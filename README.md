@@ -3,7 +3,7 @@
 A custom studio for the Drunkyard project. Used for easy implementation of to the database.
 Directly connected to the Supabase API through the use of the Supabase JS library.
 
-## Installation
+## Getting Started
 
 -   Clone the repository
 -   Run `npm install` to install the dependencies
