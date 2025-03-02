@@ -47,7 +47,7 @@ function HeaderBarComponent({ pages }: HeaderBarProps) {
                                 textDecoration: 'none',
                             }}
                         >
-                            BTB-STUDIO
+                            DRUNKYARD STUDIO
                         </Typography>
 
                         <Box

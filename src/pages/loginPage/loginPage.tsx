@@ -56,7 +56,7 @@ function LoginPage({ authError }: LoginPageProps) {
                 mb={4}
                 sx={{ fontFamily: 'monospace', fontWeight: 700, letterSpacing: '.3rem' }}
             >
-                Blame the Booze Studio
+                DRUNKYARD STUDIO
             </Typography>
             <Box
                 component="form"
