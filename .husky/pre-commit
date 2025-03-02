@@ -10,4 +10,9 @@ if ! echo "$BRANCH_NAME" | grep -qE '^[0-9]+-' && ! echo "$BRANCH_NAME" | grep -
 fi
 
 # Run lint-staged
-npx lint-staged || echo "⚠️ No matching staged files for lint-staged. Skipping..."
+if ! npx lint-staged; then
+  echo "❌ Commit rejected: Lint-staged failed."
+  exit 1
+fi
+
+echo "✅ Lint-staged passed."
