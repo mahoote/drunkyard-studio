@@ -66,19 +66,38 @@ export async function createNewGame(
  * @param selectedAccessories
  * @param accessories
  * @param newGameId
+ * @param newGameTranslations
  */
 export async function addAccessoriesToGame(
     selectedAccessories: string[],
     accessories: GenericType[] | null,
-    newGameId: number
+    newGameId: number,
+    newGameTranslations: NewGameTranslations
 ) {
     for (const accessory of selectedAccessories) {
+        const index = selectedAccessories.indexOf(accessory)
+
         let accessoryId =
             accessories?.find(accessoryItem => accessoryItem.name === accessory)?.id ?? 0
 
         // Create accessory if it does not exist.
         if (accessoryId === 0) {
-            const newAccessory = await createAccessory(accessory)
+            // New Game Translations
+            const accessoryTranslations: { language: string; name: string }[] = [
+                {
+                    language: 'en',
+                    name: accessory,
+                },
+            ]
+
+            Object.entries(newGameTranslations).forEach(([key, translation]) => {
+                accessoryTranslations.push({
+                    language: key,
+                    name: translation.accessories?.[index] ?? accessory,
+                })
+            })
+
+            const newAccessory = await createAccessory(accessoryTranslations)
             accessoryId = newAccessory.id
 
             // Remove the last fetched game options to force a re-fetch.

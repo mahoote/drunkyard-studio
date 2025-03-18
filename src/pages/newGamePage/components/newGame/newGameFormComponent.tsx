@@ -141,7 +141,7 @@ function NewGameFormComponent() {
                     <TextFieldSuggestionsComponent
                         wordSuggestions={actionCardSuggestions}
                         label="Intro Description"
-                        variant="outlined"
+                        variant="filled"
                         name="introDescription"
                         value={newGame.introDescription}
                         setValue={newValue =>
@@ -150,6 +150,7 @@ function NewGameFormComponent() {
                                 introDescription: newValue,
                             })
                         }
+                        required
                         multiline
                     />
 

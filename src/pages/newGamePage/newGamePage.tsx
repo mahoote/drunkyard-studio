@@ -110,7 +110,12 @@ function NewGamePage() {
 
         try {
             // Add accessories and game types
-            await addAccessoriesToGame(selectedAccessories, accessories, createdGame.id)
+            await addAccessoriesToGame(
+                selectedAccessories,
+                accessories,
+                createdGame.id,
+                newGameTranslations
+            )
             await addGameTypesToGame(selectedGameTypes, gameTypes, createdGame.id)
 
             // Add advanced settings
