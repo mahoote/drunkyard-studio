@@ -48,6 +48,7 @@ export type NewGameTranslation = {
     prompt?: string
     playerCreativePrompt?: string
     actionCardInputs?: string[]
+    accessories?: string[]
 }
 
 export type NewGameTranslations = {

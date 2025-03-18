@@ -21,6 +21,7 @@ const TranslationsFormComponent = () => {
         activeFormRef,
         newGameTranslations,
         setNewGameTranslations,
+        selectedAccessories,
     } = useNewGameStore()
 
     const { setAlert } = useAlertStore()
@@ -51,6 +52,7 @@ const TranslationsFormComponent = () => {
                 prompt: actionCardSettingsData?.prompt,
                 playerCreativePrompt: actionCardSettingsData?.playerCreativePrompt,
                 actionCardInputs: actionCardInputs?.filter(input => input.length > 0),
+                accessories: selectedAccessories ?? undefined,
             },
         }
 
@@ -280,6 +282,42 @@ const TranslationsFormComponent = () => {
                     ))}
                 </Box>
                 <Divider />
+
+                {selectedAccessories.length > 0 && (
+                    <>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                            <h3>Accessories</h3>
+                            {languages.map(language => (
+                                <Box
+                                    key={language}
+                                    sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+                                >
+                                    <Typography fontSize={18} color="darkgray">
+                                        {codeToLanguage(language)} *
+                                    </Typography>
+                                    <TranslateStringArrayComponent
+                                        values={selectedAccessories}
+                                        gridXs={12}
+                                        gridMd={6}
+                                        inputValues={
+                                            newGameTranslations[language]?.accessories
+                                        }
+                                        setInputValues={values =>
+                                            setNewGameTranslations({
+                                                ...newGameTranslations,
+                                                [language]: {
+                                                    ...newGameTranslations[language],
+                                                    accessories: values,
+                                                },
+                                            })
+                                        }
+                                    />
+                                </Box>
+                            ))}
+                        </Box>
+                        <Divider />
+                    </>
+                )}
 
                 {advancedSettingsData.customEndGameSentence && (
                     <>
