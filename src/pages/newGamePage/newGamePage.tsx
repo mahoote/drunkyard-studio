@@ -159,7 +159,7 @@ function NewGamePage() {
             ...newGame,
             descriptions: descriptions,
         })
-    }, [newGame, descriptions])
+    }, [setNewGame, descriptions])
 
     return (
         <Box>
