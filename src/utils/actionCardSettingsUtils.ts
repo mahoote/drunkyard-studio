@@ -30,6 +30,7 @@ export async function createActionCardData(
         is_player_creative: actionCardSettingsData.isPlayerCreative,
         has_buzzer: actionCardSettingsData.hasBuzzer,
         allow_sentence: actionCardSettingsData.allowSentence,
+        can_repeat: actionCardSettingsData.canRepeat,
     }
 
     const settingsTranslationInsertDtos: ActionCardSettingsTranslationInsertDto[] = []

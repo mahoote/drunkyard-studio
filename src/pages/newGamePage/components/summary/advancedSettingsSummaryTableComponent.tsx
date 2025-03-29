@@ -131,6 +131,14 @@ const AdvancedSettingsSummaryTableComponent = () => {
                         </TableRow>
                         <TableRow>
                             <TableCell sx={{ verticalAlign: 'top' }} scope="row">
+                                Can Repeat
+                            </TableCell>
+                            <TableCell>
+                                {actionCardSettingsData.canRepeat?.toString()}
+                            </TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell sx={{ verticalAlign: 'top' }} scope="row">
                                 Player Creative
                             </TableCell>
                             <TableCell>
