@@ -34,7 +34,7 @@ export type ActionCardSettings = {
     playerCreativePrompt?: string
     hasBuzzer?: boolean
     allowSentence: boolean
-    canRepeat: boolean
+    canRepeat?: boolean
 }
 export type WritingSettings = {
     writesAmount: number
