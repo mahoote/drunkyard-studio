@@ -35,6 +35,8 @@ export type ActionCardSettings = {
     hasBuzzer?: boolean
     allowSentence: boolean
     canRepeat?: boolean
+    excludePlayersAmount?: string
+    cardBasedTimer?: boolean
 }
 export type WritingSettings = {
     writesAmount: number

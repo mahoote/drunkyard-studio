@@ -20,6 +20,8 @@ export type ActionCardSettingsInsertDto = {
     has_buzzer?: boolean
     allow_sentence: boolean
     can_repeat?: boolean
+    exclude_players_amount?: string
+    card_based_timer?: boolean
 }
 
 export type ActionCardSettingsTranslationInsertDto = {

@@ -31,6 +31,11 @@ export async function createActionCardData(
         has_buzzer: actionCardSettingsData.hasBuzzer,
         allow_sentence: actionCardSettingsData.allowSentence,
         can_repeat: actionCardSettingsData.canRepeat,
+        exclude_players_amount:
+            actionCardSettingsData.stateId === 6
+                ? actionCardSettingsData.excludePlayersAmount
+                : undefined,
+        card_based_timer: actionCardSettingsData.cardBasedTimer,
     }
 
     const settingsTranslationInsertDtos: ActionCardSettingsTranslationInsertDto[] = []

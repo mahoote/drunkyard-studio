@@ -92,7 +92,29 @@ function ActionCardSettingsComponent() {
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12} sm={3}>
+                    {actionCardSettingsData.stateId === 6 && (
+                        <Grid item xs={12} sm={2}>
+                            <Tooltip title={'The amount of players not to receive cards.'}>
+                                <TextField
+                                    label="Exclude Players Amount"
+                                    variant="filled"
+                                    name="excludePlayersAmount"
+                                    value={actionCardSettingsData.excludePlayersAmount}
+                                    onChange={event =>
+                                        handleNumberChange(
+                                            event,
+                                            actionCardSettingsData,
+                                            setActionCardSettingsData
+                                        )
+                                    }
+                                    required
+                                    fullWidth
+                                />
+                            </Tooltip>
+                        </Grid>
+                    )}
+
+                    <Grid item xs={12} sm={actionCardSettingsData.stateId === 6 ? 2 : 3}>
                         <Tooltip
                             title={
                                 'How many cards there is in a game. Will end the game after the last card.'
@@ -116,7 +138,7 @@ function ActionCardSettingsComponent() {
                             />
                         </Tooltip>
                     </Grid>
-                    <Grid item xs={12} sm={3}>
+                    <Grid item xs={12} sm={actionCardSettingsData.stateId === 6 ? 2 : 3}>
                         <Tooltip title={'How long each card is displayed.'}>
                             <TextField
                                 label="Card Time (Seconds)"
@@ -237,7 +259,10 @@ function ActionCardSettingsComponent() {
                                 }
                             >
                                 <FormControlLabel
-                                    disabled={actionCardSettingsData.stateId !== 5}
+                                    disabled={
+                                        actionCardSettingsData.stateId !== 5 &&
+                                        actionCardSettingsData.stateId !== 6
+                                    }
                                     control={
                                         <Switch
                                             defaultChecked={actionCardSettingsData.hasBuzzer}
@@ -292,6 +317,29 @@ function ActionCardSettingsComponent() {
                                         />
                                     }
                                     label="Can Repeat"
+                                    labelPlacement="top"
+                                />
+                            </Tooltip>
+                            <Tooltip
+                                title={
+                                    'Instead of the global game timer, it will use timer per card.'
+                                }
+                            >
+                                <FormControlLabel
+                                    control={
+                                        <Switch
+                                            defaultChecked={
+                                                actionCardSettingsData.cardBasedTimer
+                                            }
+                                            onChange={event => {
+                                                setActionCardSettingsData({
+                                                    ...actionCardSettingsData,
+                                                    cardBasedTimer: event.target.checked,
+                                                })
+                                            }}
+                                        />
+                                    }
+                                    label="Card Based Timer"
                                     labelPlacement="top"
                                 />
                             </Tooltip>
