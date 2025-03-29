@@ -276,6 +276,25 @@ function ActionCardSettingsComponent() {
                                     labelPlacement="top"
                                 />
                             </Tooltip>
+                            <Tooltip
+                                title={'If the action card can repeat and show up again.'}
+                            >
+                                <FormControlLabel
+                                    control={
+                                        <Switch
+                                            defaultChecked={actionCardSettingsData.canRepeat}
+                                            onChange={event => {
+                                                setActionCardSettingsData({
+                                                    ...actionCardSettingsData,
+                                                    canRepeat: event.target.checked,
+                                                })
+                                            }}
+                                        />
+                                    }
+                                    label="Can Repeat"
+                                    labelPlacement="top"
+                                />
+                            </Tooltip>
                         </Box>
                     </Grid>
                 </Grid>
