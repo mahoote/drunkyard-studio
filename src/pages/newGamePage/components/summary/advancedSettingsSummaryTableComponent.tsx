@@ -89,6 +89,16 @@ const AdvancedSettingsSummaryTableComponent = () => {
                                 }
                             </TableCell>
                         </TableRow>
+                        {actionCardSettingsData.stateId === 6 && (
+                            <TableRow>
+                                <TableCell sx={{ verticalAlign: 'top' }} scope="row">
+                                    Exclude Players Amount
+                                </TableCell>
+                                <TableCell>
+                                    {actionCardSettingsData.excludePlayersAmount}
+                                </TableCell>
+                            </TableRow>
+                        )}
                         <TableRow>
                             <TableCell sx={{ verticalAlign: 'top' }} scope="row">
                                 Allow Sentence
@@ -135,6 +145,14 @@ const AdvancedSettingsSummaryTableComponent = () => {
                             </TableCell>
                             <TableCell>
                                 {actionCardSettingsData.canRepeat?.toString()}
+                            </TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell sx={{ verticalAlign: 'top' }} scope="row">
+                                Card Based Timer
+                            </TableCell>
+                            <TableCell>
+                                {actionCardSettingsData.cardBasedTimer?.toString()}
                             </TableCell>
                         </TableRow>
                         <TableRow>
