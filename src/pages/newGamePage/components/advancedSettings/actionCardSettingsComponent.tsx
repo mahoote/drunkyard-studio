@@ -13,7 +13,11 @@ import {
     Tooltip,
     Typography,
 } from '@mui/material'
-import { handleNumberChange, handleSelectChange } from '../../../../utils/inputUtils'
+import {
+    handleNumberChange,
+    handleSelectChange,
+    handleTextChange,
+} from '../../../../utils/inputUtils'
 import MultiInputComponent from '../../../../components/multiInput/multiInputComponent'
 import TextFieldSuggestionsComponent from '../../../../components/textFieldSuggestionsComponent'
 import { actionCardSuggestions } from '../../../../constants/WORD_SUGGESTION_DATA'
@@ -101,7 +105,7 @@ function ActionCardSettingsComponent() {
                                     name="excludePlayersAmount"
                                     value={actionCardSettingsData.excludePlayersAmount}
                                     onChange={event =>
-                                        handleNumberChange(
+                                        handleTextChange(
                                             event,
                                             actionCardSettingsData,
                                             setActionCardSettingsData
@@ -255,7 +259,7 @@ function ActionCardSettingsComponent() {
                             </Tooltip>
                             <Tooltip
                                 title={
-                                    'If one player gets the cards, all other players will be given a buzzer for the game.'
+                                    'If there are players not receiving cards, they will be given a buzzer for the game.'
                                 }
                             >
                                 <FormControlLabel
