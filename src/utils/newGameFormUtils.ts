@@ -45,6 +45,7 @@ export async function createNewGame(
             custom_end_game_sentence: validString(
                 advancedDefaultSettings.customEndGameSentence
             ),
+            has_winner_prompt: validString(advancedDefaultSettings.hasWinnerPrompt),
         },
     ]
 
@@ -55,6 +56,7 @@ export async function createNewGame(
             intro_description: validString(translation.introDescription),
             descriptions: getValidDescriptions(translation.descriptions),
             custom_end_game_sentence: validString(translation.customEndGameSentence),
+            has_winner_prompt: validString(translation.hasWinnerPrompt),
         })
     })
 

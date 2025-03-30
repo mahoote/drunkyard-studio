@@ -28,7 +28,7 @@ type GameInsertDto = {
     game_audience_id?: number
     game_category_id: number
     game_end_type: string
-    has_winner: boolean
+    has_winner?: boolean
 }
 
 type GameTranslationInsertDto = {
@@ -38,6 +38,7 @@ type GameTranslationInsertDto = {
     intro_description?: string
     descriptions: string[]
     custom_end_game_sentence?: string
+    has_winner_prompt?: string
 }
 
 export type { GameDto, GameInsertDto, GameTranslationInsertDto }

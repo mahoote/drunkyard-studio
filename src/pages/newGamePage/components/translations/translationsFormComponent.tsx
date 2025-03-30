@@ -53,6 +53,7 @@ const TranslationsFormComponent = () => {
                 playerCreativePrompt: actionCardSettingsData?.playerCreativePrompt,
                 actionCardInputs: actionCardInputs?.filter(input => input.length > 0),
                 accessories: selectedAccessories ?? undefined,
+                hasWinnerPrompt: advancedSettingsData.hasWinnerPrompt,
             },
         }
 
@@ -346,6 +347,41 @@ const TranslationsFormComponent = () => {
                                             [language]: {
                                                 ...newGameTranslations[language],
                                                 customEndGameSentence: event.target.value,
+                                            },
+                                        })
+                                    }
+                                />
+                            ))}
+                        </Box>
+                        <Divider />
+                    </>
+                )}
+
+                {advancedSettingsData.hasWinnerPrompt && (
+                    <>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                            <div>
+                                <h3>Has Winner Prompt</h3>
+                                <MultilineComponent
+                                    text={advancedSettingsData.hasWinnerPrompt}
+                                />
+                            </div>
+                            {languages.map(language => (
+                                <TextField
+                                    key={language}
+                                    label={codeToLanguage(language)}
+                                    variant="filled"
+                                    name={`${language}HasWinnerPrompt`}
+                                    fullWidth
+                                    multiline
+                                    required
+                                    value={newGameTranslations[language]?.hasWinnerPrompt}
+                                    onChange={event =>
+                                        setNewGameTranslations({
+                                            ...newGameTranslations,
+                                            [language]: {
+                                                ...newGameTranslations[language],
+                                                hasWinnerPrompt: event.target.value,
                                             },
                                         })
                                     }

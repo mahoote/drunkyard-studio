@@ -46,6 +46,14 @@ const AdvancedSettingsSummaryTableComponent = () => {
                     </TableCell>
                     <TableCell>{advancedSettingsData.hasWinner?.toString()}</TableCell>
                 </TableRow>
+                {advancedSettingsData.hasWinner && (
+                    <TableRow>
+                        <TableCell sx={{ verticalAlign: 'top' }} scope="row">
+                            Has Winner Prompt
+                        </TableCell>
+                        <TableCell>{advancedSettingsData.hasWinnerPrompt}</TableCell>
+                    </TableRow>
+                )}
                 <TableRow>
                     <TableCell sx={{ verticalAlign: 'top' }} scope="row">
                         Custom Rules Image

@@ -83,7 +83,7 @@ function AdvancedDefaultSettingsComponent() {
                             </RadioGroup>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12} sm={4} alignContent="center">
+                    <Grid item xs={12} sm="auto" alignContent="center">
                         <FormControl>
                             <FormLabel>Other Settings</FormLabel>
                             <Tooltip title="The playes will pick a winner at the end of the game based on who won.">
@@ -105,7 +105,29 @@ function AdvancedDefaultSettingsComponent() {
                         </FormControl>
                     </Grid>
                 </Grid>
-                <Grid container>
+                <Grid container gap={2}>
+                    {advancedSettingsData.hasWinner && (
+                        <Grid item xs={12} sm={6}>
+                            <Tooltip title="Specific prompt to ask the players to pick a winner.">
+                                <TextField
+                                    label="Has Winner Prompt"
+                                    variant="filled"
+                                    name="hasWinnerPrompt"
+                                    fullWidth
+                                    value={advancedSettingsData.hasWinnerPrompt}
+                                    onChange={event =>
+                                        handleTextChange(
+                                            event,
+                                            advancedSettingsData,
+                                            setAdvancedSettingsData
+                                        )
+                                    }
+                                    multiline
+                                    required
+                                />
+                            </Tooltip>
+                        </Grid>
+                    )}
                     <Grid item xs={12} alignContent="center">
                         <ImageUploaderComponent
                             image={advancedSettingsData.customRulesImage}

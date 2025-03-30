@@ -15,7 +15,8 @@ export type AdvancedSettings = {
     customEndGameSentence?: string
     gameEndType: string
     customRulesImage?: CustomImage
-    hasWinner: boolean
+    hasWinner?: boolean
+    hasWinnerPrompt?: string
 }
 
 export type CustomImage = {
@@ -52,6 +53,7 @@ export type NewGameTranslation = {
     playerCreativePrompt?: string
     actionCardInputs?: string[]
     accessories?: string[]
+    hasWinnerPrompt?: string
 }
 
 export type NewGameTranslations = {
