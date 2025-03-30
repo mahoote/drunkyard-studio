@@ -264,8 +264,7 @@ function ActionCardSettingsComponent() {
                             >
                                 <FormControlLabel
                                     disabled={
-                                        actionCardSettingsData.stateId !== 5 &&
-                                        actionCardSettingsData.stateId !== 6
+                                        ![4, 5, 6].includes(actionCardSettingsData.stateId)
                                     }
                                     control={
                                         <Switch
