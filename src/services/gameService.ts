@@ -2,6 +2,7 @@ import { supabaseGame } from '../supabaseClient'
 import { GameDto, GameInsertDto, GameTranslationInsertDto } from '../types/gameDto'
 import { SupabaseResponse } from '../types/supabaseResponse'
 import { GameHasAccessoryDto } from '../types/gameHasAccessoryDto'
+import { cleanUndefined } from '../utils/objectUtils'
 
 /**
  * Creates a new game.
@@ -12,7 +13,7 @@ import { GameHasAccessoryDto } from '../types/gameHasAccessoryDto'
 async function createGame(game: GameInsertDto, gameTranslations: GameTranslationInsertDto[]) {
     const { data, error }: SupabaseResponse<GameDto> = await supabaseGame
         .from('game')
-        .insert([game])
+        .insert([cleanUndefined(game)])
         .select()
         .single()
 
@@ -74,7 +75,7 @@ async function createGameHasGameType(gameId: number, gameTypeId: number) {
 async function createGameTranslation(gameTranslation: GameTranslationInsertDto) {
     const { error }: SupabaseResponse<GameDto> = await supabaseGame
         .from('game_translation')
-        .insert([gameTranslation])
+        .insert([cleanUndefined(gameTranslation)])
 
     if (error) {
         throw new Error(error.message)

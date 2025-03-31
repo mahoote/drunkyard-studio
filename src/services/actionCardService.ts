@@ -8,6 +8,7 @@ import {
     ActionCardSettingsTranslationInsertDto,
     ActionCardTranslationInsertDto,
 } from '../types/actionCardDto'
+import { cleanUndefined } from '../utils/objectUtils'
 
 /**
  * Fetches all the action card states.
@@ -31,9 +32,11 @@ export async function createActionCardSettings(
     actionCardSettingsInsertDto: ActionCardSettingsInsertDto,
     actionCardSettingsTranslationInsertDtos: ActionCardSettingsTranslationInsertDto[]
 ) {
+    const cleanSettings = cleanUndefined(actionCardSettingsInsertDto)
+
     const { data, error }: SupabaseResponse<ActionCardSettingsDto> = await supabaseGame
         .from('action_card_settings')
-        .insert([actionCardSettingsInsertDto])
+        .insert([cleanSettings])
         .select()
         .single()
 
@@ -62,9 +65,11 @@ export async function createActionCardSettings(
 export async function createActionCardSettingsTranslation(
     actionCardSettingsTranslationInsertDto: ActionCardSettingsTranslationInsertDto
 ): Promise<void> {
+    const cleanSettings = cleanUndefined(actionCardSettingsTranslationInsertDto)
+
     const { error } = await supabaseGame
         .from('action_card_settings_translation')
-        .insert([actionCardSettingsTranslationInsertDto])
+        .insert([cleanSettings])
 
     if (error) {
         throw new Error(error.message)

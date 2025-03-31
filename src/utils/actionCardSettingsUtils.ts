@@ -1,11 +1,11 @@
 import { ActionCardSettings, NewGameTranslations } from '../types/newGame'
 import { createActionCard, createActionCardSettings } from '../services/actionCardService'
 import {
-    ActionCardSettingsInsertDto,
     ActionCardSettingsTranslationInsertDto,
     ActionCardTranslationInsertDto,
 } from '../types/actionCardDto'
 import { validString } from './inputUtils'
+import { mapActionCardSettings } from './mapUtils'
 
 /**
  * Creates the Action Card Settings and Action Cards.
@@ -21,22 +21,7 @@ export async function createActionCardData(
     actionCardInputs: string[],
     newGameTranslations: NewGameTranslations
 ) {
-    const actionCardSettingsInsertDto: ActionCardSettingsInsertDto = {
-        game_id: gameId,
-        state_id: actionCardSettingsData.stateId,
-        card_limit: actionCardSettingsData.cardLimit,
-        card_seconds: actionCardSettingsData.cardSeconds,
-        is_auto_next: actionCardSettingsData.isAutoNext,
-        is_player_creative: actionCardSettingsData.isPlayerCreative,
-        has_buzzer: actionCardSettingsData.hasBuzzer,
-        allow_sentence: actionCardSettingsData.allowSentence,
-        can_repeat: actionCardSettingsData.canRepeat,
-        exclude_players_amount:
-            actionCardSettingsData.stateId === 6
-                ? actionCardSettingsData.excludePlayersAmount
-                : undefined,
-        card_based_timer: actionCardSettingsData.cardBasedTimer,
-    }
+    const actionCardSettingsInsertDto = mapActionCardSettings(gameId, actionCardSettingsData)
 
     const settingsTranslationInsertDtos: ActionCardSettingsTranslationInsertDto[] = []
 

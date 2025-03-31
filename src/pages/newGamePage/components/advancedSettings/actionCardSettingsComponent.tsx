@@ -139,6 +139,7 @@ function ActionCardSettingsComponent() {
                                     )
                                 }
                                 fullWidth
+                                disabled={actionCardSettingsData.oneCardPerPlayer}
                             />
                         </Tooltip>
                     </Grid>
@@ -343,6 +344,31 @@ function ActionCardSettingsComponent() {
                                         />
                                     }
                                     label="Card Based Timer"
+                                    labelPlacement="top"
+                                />
+                            </Tooltip>
+                            <Tooltip
+                                title={
+                                    'The limit of cards is automatically set to the amount of players'
+                                }
+                            >
+                                <FormControlLabel
+                                    disabled={actionCardSettingsData.stateId !== 4}
+                                    control={
+                                        <Switch
+                                            defaultChecked={
+                                                actionCardSettingsData.oneCardPerPlayer
+                                            }
+                                            onChange={event => {
+                                                setActionCardSettingsData({
+                                                    ...actionCardSettingsData,
+                                                    oneCardPerPlayer: event.target.checked,
+                                                    cardLimit: 0,
+                                                })
+                                            }}
+                                        />
+                                    }
+                                    label="One Card Per Player"
                                     labelPlacement="top"
                                 />
                             </Tooltip>

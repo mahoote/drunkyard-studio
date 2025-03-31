@@ -165,6 +165,14 @@ const AdvancedSettingsSummaryTableComponent = () => {
                         </TableRow>
                         <TableRow>
                             <TableCell sx={{ verticalAlign: 'top' }} scope="row">
+                                One Card Per Player
+                            </TableCell>
+                            <TableCell>
+                                {actionCardSettingsData.oneCardPerPlayer?.toString()}
+                            </TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell sx={{ verticalAlign: 'top' }} scope="row">
                                 Player Creative
                             </TableCell>
                             <TableCell>
