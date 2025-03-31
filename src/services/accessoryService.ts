@@ -73,11 +73,13 @@ async function createAccessoryTranslation(
     data: { id: number },
     accessory: { language: string; name: string }
 ) {
-    await supabaseGame.from('accessory_translation').insert({
+    const translation = {
         accessory_id: data.id,
         language: accessory.language,
         name: accessory.name,
-    })
+    }
+
+    await supabaseGame.from('accessory_translation').insert(translation)
 }
 
 /**

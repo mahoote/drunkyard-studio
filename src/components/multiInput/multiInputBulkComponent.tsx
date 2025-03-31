@@ -28,7 +28,7 @@ function MultiInputBulkComponent({ open, handleClose, handleAdd }: MultiInputBul
         event.preventDefault()
 
         const jsonArray = jsonObject
-            .split(',')
+            .split(';')
             .map(item => item.trim())
             .filter(item => item !== '')
 

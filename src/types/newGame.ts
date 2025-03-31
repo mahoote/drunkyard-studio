@@ -38,6 +38,7 @@ export type ActionCardSettings = {
     canRepeat?: boolean
     excludePlayersAmount?: string
     cardBasedTimer?: boolean
+    oneCardPerPlayer?: boolean
 }
 export type WritingSettings = {
     writesAmount: number
