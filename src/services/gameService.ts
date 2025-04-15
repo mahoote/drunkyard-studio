@@ -129,6 +129,7 @@ export async function getGame(gameId: number) {
       accessory:accessory_id (
         id,
         accessory_translation (
+          language,
           name
         )
       )
@@ -142,7 +143,6 @@ export async function getGame(gameId: number) {
   `
         )
         .eq('id', gameId)
-        .eq('accessories.accessory.accessory_translation.language', 'en') // ✅ move the filter into deep path
         .single()
 
     if (error) {

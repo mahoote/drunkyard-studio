@@ -13,6 +13,7 @@ import {
     getActionCardSettings,
     getActionCardSettingsTranslations,
 } from '../../services/actionCardService'
+import { NewGameTranslations } from '../../types/newGame'
 
 export default function EditGamePage() {
     const theme = useTheme()
@@ -26,6 +27,8 @@ export default function EditGamePage() {
         setSelectedGameTypes,
         setSelectedAccessories,
         setActionCardInputs,
+        setNewGameTranslations,
+        setFormStepIndex,
     } = useNewGameStore()
 
     const [games, setGames] = useState<GamePreview[]>([])
@@ -39,6 +42,8 @@ export default function EditGamePage() {
             console.error(new Error('Error getting game details'))
             return
         }
+
+        const newGameTranslations: NewGameTranslations = {}
 
         const englishGameTranslation = gameTranslations.find(
             translation => translation.language === 'en'
@@ -68,7 +73,10 @@ export default function EditGamePage() {
 
         setSelectedAccessories(
             game.accessories.flatMap(
-                accessory => accessory.accessory?.accessory_translation?.map(t => t.name) ?? []
+                accessory =>
+                    accessory.accessory?.accessory_translation
+                        ?.filter(t => t.language === 'en')
+                        .map(t => t.name) ?? []
             )
         )
 
@@ -77,6 +85,22 @@ export default function EditGamePage() {
             hasWinner: game.has_winner,
             customEndGameSentence: englishGameTranslation?.custom_end_game_sentence,
             gameEndType: game.game_end_type ?? '',
+        })
+
+        gameTranslations.forEach(translation => {
+            newGameTranslations[translation.language] = {
+                name: translation.name,
+                introDescription: translation.intro_description,
+                descriptions: translation.descriptions,
+                accessories: game.accessories.flatMap(
+                    accessory =>
+                        accessory.accessory?.accessory_translation
+                            ?.filter(t => t.language === translation.language)
+                            .map(t => t.name) ?? []
+                ),
+                customEndGameSentence: translation.custom_end_game_sentence,
+                hasWinnerPrompt: translation.has_winner_prompt,
+            }
         })
 
         if (actionCardSettings) {
@@ -111,8 +135,20 @@ export default function EditGamePage() {
             })
 
             setActionCardInputs(actionCardsMap.get('en'))
+
+            actionCardSettingsTranslations.forEach(translation => {
+                newGameTranslations[translation.language] = {
+                    ...newGameTranslations[translation.language],
+                    prompt: translation?.prompt,
+                    playerCreativePrompt: translation?.player_creative_prompt,
+                    actionCardInputs: actionCardsMap.get(translation.language),
+                }
+            })
         }
 
+        setNewGameTranslations(newGameTranslations)
+
+        setFormStepIndex(0)
         navigate('/')
     }
 

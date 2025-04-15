@@ -18,6 +18,7 @@ export interface GameResponse {
         accessory: {
             id: number
             accessory_translation: {
+                language: string
                 name: string
             }[]
         } | null
