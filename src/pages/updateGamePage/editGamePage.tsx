@@ -1,12 +1,40 @@
 import React, { useEffect, useState } from 'react'
-import { getPreviewGamesByPage } from '../../services/gameService'
+import { getGame, getPreviewGamesByPage } from '../../services/gameService'
 import { Box, Card, CardContent, Typography, useTheme } from '@mui/material'
 import { GamePreview } from '../../types/gameDto'
+import { useNewGameStore } from '../../hooks/useNewGameStore'
+import { useNavigate } from 'react-router-dom'
 
 export default function EditGamePage() {
     const theme = useTheme()
+    const navigate = useNavigate()
+
+    const { setNewGame } = useNewGameStore()
 
     const [games, setGames] = useState<GamePreview[]>([])
+
+    const handleSelectGame = async (gameId: number) => {
+        const game = await getGame(gameId)
+
+        if (!game) {
+            console.error(new Error('Game not found'))
+            return
+        }
+
+        setNewGame({
+            name: game.name,
+            gameAudienceId: game.game_audience_id,
+            activityLevel: game.activity_level,
+            categoryId: game.game_category_id,
+            drunkLevel: game.drunk_level,
+            maxPlayers: game.max_players,
+            minPlayers: game.min_players,
+            minutes: game.minutes,
+            descriptions: [],
+        })
+
+        navigate('/')
+    }
 
     useEffect(() => {
         const fetchGames = async () => {
@@ -29,6 +57,7 @@ export default function EditGamePage() {
                             cursor: 'pointer',
                         },
                     }}
+                    onClick={() => void handleSelectGame(game.id)}
                 >
                     <CardContent>
                         <Typography>{game.name}</Typography>

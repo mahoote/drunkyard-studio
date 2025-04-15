@@ -1,5 +1,6 @@
 import { supabaseGame } from '../supabaseClient'
 import {
+    Game,
     GameDto,
     GameInsertDto,
     GamePreview,
@@ -98,7 +99,7 @@ async function getPreviewGamesByPage(pageIndex: number, pageSize = 100) {
 
     const { data, error }: SupabaseResponse<GamePreview[]> = await supabaseGame
         .from('game')
-        .select('id, name, game_translation!left (intro_description)')
+        .select(`id, name, game_translation!left (intro_description)`)
         .range(from, to)
 
     if (error) {
@@ -109,6 +110,25 @@ async function getPreviewGamesByPage(pageIndex: number, pageSize = 100) {
     if (!data) {
         console.error(new Error('No games found'))
         return []
+    }
+
+    return data
+}
+
+/**
+ * Fetches a game from the game table by its ID.
+ * @param gameId
+ */
+export async function getGame(gameId: number) {
+    const { data, error }: SupabaseResponse<Game> = await supabaseGame
+        .from('game')
+        .select('*')
+        .eq('id', gameId)
+        .single()
+
+    if (error) {
+        console.error(new Error(`Error fetching game: ${error.message}`))
+        return null
     }
 
     return data

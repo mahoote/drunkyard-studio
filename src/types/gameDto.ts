@@ -49,4 +49,21 @@ export interface GamePreview {
     }[]
 }
 
+export interface Game {
+    id: number
+    created_at: string
+    activity_level: number
+    drunk_level: number
+    minutes: number
+    game_category_id: number
+    game_audience_id: number
+    has_winner: boolean
+    deleted_at?: string
+    min_players?: number
+    max_players?: number
+    game_end_type?: string
+    custom_rules_image_url?: string
+    name: string
+}
+
 export type { GameDto, GameInsertDto, GameTranslationInsertDto }
