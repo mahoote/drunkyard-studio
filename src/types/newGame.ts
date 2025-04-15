@@ -1,4 +1,5 @@
 export type NewGame = {
+    id?: number
     activityLevel: number
     categoryId: number
     descriptions: string[]

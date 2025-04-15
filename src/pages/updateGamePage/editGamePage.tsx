@@ -22,6 +22,7 @@ export default function EditGamePage() {
         }
 
         setNewGame({
+            id: game.id,
             name: game.name,
             gameAudienceId: game.game_audience_id,
             activityLevel: game.activity_level,
