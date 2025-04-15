@@ -9,6 +9,10 @@ import {
     ActionCardTranslationInsertDto,
 } from '../types/actionCardDto'
 import { cleanUndefined } from '../utils/objectUtils'
+import {
+    ActionCardSettingsResponse,
+    ActionCardSettingsTranslationResponse,
+} from '../types/actionCardResponse'
 
 /**
  * Fetches all the action card states.
@@ -131,4 +135,49 @@ export async function createActionCardTranslation(
     if (error) {
         throw new Error(error.message)
     }
+}
+
+/**
+ * Fetches the action card settings for a specific game.
+ * @param gameId
+ */
+export async function getActionCardSettings(gameId: number) {
+    const { data, error }: SupabaseResponse<ActionCardSettingsResponse> = await supabaseGame
+        .from('action_card_settings')
+        .select('*')
+        .eq('game_id', gameId)
+        .single()
+
+    if (error && error.code === 'PGRST116') {
+        return null
+    } else if (error) {
+        console.error(new Error(error.message))
+        return null
+    }
+
+    return data
+}
+
+/**
+ * Fetches the action card settings translations for a specific settings ID.
+ * @param settingsId
+ */
+export async function getActionCardSettingsTranslations(settingsId: number) {
+    const { data, error }: SupabaseResponse<ActionCardSettingsTranslationResponse[]> =
+        await supabaseGame
+            .from('action_card_settings_translation')
+            .select('*')
+            .eq('action_card_settings_id', settingsId)
+
+    if (error) {
+        console.error(new Error(error.message))
+        return []
+    }
+
+    if (!data) {
+        console.error(new Error('No action card settings translations found'))
+        return []
+    }
+
+    return data
 }

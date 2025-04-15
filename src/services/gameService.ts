@@ -1,15 +1,14 @@
 import { supabaseGame } from '../supabaseClient'
 import {
-    Game,
     GameDto,
     GameInsertDto,
     GamePreview,
-    GameTranslation,
     GameTranslationInsertDto,
 } from '../types/gameDto'
 import { SupabaseResponse } from '../types/supabaseResponse'
 import { GameHasAccessoryDto } from '../types/gameHasAccessoryDto'
 import { cleanUndefined } from '../utils/objectUtils'
+import { GameResponse, GameTranslationResponse } from '../types/gameResponse'
 
 /**
  * Creates a new game.
@@ -121,10 +120,29 @@ async function getPreviewGamesByPage(pageIndex: number, pageSize = 100) {
  * @param gameId
  */
 export async function getGame(gameId: number) {
-    const { data, error }: SupabaseResponse<Game> = await supabaseGame
+    const { data, error }: SupabaseResponse<GameResponse> = await supabaseGame
         .from('game')
-        .select('*')
+        .select(
+            `
+    *,
+    accessories:game_has_accessory!left (
+      accessory:accessory_id (
+        id,
+        accessory_translation (
+          name
+        )
+      )
+    ),
+    game_types:game_has_game_type!left (
+      game_type:game_type_id (
+        id,
+        name
+      )
+    )
+  `
+        )
         .eq('id', gameId)
+        .eq('accessories.accessory.accessory_translation.language', 'en') // ✅ move the filter into deep path
         .single()
 
     if (error) {
@@ -140,7 +158,7 @@ export async function getGame(gameId: number) {
  * @param gameId
  */
 export async function getGameTranslations(gameId: number) {
-    const { data, error }: SupabaseResponse<GameTranslation[]> = await supabaseGame
+    const { data, error }: SupabaseResponse<GameTranslationResponse[]> = await supabaseGame
         .from('game_translation')
         .select('*')
         .eq('game_id', gameId)

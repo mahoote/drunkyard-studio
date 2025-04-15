@@ -8,25 +8,37 @@ import { Box, Card, CardContent, Typography, useTheme } from '@mui/material'
 import { GamePreview } from '../../types/gameDto'
 import { useNewGameStore } from '../../hooks/useNewGameStore'
 import { useNavigate } from 'react-router-dom'
+import {
+    getActionCardSettings,
+    getActionCardSettingsTranslations,
+} from '../../services/actionCardService'
 
 export default function EditGamePage() {
     const theme = useTheme()
     const navigate = useNavigate()
 
-    const { setNewGame, setDescriptions, setAdvancedSettingsData } = useNewGameStore()
+    const {
+        setNewGame,
+        setDescriptions,
+        setAdvancedSettingsData,
+        setActionCardSettingsData,
+        setSelectedGameTypes,
+        setSelectedAccessories,
+    } = useNewGameStore()
 
     const [games, setGames] = useState<GamePreview[]>([])
 
     const handleSelectGame = async (gameId: number) => {
         const game = await getGame(gameId)
         const gameTranslations = await getGameTranslations(gameId)
+        const actionCardSettings = await getActionCardSettings(gameId)
 
         if (!game || !gameTranslations) {
             console.error(new Error('Error getting game details'))
             return
         }
 
-        const englishTranslation = gameTranslations.find(
+        const englishGameTranslation = gameTranslations.find(
             translation => translation.language === 'en'
         )
 
@@ -41,17 +53,60 @@ export default function EditGamePage() {
             minPlayers: game.min_players,
             minutes: game.minutes,
             descriptions: [],
-            introDescription: englishTranslation?.intro_description,
+            introDescription: englishGameTranslation?.intro_description,
         })
 
-        setDescriptions(englishTranslation?.descriptions ?? [])
+        setDescriptions(englishGameTranslation?.descriptions ?? [])
+
+        setSelectedGameTypes(
+            game.game_types
+                .map(gameType => gameType.game_type?.name)
+                .filter((name): name is string => typeof name === 'string')
+        )
+
+        setSelectedAccessories(
+            game.accessories.flatMap(
+                accessory => accessory.accessory?.accessory_translation?.map(t => t.name) ?? []
+            )
+        )
 
         setAdvancedSettingsData({
-            hasWinnerPrompt: englishTranslation?.has_winner_prompt,
+            hasWinnerPrompt: englishGameTranslation?.has_winner_prompt,
             hasWinner: game.has_winner,
-            customEndGameSentence: englishTranslation?.custom_end_game_sentence,
+            customEndGameSentence: englishGameTranslation?.custom_end_game_sentence,
             gameEndType: game.game_end_type ?? '',
         })
+
+        if (actionCardSettings) {
+            const actionCardSettingsTranslations = await getActionCardSettingsTranslations(
+                actionCardSettings.id
+            )
+
+            if (!actionCardSettingsTranslations) {
+                return
+            }
+
+            const englishActionCardSettingsTranslation = actionCardSettingsTranslations.find(
+                translation => translation.language === 'en'
+            )
+
+            setActionCardSettingsData({
+                stateId: actionCardSettings.state_id,
+                cardLimit: actionCardSettings.card_limit,
+                cardSeconds: actionCardSettings.card_seconds,
+                isAutoNext: actionCardSettings.is_auto_next,
+                prompt: englishActionCardSettingsTranslation?.prompt,
+                isPlayerCreative: actionCardSettings.is_player_creative,
+                playerCreativePrompt:
+                    englishActionCardSettingsTranslation?.player_creative_prompt,
+                hasBuzzer: actionCardSettings.has_buzzer,
+                allowSentence: actionCardSettings.allow_sentence,
+                canRepeat: actionCardSettings.can_repeat,
+                excludePlayersAmount: actionCardSettings.exclude_players_amount,
+                cardBasedTimer: actionCardSettings.card_based_timer,
+                oneCardPerPlayer: actionCardSettings.one_card_per_player,
+            })
+        }
 
         navigate('/')
     }
