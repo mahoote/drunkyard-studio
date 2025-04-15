@@ -66,4 +66,14 @@ export interface Game {
     name: string
 }
 
+export interface GameTranslation {
+    id: number
+    game_id: number
+    language: string
+    name: string
+    intro_description: string
+    descriptions: string[]
+    custom_end_game_sentence?: string
+    has_winner_prompt?: string
+}
 export type { GameDto, GameInsertDto, GameTranslationInsertDto }

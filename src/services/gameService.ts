@@ -4,6 +4,7 @@ import {
     GameDto,
     GameInsertDto,
     GamePreview,
+    GameTranslation,
     GameTranslationInsertDto,
 } from '../types/gameDto'
 import { SupabaseResponse } from '../types/supabaseResponse'
@@ -129,6 +130,24 @@ export async function getGame(gameId: number) {
     if (error) {
         console.error(new Error(`Error fetching game: ${error.message}`))
         return null
+    }
+
+    return data
+}
+
+/**
+ * Fetches all the translations for a game by its ID.
+ * @param gameId
+ */
+export async function getGameTranslations(gameId: number) {
+    const { data, error }: SupabaseResponse<GameTranslation[]> = await supabaseGame
+        .from('game_translation')
+        .select('*')
+        .eq('game_id', gameId)
+
+    if (error) {
+        console.error(new Error(`Error fetching game translations: ${error.message}`))
+        return []
     }
 
     return data

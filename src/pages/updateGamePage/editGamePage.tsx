@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { getGame, getPreviewGamesByPage } from '../../services/gameService'
+import {
+    getGame,
+    getGameTranslations,
+    getPreviewGamesByPage,
+} from '../../services/gameService'
 import { Box, Card, CardContent, Typography, useTheme } from '@mui/material'
 import { GamePreview } from '../../types/gameDto'
 import { useNewGameStore } from '../../hooks/useNewGameStore'
@@ -9,17 +13,22 @@ export default function EditGamePage() {
     const theme = useTheme()
     const navigate = useNavigate()
 
-    const { setNewGame } = useNewGameStore()
+    const { setNewGame, setDescriptions, setAdvancedSettingsData } = useNewGameStore()
 
     const [games, setGames] = useState<GamePreview[]>([])
 
     const handleSelectGame = async (gameId: number) => {
         const game = await getGame(gameId)
+        const gameTranslations = await getGameTranslations(gameId)
 
-        if (!game) {
-            console.error(new Error('Game not found'))
+        if (!game || !gameTranslations) {
+            console.error(new Error('Error getting game details'))
             return
         }
+
+        const englishTranslation = gameTranslations.find(
+            translation => translation.language === 'en'
+        )
 
         setNewGame({
             id: game.id,
@@ -32,6 +41,16 @@ export default function EditGamePage() {
             minPlayers: game.min_players,
             minutes: game.minutes,
             descriptions: [],
+            introDescription: englishTranslation?.intro_description,
+        })
+
+        setDescriptions(englishTranslation?.descriptions ?? [])
+
+        setAdvancedSettingsData({
+            hasWinnerPrompt: englishTranslation?.has_winner_prompt,
+            hasWinner: game.has_winner,
+            customEndGameSentence: englishTranslation?.custom_end_game_sentence,
+            gameEndType: game.game_end_type ?? '',
         })
 
         navigate('/')
