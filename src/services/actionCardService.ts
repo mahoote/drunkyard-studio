@@ -10,6 +10,7 @@ import {
 } from '../types/actionCardDto'
 import { cleanUndefined } from '../utils/objectUtils'
 import {
+    ActionCardResponse,
     ActionCardSettingsResponse,
     ActionCardSettingsTranslationResponse,
 } from '../types/actionCardResponse'
@@ -180,4 +181,52 @@ export async function getActionCardSettingsTranslations(settingsId: number) {
     }
 
     return data
+}
+
+/**
+ * Fetches all the action cards for a specific settings ID.
+ * Maps the cards into a Map with the language as the key and the card values as an array.
+ * @param settingsId
+ */
+export async function getActionCards(settingsId: number) {
+    const { data, error } = await supabaseGame
+        .from('action_card_settings_has_action_card')
+        .select(
+            `
+          action_card (
+            id,
+            created_at,
+            action_card_translation (
+              language,
+              value
+            )
+          )
+        `
+        )
+        .eq('action_card_settings_id', settingsId)
+
+    if (error) {
+        console.error(new Error(`Failed to fetch action cards: ${error.message}`))
+        return null
+    }
+
+    if (!data || data.length === 0) {
+        console.error(new Error('No action cards found'))
+        return null
+    }
+
+    const actionCards = data as unknown as ActionCardResponse[]
+    const cardMap = new Map<string, string[]>()
+
+    actionCards.map(response =>
+        response.action_card.action_card_translation.map(translation => {
+            const { language, value } = translation
+            if (!cardMap.has(language)) {
+                cardMap.set(language, [])
+            }
+            cardMap.get(language)?.push(value)
+        })
+    )
+
+    return cardMap
 }

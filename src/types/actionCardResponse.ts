@@ -22,3 +22,14 @@ export interface ActionCardSettingsTranslationResponse {
     prompt?: string
     player_creative_prompt?: string
 }
+
+export interface ActionCardResponse {
+    action_card: {
+        id: number
+        created_at: string
+        action_card_translation: {
+            language: string
+            value: string
+        }[]
+    }
+}

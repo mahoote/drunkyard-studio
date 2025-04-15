@@ -9,6 +9,7 @@ import { GamePreview } from '../../types/gameDto'
 import { useNewGameStore } from '../../hooks/useNewGameStore'
 import { useNavigate } from 'react-router-dom'
 import {
+    getActionCards,
     getActionCardSettings,
     getActionCardSettingsTranslations,
 } from '../../services/actionCardService'
@@ -24,6 +25,7 @@ export default function EditGamePage() {
         setActionCardSettingsData,
         setSelectedGameTypes,
         setSelectedAccessories,
+        setActionCardInputs,
     } = useNewGameStore()
 
     const [games, setGames] = useState<GamePreview[]>([])
@@ -81,8 +83,9 @@ export default function EditGamePage() {
             const actionCardSettingsTranslations = await getActionCardSettingsTranslations(
                 actionCardSettings.id
             )
+            const actionCardsMap = await getActionCards(actionCardSettings.id)
 
-            if (!actionCardSettingsTranslations) {
+            if (!actionCardSettingsTranslations || !actionCardsMap) {
                 return
             }
 
@@ -106,6 +109,8 @@ export default function EditGamePage() {
                 cardBasedTimer: actionCardSettings.card_based_timer,
                 oneCardPerPlayer: actionCardSettings.one_card_per_player,
             })
+
+            setActionCardInputs(actionCardsMap.get('en'))
         }
 
         navigate('/')
