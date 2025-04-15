@@ -1,5 +1,10 @@
 import { supabaseGame } from '../supabaseClient'
-import { GameDto, GameInsertDto, GameTranslationInsertDto } from '../types/gameDto'
+import {
+    GameDto,
+    GameInsertDto,
+    GamePreview,
+    GameTranslationInsertDto,
+} from '../types/gameDto'
 import { SupabaseResponse } from '../types/supabaseResponse'
 import { GameHasAccessoryDto } from '../types/gameHasAccessoryDto'
 import { cleanUndefined } from '../utils/objectUtils'
@@ -82,4 +87,37 @@ async function createGameTranslation(gameTranslation: GameTranslationInsertDto) 
     }
 }
 
-export { createGame, createGameHasAccessory, createGameHasGameType, deleteNewGame }
+/**
+ * Fetches a single page of games.
+ * @param pageIndex Zero-based page index (0 = first page)
+ * @param pageSize Number of games per page (default: 100)
+ */
+async function getPreviewGamesByPage(pageIndex: number, pageSize = 100) {
+    const from = pageIndex * pageSize
+    const to = from + pageSize - 1
+
+    const { data, error }: SupabaseResponse<GamePreview[]> = await supabaseGame
+        .from('game')
+        .select('id, name, game_translation!left (intro_description)')
+        .range(from, to)
+
+    if (error) {
+        console.error(new Error(`Error fetching games: ${error.message}`))
+        return []
+    }
+
+    if (!data) {
+        console.error(new Error('No games found'))
+        return []
+    }
+
+    return data
+}
+
+export {
+    createGame,
+    createGameHasAccessory,
+    createGameHasGameType,
+    deleteNewGame,
+    getPreviewGamesByPage,
+}

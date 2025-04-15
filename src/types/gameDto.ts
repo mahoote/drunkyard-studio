@@ -41,4 +41,12 @@ type GameTranslationInsertDto = {
     has_winner_prompt?: string
 }
 
+export interface GamePreview {
+    id: number
+    name: string
+    game_translation: {
+        intro_description: string
+    }[]
+}
+
 export type { GameDto, GameInsertDto, GameTranslationInsertDto }

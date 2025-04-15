@@ -1,7 +1,6 @@
+import './App.css'
 import React, { useEffect } from 'react'
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
-import './App.css'
-
 import AppLayoutComponent from './components/appLayoutComponent'
 import NewGamePage from './pages/newGamePage/newGamePage'
 import LoginPage from './pages/loginPage/loginPage'

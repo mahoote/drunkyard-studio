@@ -25,6 +25,7 @@ module.exports = {
             },
         ],
         'prettier/prettier': 'error',
+        '@typescript-eslint/no-floating-promises': 'warn',
     },
     parserOptions: {
         ecmaVersion: 'latest',
