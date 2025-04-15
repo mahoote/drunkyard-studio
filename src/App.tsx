@@ -7,6 +7,7 @@ import NewGamePage from './pages/newGamePage/newGamePage'
 import LoginPage from './pages/loginPage/loginPage'
 import { useAuthStore } from './hooks/useAuthStore'
 import PageLoaderComponent from './components/pageLoaderComponent'
+import EditGamePage from './pages/updateGamePage/editGamePage'
 
 function App() {
     return (
@@ -32,6 +33,7 @@ function AuthRoutes() {
             {user ? (
                 <Route path="/" element={<AppLayoutComponent />}>
                     <Route index element={<NewGamePage />} />
+                    <Route path="edit" element={<EditGamePage />} />
                     <Route path="*" element={<div>This page does not exist</div>} />
                 </Route>
             ) : (
