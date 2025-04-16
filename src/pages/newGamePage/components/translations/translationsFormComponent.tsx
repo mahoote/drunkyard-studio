@@ -5,7 +5,7 @@ import { actionCardSuggestions } from '../../../../constants/WORD_SUGGESTION_DAT
 import TextFieldSuggestionsComponent from '../../../../components/textFieldSuggestionsComponent'
 import MultilineComponent from '../../../../components/multilineComponent'
 import TranslateStringArrayComponent from './translateStringArrayComponent'
-import { NewGameTranslations } from '../../../../types/newGame'
+import { CombinedTranslations } from '../../../../types/newGame'
 import { Add, ContentCopy, DataObject } from '@mui/icons-material'
 import AppModalComponent from '../../../../components/appModalComponent'
 import { generateTranslationPrompt } from '../../../../utils/prompts'
@@ -22,6 +22,10 @@ const TranslationsFormComponent = () => {
         newGameTranslations,
         setNewGameTranslations,
         selectedAccessories,
+        actionCardSettingsTranslations,
+        actionCardTranslations,
+        setActionCardSettingsTranslations,
+        setActionCardTranslations,
     } = useNewGameStore()
 
     const { setAlert } = useAlertStore()
@@ -41,19 +45,27 @@ const TranslationsFormComponent = () => {
      * Alerts the user if it fails.
      */
     const handleCopyFromEnglish = async () => {
-        const englishTranslations: NewGameTranslations = {
-            en: {
-                name: newGame.name,
-                introDescription: newGame.introDescription,
-                descriptions: newGame.descriptions.filter(
-                    description => description.length > 0
-                ),
-                customEndGameSentence: advancedSettingsData.customEndGameSentence,
-                prompt: actionCardSettingsData?.prompt,
-                playerCreativePrompt: actionCardSettingsData?.playerCreativePrompt,
-                actionCardInputs: actionCardInputs?.filter(input => input.length > 0),
-                accessories: selectedAccessories ?? undefined,
-                hasWinnerPrompt: advancedSettingsData.hasWinnerPrompt,
+        const englishTranslations: CombinedTranslations = {
+            game: {
+                en: {
+                    name: newGame.name,
+                    introDescription: newGame.introDescription,
+                    descriptions: newGame.descriptions.filter(
+                        description => description.length > 0
+                    ),
+                    customEndGameSentence: advancedSettingsData.customEndGameSentence,
+                    accessories: selectedAccessories ?? undefined,
+                    hasWinnerPrompt: advancedSettingsData.hasWinnerPrompt,
+                },
+            },
+            actionCardSettings: {
+                en: {
+                    prompt: actionCardSettingsData?.prompt,
+                    playerCreativePrompt: actionCardSettingsData?.playerCreativePrompt,
+                },
+            },
+            actionCards: {
+                en: actionCardInputs?.filter(input => input.name.length > 0),
             },
         }
 
@@ -89,8 +101,14 @@ const TranslationsFormComponent = () => {
      */
     const handleJsonAdd = () => {
         try {
-            const newTranslations = JSON.parse(userJsonInput) as NewGameTranslations
-            setNewGameTranslations(newTranslations)
+            const newTranslations = JSON.parse(userJsonInput) as CombinedTranslations
+
+            setNewGameTranslations(newTranslations.game)
+            if (newTranslations.actionCardSettings && newTranslations.actionCards) {
+                setActionCardSettingsTranslations(newTranslations.actionCardSettings)
+                setActionCardTranslations(newTranslations.actionCards)
+            }
+
             setOpenModal(false)
             window.location.reload()
         } catch (error) {
@@ -300,6 +318,7 @@ const TranslationsFormComponent = () => {
                                         values={selectedAccessories}
                                         gridXs={12}
                                         gridMd={6}
+                                        noWhiteSpace={false}
                                         inputValues={
                                             newGameTranslations[language]?.accessories
                                         }
@@ -423,12 +442,17 @@ const TranslationsFormComponent = () => {
                                                 name={`${language}Prompt`}
                                                 fullWidth
                                                 required
-                                                value={newGameTranslations[language]?.prompt}
+                                                value={
+                                                    actionCardSettingsTranslations[language]
+                                                        ?.prompt
+                                                }
                                                 onChange={event =>
-                                                    setNewGameTranslations({
-                                                        ...newGameTranslations,
+                                                    setActionCardSettingsTranslations({
+                                                        ...actionCardSettingsTranslations,
                                                         [language]: {
-                                                            ...newGameTranslations[language],
+                                                            ...actionCardSettingsTranslations[
+                                                                language
+                                                            ],
                                                             prompt: event.target.value,
                                                         },
                                                     })
@@ -467,14 +491,15 @@ const TranslationsFormComponent = () => {
                                                     fullWidth
                                                     required
                                                     value={
-                                                        newGameTranslations[language]
-                                                            ?.playerCreativePrompt
+                                                        actionCardSettingsTranslations[
+                                                            language
+                                                        ]?.playerCreativePrompt
                                                     }
                                                     onChange={event =>
-                                                        setNewGameTranslations({
-                                                            ...newGameTranslations,
+                                                        setActionCardSettingsTranslations({
+                                                            ...actionCardSettingsTranslations,
                                                             [language]: {
-                                                                ...newGameTranslations[
+                                                                ...actionCardSettingsTranslations[
                                                                     language
                                                                 ],
                                                                 playerCreativePrompt:
@@ -505,20 +530,24 @@ const TranslationsFormComponent = () => {
                                         {codeToLanguage(language)} *
                                     </Typography>
                                     <TranslateStringArrayComponent
-                                        values={actionCardInputs}
+                                        values={actionCardInputs.map(card => card.name)}
                                         gridXs={12}
                                         gridSm={6}
                                         multiline={actionCardSettingsData?.allowSentence}
-                                        inputValues={
-                                            newGameTranslations[language]?.actionCardInputs
-                                        }
+                                        inputValues={actionCardTranslations[language]?.map(
+                                            card => card.name
+                                        )}
                                         setInputValues={values =>
-                                            setNewGameTranslations({
-                                                ...newGameTranslations,
-                                                [language]: {
-                                                    ...newGameTranslations[language],
-                                                    actionCardInputs: values,
-                                                },
+                                            setActionCardTranslations({
+                                                ...actionCardTranslations,
+                                                [language]: actionCardInputs.map(
+                                                    (_, index) => ({
+                                                        id: actionCardTranslations[language]?.[
+                                                            index
+                                                        ].id,
+                                                        name: values[index],
+                                                    })
+                                                ),
                                             })
                                         }
                                     />

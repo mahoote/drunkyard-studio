@@ -11,6 +11,7 @@ export type ActionCardSettingsDto = {
 }
 
 export type ActionCardSettingsInsertDto = {
+    id?: number
     game_id: number
     state_id: number
     card_limit?: number
@@ -26,6 +27,7 @@ export type ActionCardSettingsInsertDto = {
 }
 
 export type ActionCardSettingsTranslationInsertDto = {
+    id?: number
     action_card_settings_id?: number
     language: string
     prompt?: string
@@ -38,6 +40,7 @@ export type ActionCardDto = {
 }
 
 export type ActionCardTranslationInsertDto = {
+    id?: number
     action_card_id?: number
     language: string
     value: string

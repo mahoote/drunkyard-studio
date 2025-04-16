@@ -6,6 +6,7 @@ export function mapActionCardSettings(
     actionCardSettingsData: ActionCardSettings
 ): ActionCardSettingsInsertDto {
     return {
+        id: actionCardSettingsData.id,
         game_id: gameId,
         state_id: actionCardSettingsData.stateId,
         card_limit:

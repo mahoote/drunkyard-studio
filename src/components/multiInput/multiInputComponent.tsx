@@ -5,10 +5,11 @@ import TextFieldSuggestionsComponent from '../textFieldSuggestionsComponent'
 import { TextFieldSuggestion } from '../../types/textFieldSuggestion'
 import MultiInputBulkComponent from './multiInputBulkComponent'
 import { noWhiteSpaceInput } from '../../utils/inputUtils'
+import { GenericType } from '../../types/genericType'
 
 type MultiInputProps = {
-    inputs: string[]
-    setInputs: (inputs: string[] | undefined) => void
+    inputs: GenericType[]
+    setInputs: (inputs: GenericType[] | undefined) => void
     multiline?: boolean
     wordSuggestions: TextFieldSuggestion[]
     variant?: 'outlined' | 'filled'
@@ -31,23 +32,23 @@ function MultiInputComponent({
     const handleCloseBulk = () => setOpenBulk(false)
 
     if (inputs.length <= 0) {
-        setInputs([''])
+        setInputs([{ id: undefined, name: '' }])
     }
 
-    const handleInputChange = (index: number, newValue: string) => {
+    const handleInputChange = (index: number, newValue: GenericType) => {
         setInputs(inputs.map((input, i) => (i === index ? newValue : input)))
     }
 
     const addInputField = () => {
-        setInputs([...inputs, ''])
+        setInputs([...inputs, { id: undefined, name: '' }])
     }
 
     /**
      * Filters out all the non-empty inputs and adds them to the array.
      * @param bulkInputs
      */
-    const addBulkInputs = (bulkInputs: string[]) => {
-        if (inputs.length === 1 && inputs[0] === '') {
+    const addBulkInputs = (bulkInputs: GenericType[]) => {
+        if (inputs.length === 1 && inputs[0].name === '') {
             setInputs(bulkInputs)
             return
         }
@@ -58,11 +59,11 @@ function MultiInputComponent({
     }
 
     const removeEmptyInputs = () => {
-        setInputs(inputs.filter(input => input !== ''))
+        setInputs(inputs.filter(input => input.name !== ''))
     }
 
     const removeAllInputs = () => {
-        setInputs([''])
+        setInputs([{ id: undefined, name: '' }])
     }
 
     return (
@@ -70,7 +71,9 @@ function MultiInputComponent({
             <MultiInputBulkComponent
                 open={openBulk}
                 handleClose={handleCloseBulk}
-                handleAdd={addBulkInputs}
+                handleAdd={bulkInputs =>
+                    addBulkInputs(bulkInputs.map(input => ({ id: undefined, name: input })))
+                }
             />
             <Grid container spacing={2}>
                 {inputs.map((input, index) => (
@@ -81,11 +84,14 @@ function MultiInputComponent({
                             label={`Input ${index + 1}`}
                             name={`input-${index + 1}`}
                             variant={variant}
-                            value={input}
+                            value={input.name}
                             setValue={(newValue: string) => {
                                 let newInputValue = newValue
                                 if (!multiline) newInputValue = noWhiteSpaceInput(newValue)
-                                return handleInputChange(index, newInputValue)
+                                return handleInputChange(index, {
+                                    id: input.id,
+                                    name: newInputValue,
+                                })
                             }}
                             multiline={multiline}
                             required

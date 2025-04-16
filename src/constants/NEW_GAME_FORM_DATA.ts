@@ -35,7 +35,15 @@ export const initialNewGameTranslations = {
         introDescription: undefined,
         descriptions: [],
         customEndGameSentence: undefined,
-        prompt: undefined,
-        actionCardInputs: [],
     },
+}
+
+export const initialActionCardSettingsTranslations = {
+    no: {
+        prompt: undefined,
+    },
+}
+
+export const initialActionCardsTranslations = {
+    no: [],
 }

@@ -15,6 +15,7 @@ type TranslateStringArrayComponentProps = {
     gridSm?: number
     gridMd?: number
     multiline?: boolean
+    noWhiteSpace?: boolean
 }
 
 const TranslateStringArrayComponent = ({
@@ -27,6 +28,7 @@ const TranslateStringArrayComponent = ({
     gridSm,
     gridMd,
     multiline,
+    noWhiteSpace = true,
 }: TranslateStringArrayComponentProps) => {
     return (
         <Grid container spacing={2}>
@@ -65,7 +67,7 @@ const TranslateStringArrayComponent = ({
                                         value={inputValues?.[index]}
                                         setValue={value => {
                                             let newInputValue = value
-                                            if (!multiline)
+                                            if (!multiline && noWhiteSpace)
                                                 newInputValue = noWhiteSpaceInput(value)
 
                                             const newInputValues: string[] = [

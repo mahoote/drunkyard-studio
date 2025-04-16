@@ -28,9 +28,11 @@ function AdvancedSettingsFormComponent() {
 
     useEffect(() => {
         if (includesActionCard) {
-            if (!actionCardInputs || !actionCardSettingsData) {
-                setActionCardSettingsData(initialActionCardSettingsData)
+            if (!actionCardInputs) {
                 setActionCardInputs(initialActionCardInputs)
+            }
+            if (!actionCardSettingsData) {
+                setActionCardSettingsData(initialActionCardSettingsData)
             }
         } else {
             setActionCardSettingsData(undefined)

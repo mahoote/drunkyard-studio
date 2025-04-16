@@ -5,7 +5,7 @@ import {
 } from '../services/gameService'
 import { GameInsertDto, GameTranslationInsertDto } from '../types/gameDto'
 import { GenericType } from '../types/genericType'
-import { AdvancedSettings, NewGame, NewGameTranslations } from '../types/newGame'
+import { AdvancedSettings, NewGame, GameTranslations } from '../types/newGame'
 import { createAccessory } from '../services/accessoryService'
 import { removeGameOptionsLastFetched } from './storageUtils'
 import { validNaturalNumber, validString } from './inputUtils'
@@ -19,10 +19,11 @@ import { validNaturalNumber, validString } from './inputUtils'
 export async function createNewGame(
     newGameData: NewGame,
     advancedDefaultSettings: AdvancedSettings,
-    newGameTranslations: NewGameTranslations
+    newGameTranslations: GameTranslations
 ) {
     // New Game
     const gameInsertDto: GameInsertDto = {
+        id: newGameData.id,
         name: newGameData.name,
         min_players: validNaturalNumber(newGameData.minPlayers),
         max_players: validNaturalNumber(newGameData.maxPlayers),
@@ -36,21 +37,23 @@ export async function createNewGame(
     }
 
     // New Game Translations
-    const newGameTranslationInsertDtos: GameTranslationInsertDto[] = [
-        {
-            language: 'en',
-            name: newGameData.name,
-            intro_description: validString(newGameData.introDescription),
-            descriptions: getValidDescriptions(newGameData.descriptions),
-            custom_end_game_sentence: validString(
-                advancedDefaultSettings.customEndGameSentence
-            ),
-            has_winner_prompt: validString(advancedDefaultSettings.hasWinnerPrompt),
-        },
-    ]
+    const newGameTranslationInsertDtos: GameTranslationInsertDto[] = []
+
+    newGameTranslationInsertDtos.push({
+        id: newGameTranslations['en'].id,
+        language: 'en',
+        name: newGameData.name,
+        intro_description: validString(newGameData.introDescription),
+        descriptions: getValidDescriptions(newGameData.descriptions),
+        custom_end_game_sentence: validString(advancedDefaultSettings.customEndGameSentence),
+        has_winner_prompt: validString(advancedDefaultSettings.hasWinnerPrompt),
+    })
 
     Object.entries(newGameTranslations).forEach(([key, translation]) => {
+        if (key === 'en') return
+
         newGameTranslationInsertDtos.push({
+            id: translation.id,
             language: key,
             name: translation.name,
             intro_description: validString(translation.introDescription),
@@ -74,16 +77,17 @@ export async function addAccessoriesToGame(
     selectedAccessories: string[],
     accessories: GenericType[] | null,
     newGameId: number,
-    newGameTranslations: NewGameTranslations
+    newGameTranslations: GameTranslations
 ) {
     for (const accessory of selectedAccessories) {
         const index = selectedAccessories.indexOf(accessory)
 
-        let accessoryId =
-            accessories?.find(accessoryItem => accessoryItem.name === accessory)?.id ?? 0
+        let accessoryId = accessories?.find(
+            accessoryItem => accessoryItem.name === accessory
+        )?.id
 
         // Create accessory if it does not exist.
-        if (accessoryId === 0) {
+        if (!accessoryId) {
             // New Game Translations
             const accessoryTranslations: { language: string; name: string }[] = [
                 {
@@ -93,6 +97,8 @@ export async function addAccessoriesToGame(
             ]
 
             Object.entries(newGameTranslations).forEach(([key, translation]) => {
+                if (key === 'en') return
+
                 accessoryTranslations.push({
                     language: key,
                     name: translation.accessories?.[index] ?? accessory,
@@ -100,13 +106,15 @@ export async function addAccessoriesToGame(
             })
 
             const newAccessory = await createAccessory(accessoryTranslations)
-            accessoryId = newAccessory.id
+            accessoryId = newAccessory?.id
 
             // Remove the last fetched game options to force a re-fetch.
             removeGameOptionsLastFetched()
-        }
 
-        await createGameHasAccessory(newGameId, accessoryId)
+            if (accessoryId) {
+                await createGameHasAccessory(newGameId, accessoryId)
+            }
+        }
     }
 }
 
@@ -122,10 +130,9 @@ export async function addGameTypesToGame(
     newGameId: number
 ) {
     for (const gameType of selectedGameTypes) {
-        const gameTypeId =
-            gameTypes?.find(gameTypeItem => gameTypeItem.name === gameType)?.id ?? 0
+        const gameTypeId = gameTypes?.find(gameTypeItem => gameTypeItem.name === gameType)?.id
 
-        if (gameTypeId === 0) {
+        if (!gameTypeId) {
             console.error('Could not find game type:', gameType)
             throw new Error('Could not find game type.')
         }

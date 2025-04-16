@@ -1,8 +1,14 @@
 import { supabaseGame } from '../supabaseClient'
-import { GameDto, GameInsertDto, GameTranslationInsertDto } from '../types/gameDto'
+import {
+    GameDto,
+    GameInsertDto,
+    GamePreview,
+    GameTranslationInsertDto,
+} from '../types/gameDto'
 import { SupabaseResponse } from '../types/supabaseResponse'
 import { GameHasAccessoryDto } from '../types/gameHasAccessoryDto'
 import { cleanUndefined } from '../utils/objectUtils'
+import { GameResponse, GameTranslationResponse } from '../types/gameResponse'
 
 /**
  * Creates a new game.
@@ -13,7 +19,7 @@ import { cleanUndefined } from '../utils/objectUtils'
 async function createGame(game: GameInsertDto, gameTranslations: GameTranslationInsertDto[]) {
     const { data, error }: SupabaseResponse<GameDto> = await supabaseGame
         .from('game')
-        .insert([cleanUndefined(game)])
+        .upsert([cleanUndefined(game)])
         .select()
         .single()
 
@@ -55,7 +61,10 @@ async function deleteNewGame(gameId: number) {
 async function createGameHasAccessory(gameId: number, accessoryId: number) {
     const { error }: SupabaseResponse<GameHasAccessoryDto> = await supabaseGame
         .from('game_has_accessory')
-        .insert({ game_id: gameId, accessory_id: accessoryId })
+        .upsert(
+            { game_id: gameId, accessory_id: accessoryId },
+            { onConflict: 'game_id,accessory_id' }
+        )
 
     if (error) {
         throw new Error(error.message)
@@ -63,9 +72,22 @@ async function createGameHasAccessory(gameId: number, accessoryId: number) {
 }
 
 async function createGameHasGameType(gameId: number, gameTypeId: number) {
+    // First, delete any existing game type for the game.
+    const { error: deleteError } = await supabaseGame
+        .from('game_has_game_type')
+        .delete()
+        .eq('game_id', gameId)
+
+    if (deleteError) {
+        console.error('Error deleting existing game type:', deleteError.message)
+    }
+
     const { error }: SupabaseResponse<GameHasAccessoryDto> = await supabaseGame
         .from('game_has_game_type')
-        .insert({ game_id: gameId, game_type_id: gameTypeId })
+        .upsert(
+            { game_id: gameId, game_type_id: gameTypeId },
+            { onConflict: 'game_id,game_type_id' }
+        )
 
     if (error) {
         throw new Error(error.message)
@@ -75,11 +97,99 @@ async function createGameHasGameType(gameId: number, gameTypeId: number) {
 async function createGameTranslation(gameTranslation: GameTranslationInsertDto) {
     const { error }: SupabaseResponse<GameDto> = await supabaseGame
         .from('game_translation')
-        .insert([cleanUndefined(gameTranslation)])
+        .upsert([cleanUndefined(gameTranslation)])
 
     if (error) {
         throw new Error(error.message)
     }
 }
 
-export { createGame, createGameHasAccessory, createGameHasGameType, deleteNewGame }
+/**
+ * Fetches a single page of games.
+ * @param pageIndex Zero-based page index (0 = first page)
+ * @param pageSize Number of games per page (default: 100)
+ */
+async function getPreviewGamesByPage(pageIndex: number, pageSize = 100) {
+    const from = pageIndex * pageSize
+    const to = from + pageSize - 1
+
+    const { data, error }: SupabaseResponse<GamePreview[]> = await supabaseGame
+        .from('game')
+        .select(`id, name, game_translation!left (intro_description)`)
+        .order('id', { ascending: false })
+        .range(from, to)
+
+    if (error) {
+        console.error(new Error(`Error fetching games: ${error.message}`))
+        return []
+    }
+
+    if (!data) {
+        console.error(new Error('No games found'))
+        return []
+    }
+
+    return data
+}
+
+/**
+ * Fetches a game from the game table by its ID.
+ * @param gameId
+ */
+export async function getGame(gameId: number) {
+    const { data, error }: SupabaseResponse<GameResponse> = await supabaseGame
+        .from('game')
+        .select(
+            `
+    *,
+    accessories:game_has_accessory!left (
+      accessory:accessory_id (
+        id,
+        accessory_translation (
+          language,
+          name
+        )
+      )
+    ),
+    game_types:game_has_game_type!left (
+      game_type:game_type_id (
+        id,
+        name
+      )
+    )
+  `
+        )
+        .eq('id', gameId)
+        .single()
+
+    if (error) {
+        throw new Error(`Error fetching game: ${error.message}`)
+    }
+
+    return data
+}
+
+/**
+ * Fetches all the translations for a game by its ID.
+ * @param gameId
+ */
+export async function getGameTranslations(gameId: number) {
+    const { data, error }: SupabaseResponse<GameTranslationResponse[]> = await supabaseGame
+        .from('game_translation')
+        .select('*')
+        .eq('game_id', gameId)
+
+    if (error) {
+        throw new Error(`Error fetching game translations: ${error.message}`)
+    }
+
+    return data
+}
+
+export {
+    createGame,
+    createGameHasAccessory,
+    createGameHasGameType,
+    deleteNewGame,
+    getPreviewGamesByPage,
+}

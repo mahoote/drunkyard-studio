@@ -39,6 +39,37 @@ export async function getAccessories(): Promise<GenericType[]> {
 export async function createAccessory(
     accessoryTranslation: { language: string; name: string }[]
 ) {
+    // Validate that it is a new accessory.
+    const englishName = accessoryTranslation.find(
+        accessory => accessory.language === 'en'
+    )?.name
+
+    if (!englishName) {
+        throw new Error('English translation is required to check existence.')
+    }
+
+    // Check if an accessory translation with the same English name already exists
+    const {
+        data: existingTranslation,
+        error: fetchError,
+    }: SupabaseResponse<{ accessory_id: number; name: string }> = await supabaseGame
+        .from('accessory_translation')
+        .select('accessory_id, name')
+        .eq('name', englishName) // Check for the exact English name
+        .eq('language', 'en') // Ensure it is the English translation
+        .single()
+
+    if (fetchError && fetchError.code !== 'PGRST116') {
+        throw new Error(
+            `Error checking existing accessory translations: ${fetchError.message}`
+        )
+    }
+
+    // If an English translation already exists, skip the insert
+    if (existingTranslation) {
+        return null
+    }
+
     const { data, error }: SupabaseResponse<{ id: number }> = await supabaseGame
         .from('accessory')
         .insert({})

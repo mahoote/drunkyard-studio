@@ -32,7 +32,7 @@ function HeaderBarComponent({ pages }: HeaderBarProps) {
                         flexGrow: 1,
                     }}
                 >
-                    <Box display="flex">
+                    <Box display="flex" alignItems="center">
                         <Typography
                             variant="h6"
                             noWrap
@@ -62,7 +62,12 @@ function HeaderBarComponent({ pages }: HeaderBarProps) {
                                     key={index}
                                     component={Link}
                                     to={page.path}
-                                    sx={{ my: 2, color: 'white', display: 'block' }}
+                                    sx={{
+                                        my: 2,
+                                        color: 'white',
+                                        display: 'flex',
+                                    }}
+                                    startIcon={page.icon}
                                 >
                                     {page.name}
                                 </Button>

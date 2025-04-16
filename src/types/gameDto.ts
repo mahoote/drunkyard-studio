@@ -19,6 +19,7 @@ type GameDto = {
 }
 
 type GameInsertDto = {
+    id?: number
     name: string
     min_players?: number
     max_players?: number
@@ -32,6 +33,7 @@ type GameInsertDto = {
 }
 
 type GameTranslationInsertDto = {
+    id?: number
     game_id?: number
     language: string
     name: string
@@ -39,6 +41,14 @@ type GameTranslationInsertDto = {
     descriptions: string[]
     custom_end_game_sentence?: string
     has_winner_prompt?: string
+}
+
+export interface GamePreview {
+    id: number
+    name: string
+    game_translation: {
+        intro_description: string
+    }[]
 }
 
 export type { GameDto, GameInsertDto, GameTranslationInsertDto }

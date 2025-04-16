@@ -1,4 +1,7 @@
+import { GenericType } from './genericType'
+
 export type NewGame = {
+    id?: number
     activityLevel: number
     categoryId: number
     descriptions: string[]
@@ -26,6 +29,7 @@ export type CustomImage = {
 }
 
 export type ActionCardSettings = {
+    id?: number
     stateId: number
     cardLimit?: number
     cardSeconds?: number
@@ -45,18 +49,36 @@ export type WritingSettings = {
     writeSeconds: number
 }
 
-export type NewGameTranslation = {
+export type GameTranslation = {
+    id?: number
     name: string
     introDescription?: string
     descriptions: string[]
     customEndGameSentence?: string
-    prompt?: string
-    playerCreativePrompt?: string
-    actionCardInputs?: string[]
     accessories?: string[]
     hasWinnerPrompt?: string
 }
 
-export type NewGameTranslations = {
-    [key: string]: NewGameTranslation
+export interface ActionCardSettingsTranslation {
+    id?: number
+    prompt?: string
+    playerCreativePrompt?: string
+}
+
+export interface CombinedTranslations {
+    game: { [key: string]: GameTranslation }
+    actionCardSettings?: { [key: string]: ActionCardSettingsTranslation }
+    actionCards?: { [key: string]: GenericType[] | undefined }
+}
+
+export interface ActionCardTranslations {
+    [key: string]: GenericType[] | undefined
+}
+
+export type GameTranslations = {
+    [key: string]: GameTranslation
+}
+
+export interface ActionCardSettingsTranslations {
+    [key: string]: ActionCardSettingsTranslation
 }

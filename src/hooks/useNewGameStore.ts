@@ -2,6 +2,8 @@ import { create } from 'zustand'
 import { NewGameState } from '../states/newGameState'
 import {
     initialAccessoriesData,
+    initialActionCardSettingsTranslations,
+    initialActionCardsTranslations,
     initialGameTypesData,
     initialNewGameData,
     initialNewGameTranslations,
@@ -44,6 +46,14 @@ export const useNewGameStore = create<NewGameState>()(
 
             formStepIndex: 0,
             setFormStepIndex: step => set({ formStepIndex: step }),
+
+            actionCardSettingsTranslations: initialActionCardSettingsTranslations,
+            setActionCardSettingsTranslations: translations =>
+                set({ actionCardSettingsTranslations: translations }),
+
+            actionCardTranslations: initialActionCardsTranslations,
+            setActionCardTranslations: translations =>
+                set({ actionCardTranslations: translations }),
         }),
         {
             name: 'newGameStorage',

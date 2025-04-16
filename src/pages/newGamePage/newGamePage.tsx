@@ -10,6 +10,8 @@ import AdvancedSettingsFormComponent from './components/advancedSettings/advance
 import { isActionCardSettingsDataValid } from '../../utils/actionCardSettingsUtils'
 import {
     initialAccessoriesData,
+    initialActionCardSettingsTranslations,
+    initialActionCardsTranslations,
     initialGameTypesData,
     initialNewGameData,
     initialNewGameTranslations,
@@ -58,6 +60,10 @@ function NewGamePage() {
         setFormStepIndex,
         newGameTranslations,
         setWritingSettingsData,
+        setActionCardSettingsTranslations,
+        setActionCardTranslations,
+        actionCardSettingsTranslations,
+        actionCardTranslations,
     } = useNewGameStore()
 
     const { gameTypes, accessories } = useGameOptionsStore()
@@ -81,12 +87,16 @@ function NewGamePage() {
 
         // Translations
         setNewGameTranslations(initialNewGameTranslations)
+        setActionCardSettingsTranslations(initialActionCardSettingsTranslations)
+        setActionCardTranslations(initialActionCardsTranslations)
 
         if (reloadPage) window.location.reload()
     }
 
     const submitForm = async () => {
         let createdGame: GameDto | null = null
+
+        const isUpdatingGame = newGame.id !== undefined
 
         try {
             createdGame = await createNewGame(
@@ -121,8 +131,9 @@ function NewGamePage() {
             // Add advanced settings
             await createAdvancedSettingsData(
                 createdGame.id,
-                newGameTranslations,
                 advancedSettingsData,
+                actionCardSettingsTranslations,
+                actionCardTranslations,
                 actionCardSettingsData,
                 actionCardInputs
             )
@@ -144,12 +155,14 @@ function NewGamePage() {
             })
             setFormStepIndex(0)
 
-            // Clean up by deleting the created game
-            try {
-                await deleteNewGame(createdGame.id)
-            } catch (cleanupError) {
-                console.error('Failed to delete game:', cleanupError)
-                setFormStepIndex(0)
+            if (!isUpdatingGame) {
+                // Clean up by deleting the created game
+                try {
+                    await deleteNewGame(createdGame.id)
+                } catch (cleanupError) {
+                    console.error('Failed to delete game:', cleanupError)
+                    setFormStepIndex(0)
+                }
             }
         }
     }
