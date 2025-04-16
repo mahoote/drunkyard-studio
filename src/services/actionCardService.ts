@@ -41,7 +41,7 @@ export async function createActionCardSettings(
 
     const { data, error }: SupabaseResponse<ActionCardSettingsDto> = await supabaseGame
         .from('action_card_settings')
-        .insert([cleanSettings])
+        .upsert([cleanSettings])
         .select()
         .single()
 
@@ -74,7 +74,7 @@ export async function createActionCardSettingsTranslation(
 
     const { error } = await supabaseGame
         .from('action_card_settings_translation')
-        .insert([cleanSettings])
+        .upsert([cleanSettings])
 
     if (error) {
         throw new Error(error.message)
@@ -85,14 +85,16 @@ export async function createActionCardSettingsTranslation(
  * Creates an action card and adds a many-to-many relationship with the settings regarding the card.
  * @param settingsId
  * @param actionCardTranslationInsertDtos
+ * @param actionCardId
  */
 export async function createActionCard(
     settingsId: number,
-    actionCardTranslationInsertDtos: ActionCardTranslationInsertDto[]
+    actionCardTranslationInsertDtos: ActionCardTranslationInsertDto[],
+    actionCardId?: number
 ) {
     const { data, error }: SupabaseResponse<ActionCardDto> = await supabaseGame
         .from('action_card')
-        .insert([{}])
+        .upsert([cleanUndefined({ id: actionCardId })])
         .select()
         .single()
 
@@ -107,7 +109,7 @@ export async function createActionCard(
     // Add many-to-many relationship
     const { error: mtmError } = await supabaseGame
         .from('action_card_settings_has_action_card')
-        .insert([
+        .upsert([
             {
                 action_card_id: data.id,
                 action_card_settings_id: settingsId,
@@ -131,7 +133,7 @@ export async function createActionCardTranslation(
 ): Promise<void> {
     const { error } = await supabaseGame
         .from('action_card_translation')
-        .insert([actionCardTranslationInsertDto])
+        .upsert([cleanUndefined(actionCardTranslationInsertDto)])
 
     if (error) {
         throw new Error(error.message)
@@ -197,6 +199,7 @@ export async function getActionCards(settingsId: number) {
             id,
             created_at,
             action_card_translation (
+              id,
               language,
               value
             )
@@ -216,15 +219,15 @@ export async function getActionCards(settingsId: number) {
     }
 
     const actionCards = data as unknown as ActionCardResponse[]
-    const cardMap = new Map<string, string[]>()
+    const cardMap: { [key: string]: GenericType[] } = {}
 
     actionCards.map(response =>
         response.action_card.action_card_translation.map(translation => {
-            const { language, value } = translation
-            if (!cardMap.has(language)) {
-                cardMap.set(language, [])
+            const { language, value, id } = translation
+            if (!cardMap[language]) {
+                cardMap[language] = []
             }
-            cardMap.get(language)?.push(value)
+            cardMap[language].push({ id, name: value })
         })
     )
 

@@ -10,6 +10,8 @@ import AdvancedSettingsFormComponent from './components/advancedSettings/advance
 import { isActionCardSettingsDataValid } from '../../utils/actionCardSettingsUtils'
 import {
     initialAccessoriesData,
+    initialActionCardSettingsTranslations,
+    initialActionCardsTranslations,
     initialGameTypesData,
     initialNewGameData,
     initialNewGameTranslations,
@@ -58,6 +60,10 @@ function NewGamePage() {
         setFormStepIndex,
         newGameTranslations,
         setWritingSettingsData,
+        setActionCardSettingsTranslations,
+        setActionCardTranslations,
+        actionCardSettingsTranslations,
+        actionCardTranslations,
     } = useNewGameStore()
 
     const { gameTypes, accessories } = useGameOptionsStore()
@@ -81,6 +87,8 @@ function NewGamePage() {
 
         // Translations
         setNewGameTranslations(initialNewGameTranslations)
+        setActionCardSettingsTranslations(initialActionCardSettingsTranslations)
+        setActionCardTranslations(initialActionCardsTranslations)
 
         if (reloadPage) window.location.reload()
     }
@@ -121,8 +129,9 @@ function NewGamePage() {
             // Add advanced settings
             await createAdvancedSettingsData(
                 createdGame.id,
-                newGameTranslations,
                 advancedSettingsData,
+                actionCardSettingsTranslations,
+                actionCardTranslations,
                 actionCardSettingsData,
                 actionCardInputs
             )

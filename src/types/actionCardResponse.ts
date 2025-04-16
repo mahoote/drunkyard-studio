@@ -28,6 +28,7 @@ export interface ActionCardResponse {
         id: number
         created_at: string
         action_card_translation: {
+            id: number
             language: string
             value: string
         }[]

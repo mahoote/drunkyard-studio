@@ -5,7 +5,7 @@ import {
 } from '../services/gameService'
 import { GameInsertDto, GameTranslationInsertDto } from '../types/gameDto'
 import { GenericType } from '../types/genericType'
-import { AdvancedSettings, NewGame, NewGameTranslations } from '../types/newGame'
+import { AdvancedSettings, NewGame, GameTranslations } from '../types/newGame'
 import { createAccessory } from '../services/accessoryService'
 import { removeGameOptionsLastFetched } from './storageUtils'
 import { validNaturalNumber, validString } from './inputUtils'
@@ -19,10 +19,11 @@ import { validNaturalNumber, validString } from './inputUtils'
 export async function createNewGame(
     newGameData: NewGame,
     advancedDefaultSettings: AdvancedSettings,
-    newGameTranslations: NewGameTranslations
+    newGameTranslations: GameTranslations
 ) {
     // New Game
     const gameInsertDto: GameInsertDto = {
+        id: newGameData.id,
         name: newGameData.name,
         min_players: validNaturalNumber(newGameData.minPlayers),
         max_players: validNaturalNumber(newGameData.maxPlayers),
@@ -74,7 +75,7 @@ export async function addAccessoriesToGame(
     selectedAccessories: string[],
     accessories: GenericType[] | null,
     newGameId: number,
-    newGameTranslations: NewGameTranslations
+    newGameTranslations: GameTranslations
 ) {
     for (const accessory of selectedAccessories) {
         const index = selectedAccessories.indexOf(accessory)

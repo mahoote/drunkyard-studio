@@ -2,10 +2,13 @@ import {
     ActionCardSettings,
     AdvancedSettings,
     NewGame,
-    NewGameTranslations,
+    GameTranslations,
     WritingSettings,
+    ActionCardSettingsTranslations,
+    ActionCardTranslations,
 } from '../types/newGame'
 import { RefObject } from 'react'
+import { GenericType } from '../types/genericType'
 
 export interface NewGameState {
     newGame: NewGame
@@ -23,8 +26,8 @@ export interface NewGameState {
     actionCardSettingsData: ActionCardSettings | undefined
     setActionCardSettingsData: (settings: ActionCardSettings | undefined) => void
 
-    actionCardInputs: string[] | undefined
-    setActionCardInputs: (inputs: string[] | undefined) => void
+    actionCardInputs: GenericType[] | undefined
+    setActionCardInputs: (inputs: GenericType[] | undefined) => void
 
     activeFormRef: RefObject<HTMLFormElement> | null
     setActiveFormRef: (ref: RefObject<HTMLFormElement>) => void
@@ -35,8 +38,14 @@ export interface NewGameState {
     advancedSettingsData: AdvancedSettings
     setAdvancedSettingsData: (settings: AdvancedSettings) => void
 
-    newGameTranslations: NewGameTranslations
-    setNewGameTranslations: (translations: NewGameTranslations) => void
+    newGameTranslations: GameTranslations
+    setNewGameTranslations: (translations: GameTranslations) => void
+
+    actionCardSettingsTranslations: ActionCardSettingsTranslations
+    setActionCardSettingsTranslations: (translations: ActionCardSettingsTranslations) => void
+
+    actionCardTranslations: ActionCardTranslations
+    setActionCardTranslations: (translations: ActionCardTranslations) => void
 
     formStepIndex: number
     setFormStepIndex: (step: number) => void

@@ -13,7 +13,7 @@ import {
     getActionCardSettings,
     getActionCardSettingsTranslations,
 } from '../../services/actionCardService'
-import { NewGameTranslations } from '../../types/newGame'
+import { ActionCardSettingsTranslations, GameTranslations } from '../../types/newGame'
 
 export default function EditGamePage() {
     const theme = useTheme()
@@ -29,6 +29,8 @@ export default function EditGamePage() {
         setActionCardInputs,
         setNewGameTranslations,
         setFormStepIndex,
+        setActionCardSettingsTranslations,
+        setActionCardTranslations,
     } = useNewGameStore()
 
     const [games, setGames] = useState<GamePreview[]>([])
@@ -43,7 +45,7 @@ export default function EditGamePage() {
             return
         }
 
-        const newGameTranslations: NewGameTranslations = {}
+        const newGameTranslations: GameTranslations = {}
 
         const englishGameTranslation = gameTranslations.find(
             translation => translation.language === 'en'
@@ -89,6 +91,7 @@ export default function EditGamePage() {
 
         gameTranslations.forEach(translation => {
             newGameTranslations[translation.language] = {
+                id: translation.id,
                 name: translation.name,
                 introDescription: translation.intro_description,
                 descriptions: translation.descriptions,
@@ -102,6 +105,8 @@ export default function EditGamePage() {
                 hasWinnerPrompt: translation.has_winner_prompt,
             }
         })
+
+        setNewGameTranslations(newGameTranslations)
 
         if (actionCardSettings) {
             const actionCardSettingsTranslations = await getActionCardSettingsTranslations(
@@ -134,19 +139,20 @@ export default function EditGamePage() {
                 oneCardPerPlayer: actionCardSettings.one_card_per_player,
             })
 
-            setActionCardInputs(actionCardsMap.get('en'))
+            setActionCardInputs(actionCardsMap['en'])
+
+            const newSettingsTranslations: ActionCardSettingsTranslations = {}
 
             actionCardSettingsTranslations.forEach(translation => {
-                newGameTranslations[translation.language] = {
-                    ...newGameTranslations[translation.language],
+                newSettingsTranslations[translation.language] = {
                     prompt: translation?.prompt,
                     playerCreativePrompt: translation?.player_creative_prompt,
-                    actionCardInputs: actionCardsMap.get(translation.language),
                 }
             })
-        }
 
-        setNewGameTranslations(newGameTranslations)
+            setActionCardSettingsTranslations(newSettingsTranslations)
+            setActionCardTranslations(actionCardsMap)
+        }
 
         setFormStepIndex(0)
         navigate('/')

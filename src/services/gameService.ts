@@ -19,7 +19,7 @@ import { GameResponse, GameTranslationResponse } from '../types/gameResponse'
 async function createGame(game: GameInsertDto, gameTranslations: GameTranslationInsertDto[]) {
     const { data, error }: SupabaseResponse<GameDto> = await supabaseGame
         .from('game')
-        .insert([cleanUndefined(game)])
+        .upsert([cleanUndefined(game)])
         .select()
         .single()
 
@@ -61,7 +61,7 @@ async function deleteNewGame(gameId: number) {
 async function createGameHasAccessory(gameId: number, accessoryId: number) {
     const { error }: SupabaseResponse<GameHasAccessoryDto> = await supabaseGame
         .from('game_has_accessory')
-        .insert({ game_id: gameId, accessory_id: accessoryId })
+        .upsert({ game_id: gameId, accessory_id: accessoryId })
 
     if (error) {
         throw new Error(error.message)
@@ -71,7 +71,7 @@ async function createGameHasAccessory(gameId: number, accessoryId: number) {
 async function createGameHasGameType(gameId: number, gameTypeId: number) {
     const { error }: SupabaseResponse<GameHasAccessoryDto> = await supabaseGame
         .from('game_has_game_type')
-        .insert({ game_id: gameId, game_type_id: gameTypeId })
+        .upsert({ game_id: gameId, game_type_id: gameTypeId })
 
     if (error) {
         throw new Error(error.message)
@@ -81,7 +81,7 @@ async function createGameHasGameType(gameId: number, gameTypeId: number) {
 async function createGameTranslation(gameTranslation: GameTranslationInsertDto) {
     const { error }: SupabaseResponse<GameDto> = await supabaseGame
         .from('game_translation')
-        .insert([cleanUndefined(gameTranslation)])
+        .upsert([cleanUndefined(gameTranslation)])
 
     if (error) {
         throw new Error(error.message)

@@ -207,7 +207,7 @@ const AdvancedSettingsSummaryTableComponent = () => {
                                 {actionCardInputs?.map((input, index) => (
                                     <Box component="ul" key={index} px={1}>
                                         <Box component="li">
-                                            <MultilineComponent text={input} />
+                                            <MultilineComponent text={input.name} />
                                         </Box>
                                     </Box>
                                 ))}
