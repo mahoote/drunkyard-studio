@@ -96,6 +96,8 @@ function NewGamePage() {
     const submitForm = async () => {
         let createdGame: GameDto | null = null
 
+        const isUpdatingGame = newGame.id !== undefined
+
         try {
             createdGame = await createNewGame(
                 newGame,
@@ -153,12 +155,14 @@ function NewGamePage() {
             })
             setFormStepIndex(0)
 
-            // Clean up by deleting the created game
-            try {
-                await deleteNewGame(createdGame.id)
-            } catch (cleanupError) {
-                console.error('Failed to delete game:', cleanupError)
-                setFormStepIndex(0)
+            if (!isUpdatingGame) {
+                // Clean up by deleting the created game
+                try {
+                    await deleteNewGame(createdGame.id)
+                } catch (cleanupError) {
+                    console.error('Failed to delete game:', cleanupError)
+                    setFormStepIndex(0)
+                }
             }
         }
     }

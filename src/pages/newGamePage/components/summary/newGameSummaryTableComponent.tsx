@@ -117,7 +117,7 @@ const NewGameSummaryTableComponent = () => {
                     </TableCell>
                     <TableCell sx={{ verticalAlign: 'top' }}>
                         {selectedAccessories.map((accessory, index) => (
-                            <div key={index}>{accessory}</div>
+                            <div key={index}>{accessory},</div>
                         ))}
                     </TableCell>
                 </TableRow>

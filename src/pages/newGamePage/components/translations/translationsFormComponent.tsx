@@ -318,6 +318,7 @@ const TranslationsFormComponent = () => {
                                         values={selectedAccessories}
                                         gridXs={12}
                                         gridMd={6}
+                                        noWhiteSpace={false}
                                         inputValues={
                                             newGameTranslations[language]?.accessories
                                         }
@@ -539,14 +540,14 @@ const TranslationsFormComponent = () => {
                                         setInputValues={values =>
                                             setActionCardTranslations({
                                                 ...actionCardTranslations,
-                                                [language]: [
-                                                    ...(actionCardTranslations[language] ??
-                                                        []),
-                                                    ...actionCardInputs.map((card, index) => ({
-                                                        id: card.id,
+                                                [language]: actionCardInputs.map(
+                                                    (_, index) => ({
+                                                        id: actionCardTranslations[language]?.[
+                                                            index
+                                                        ].id,
                                                         name: values[index],
-                                                    })),
-                                                ],
+                                                    })
+                                                ),
                                             })
                                         }
                                     />

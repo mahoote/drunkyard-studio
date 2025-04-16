@@ -123,6 +123,7 @@ export default function EditGamePage() {
             )
 
             setActionCardSettingsData({
+                id: actionCardSettings.id,
                 stateId: actionCardSettings.state_id,
                 cardLimit: actionCardSettings.card_limit,
                 cardSeconds: actionCardSettings.card_seconds,
@@ -184,7 +185,7 @@ export default function EditGamePage() {
                     <CardContent>
                         <Typography>
                             <Typography sx={{ color: 'text.secondary' }} component="span">
-                                ({game.id}) -
+                                ({game.id})
                             </Typography>{' '}
                             {game.name}
                         </Typography>

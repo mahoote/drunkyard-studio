@@ -33,6 +33,7 @@ type GameInsertDto = {
 }
 
 type GameTranslationInsertDto = {
+    id?: number
     game_id?: number
     language: string
     name: string

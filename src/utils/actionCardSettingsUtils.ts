@@ -42,6 +42,8 @@ export async function createActionCardData(
         })
 
         Object.entries(actionCardSettingsTranslations).forEach(([key, translation]) => {
+            if (key === 'en') return
+
             settingsTranslationInsertDtos.push({
                 id: translation.id,
                 language: key,
@@ -60,6 +62,8 @@ export async function createActionCardData(
 
     // Loop through all the languages.
     for (const [key, translation] of Object.entries(actionCardTranslations)) {
+        if (key === 'en') continue
+
         // Loop through all the action card inputs and create the action cards.
         for (let i = 0; i < actionCardInputs.length; i++) {
             const input = actionCardInputs[i]

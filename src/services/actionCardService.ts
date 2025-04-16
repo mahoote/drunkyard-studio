@@ -109,12 +109,13 @@ export async function createActionCard(
     // Add many-to-many relationship
     const { error: mtmError } = await supabaseGame
         .from('action_card_settings_has_action_card')
-        .upsert([
+        .upsert(
             {
                 action_card_id: data.id,
                 action_card_settings_id: settingsId,
             },
-        ])
+            { onConflict: 'action_card_id,action_card_settings_id' }
+        )
 
     if (mtmError) {
         throw new Error(mtmError.message)
@@ -149,9 +150,10 @@ export async function getActionCardSettings(gameId: number) {
         .from('action_card_settings')
         .select('*')
         .eq('game_id', gameId)
+        .limit(1)
         .single()
 
-    if (error && error.code === 'PGRST116') {
+    if (error && error.code === 'PGRST116' && data === null) {
         return null
     } else if (error) {
         console.error(new Error(error.message))
