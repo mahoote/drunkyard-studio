@@ -65,7 +65,7 @@ const TranslationsFormComponent = () => {
                 },
             },
             actionCards: {
-                en: actionCardInputs?.filter(input => input.name.length > 0),
+                en: actionCardInputs,
             },
         }
 
@@ -106,7 +106,20 @@ const TranslationsFormComponent = () => {
             setNewGameTranslations(newTranslations.game)
             if (newTranslations.actionCardSettings && newTranslations.actionCards) {
                 setActionCardSettingsTranslations(newTranslations.actionCardSettings)
-                setActionCardTranslations(newTranslations.actionCards)
+
+                // Iterates through the original translated action cards,
+                // and sets their id on the new translated ones.
+                const actionCards = Object.fromEntries(
+                    Object.entries(newTranslations.actionCards).map(([key, translations]) => [
+                        key,
+                        translations?.map(({ name }, index) => ({
+                            id: actionCardTranslations[key]?.[index].id,
+                            name,
+                        })),
+                    ])
+                )
+
+                setActionCardTranslations(actionCards)
             }
 
             setOpenModal(false)

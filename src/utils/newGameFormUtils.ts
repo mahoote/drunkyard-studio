@@ -40,7 +40,7 @@ export async function createNewGame(
     const newGameTranslationInsertDtos: GameTranslationInsertDto[] = []
 
     newGameTranslationInsertDtos.push({
-        id: newGameTranslations['en'].id,
+        id: newGameTranslations['en']?.id,
         language: 'en',
         name: newGameData.name,
         intro_description: validString(newGameData.introDescription),
