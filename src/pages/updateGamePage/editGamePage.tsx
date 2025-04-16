@@ -14,6 +14,7 @@ import {
     getActionCardSettingsTranslations,
 } from '../../services/actionCardService'
 import { ActionCardSettingsTranslations, GameTranslations } from '../../types/newGame'
+import PageLoaderComponent from '../../components/pageLoaderComponent'
 
 export default function EditGamePage() {
     const theme = useTheme()
@@ -34,139 +35,162 @@ export default function EditGamePage() {
     } = useNewGameStore()
 
     const [games, setGames] = useState<GamePreview[]>([])
+    const [loading, setLoading] = useState<boolean>(false)
 
     const handleSelectGame = async (gameId: number) => {
-        const game = await getGame(gameId)
-        const gameTranslations = await getGameTranslations(gameId)
-        const actionCardSettings = await getActionCardSettings(gameId)
+        setLoading(true)
 
-        if (!game || !gameTranslations) {
-            console.error(new Error('Error getting game details'))
-            return
-        }
+        try {
+            const game = await getGame(gameId)
+            const gameTranslations = await getGameTranslations(gameId)
+            const actionCardSettings = await getActionCardSettings(gameId)
 
-        const newGameTranslations: GameTranslations = {}
-
-        const englishGameTranslation = gameTranslations.find(
-            translation => translation.language === 'en'
-        )
-
-        setNewGame({
-            id: game.id,
-            name: game.name,
-            gameAudienceId: game.game_audience_id,
-            activityLevel: game.activity_level,
-            categoryId: game.game_category_id,
-            drunkLevel: game.drunk_level,
-            maxPlayers: game.max_players,
-            minPlayers: game.min_players,
-            minutes: game.minutes,
-            descriptions: [],
-            introDescription: englishGameTranslation?.intro_description,
-        })
-
-        setDescriptions(englishGameTranslation?.descriptions ?? [])
-
-        setSelectedGameTypes(
-            game.game_types
-                .map(gameType => gameType.game_type?.name)
-                .filter((name): name is string => typeof name === 'string')
-        )
-
-        setSelectedAccessories(
-            game.accessories.flatMap(
-                accessory =>
-                    accessory.accessory?.accessory_translation
-                        ?.filter(t => t.language === 'en')
-                        .map(t => t.name) ?? []
-            )
-        )
-
-        setAdvancedSettingsData({
-            hasWinnerPrompt: englishGameTranslation?.has_winner_prompt,
-            hasWinner: game.has_winner,
-            customEndGameSentence: englishGameTranslation?.custom_end_game_sentence,
-            gameEndType: game.game_end_type ?? '',
-        })
-
-        gameTranslations.forEach(translation => {
-            newGameTranslations[translation.language] = {
-                id: translation.id,
-                name: translation.name,
-                introDescription: translation.intro_description,
-                descriptions: translation.descriptions,
-                accessories: game.accessories.flatMap(
-                    accessory =>
-                        accessory.accessory?.accessory_translation
-                            ?.filter(t => t.language === translation.language)
-                            .map(t => t.name) ?? []
-                ),
-                customEndGameSentence: translation.custom_end_game_sentence,
-                hasWinnerPrompt: translation.has_winner_prompt,
-            }
-        })
-
-        setNewGameTranslations(newGameTranslations)
-
-        if (actionCardSettings) {
-            const actionCardSettingsTranslations = await getActionCardSettingsTranslations(
-                actionCardSettings.id
-            )
-            const actionCardsMap = await getActionCards(actionCardSettings.id)
-
-            if (!actionCardSettingsTranslations || !actionCardsMap) {
+            if (!game || !gameTranslations) {
+                console.error(new Error('Error getting game details'))
+                setLoading(false)
                 return
             }
 
-            const englishActionCardSettingsTranslation = actionCardSettingsTranslations.find(
+            const newGameTranslations: GameTranslations = {}
+
+            const englishGameTranslation = gameTranslations.find(
                 translation => translation.language === 'en'
             )
 
-            setActionCardSettingsData({
-                id: actionCardSettings.id,
-                stateId: actionCardSettings.state_id,
-                cardLimit: actionCardSettings.card_limit,
-                cardSeconds: actionCardSettings.card_seconds,
-                isAutoNext: actionCardSettings.is_auto_next,
-                prompt: englishActionCardSettingsTranslation?.prompt,
-                isPlayerCreative: actionCardSettings.is_player_creative,
-                playerCreativePrompt:
-                    englishActionCardSettingsTranslation?.player_creative_prompt,
-                hasBuzzer: actionCardSettings.has_buzzer,
-                allowSentence: actionCardSettings.allow_sentence,
-                canRepeat: actionCardSettings.can_repeat,
-                excludePlayersAmount: actionCardSettings.exclude_players_amount,
-                cardBasedTimer: actionCardSettings.card_based_timer,
-                oneCardPerPlayer: actionCardSettings.one_card_per_player,
+            setNewGame({
+                id: game.id,
+                name: game.name,
+                gameAudienceId: game.game_audience_id,
+                activityLevel: game.activity_level,
+                categoryId: game.game_category_id,
+                drunkLevel: game.drunk_level,
+                maxPlayers: game.max_players,
+                minPlayers: game.min_players,
+                minutes: game.minutes,
+                descriptions: [],
+                introDescription: englishGameTranslation?.intro_description,
             })
 
-            setActionCardInputs(actionCardsMap['en'])
+            setDescriptions(englishGameTranslation?.descriptions ?? [])
 
-            const newSettingsTranslations: ActionCardSettingsTranslations = {}
+            setSelectedGameTypes(
+                game.game_types
+                    .map(gameType => gameType.game_type?.name)
+                    .filter((name): name is string => typeof name === 'string')
+            )
 
-            actionCardSettingsTranslations.forEach(translation => {
-                newSettingsTranslations[translation.language] = {
-                    prompt: translation?.prompt,
-                    playerCreativePrompt: translation?.player_creative_prompt,
+            setSelectedAccessories(
+                game.accessories.flatMap(
+                    accessory =>
+                        accessory.accessory?.accessory_translation
+                            ?.filter(t => t.language === 'en')
+                            .map(t => t.name) ?? []
+                )
+            )
+
+            setAdvancedSettingsData({
+                hasWinnerPrompt: englishGameTranslation?.has_winner_prompt,
+                hasWinner: game.has_winner,
+                customEndGameSentence: englishGameTranslation?.custom_end_game_sentence,
+                gameEndType: game.game_end_type ?? '',
+            })
+
+            gameTranslations.forEach(translation => {
+                newGameTranslations[translation.language] = {
+                    id: translation.id,
+                    name: translation.name,
+                    introDescription: translation.intro_description,
+                    descriptions: translation.descriptions,
+                    accessories: game.accessories.flatMap(
+                        accessory =>
+                            accessory.accessory?.accessory_translation
+                                ?.filter(t => t.language === translation.language)
+                                .map(t => t.name) ?? []
+                    ),
+                    customEndGameSentence: translation.custom_end_game_sentence,
+                    hasWinnerPrompt: translation.has_winner_prompt,
                 }
             })
 
-            setActionCardSettingsTranslations(newSettingsTranslations)
-            setActionCardTranslations(actionCardsMap)
-        }
+            setNewGameTranslations(newGameTranslations)
 
-        setFormStepIndex(0)
-        navigate('/')
+            if (actionCardSettings) {
+                const actionCardSettingsTranslations = await getActionCardSettingsTranslations(
+                    actionCardSettings.id
+                )
+                const actionCardsMap = await getActionCards(actionCardSettings.id)
+
+                if (!actionCardSettingsTranslations) {
+                    console.error(new Error('Error getting action card settings translations'))
+                    setLoading(false)
+                    return
+                }
+
+                const englishActionCardSettingsTranslation =
+                    actionCardSettingsTranslations.find(
+                        translation => translation.language === 'en'
+                    )
+
+                setActionCardSettingsData({
+                    id: actionCardSettings.id,
+                    stateId: actionCardSettings.state_id,
+                    cardLimit: actionCardSettings.card_limit,
+                    cardSeconds: actionCardSettings.card_seconds,
+                    isAutoNext: actionCardSettings.is_auto_next,
+                    prompt: englishActionCardSettingsTranslation?.prompt,
+                    isPlayerCreative: actionCardSettings.is_player_creative,
+                    playerCreativePrompt:
+                        englishActionCardSettingsTranslation?.player_creative_prompt,
+                    hasBuzzer: actionCardSettings.has_buzzer,
+                    allowSentence: actionCardSettings.allow_sentence,
+                    canRepeat: actionCardSettings.can_repeat,
+                    excludePlayersAmount: actionCardSettings.exclude_players_amount,
+                    cardBasedTimer: actionCardSettings.card_based_timer,
+                    oneCardPerPlayer: actionCardSettings.one_card_per_player,
+                })
+
+                const newSettingsTranslations: ActionCardSettingsTranslations = {}
+
+                actionCardSettingsTranslations.forEach(translation => {
+                    newSettingsTranslations[translation.language] = {
+                        prompt: translation?.prompt,
+                        playerCreativePrompt: translation?.player_creative_prompt,
+                    }
+                })
+
+                setActionCardSettingsTranslations(newSettingsTranslations)
+
+                if (actionCardsMap) {
+                    setActionCardInputs(actionCardsMap['en'])
+                    setActionCardTranslations(actionCardsMap)
+                }
+            }
+
+            setFormStepIndex(0)
+            navigate('/')
+            setLoading(false)
+        } catch (error) {
+            console.error(error)
+            setLoading(false)
+        }
     }
 
     useEffect(() => {
         const fetchGames = async () => {
+            setLoading(true)
+
             const games = await getPreviewGamesByPage(0, 100)
             setGames(games)
+
+            setLoading(false)
         }
 
         fetchGames()
     }, [])
+
+    if (loading) {
+        return <PageLoaderComponent />
+    }
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>

@@ -156,8 +156,7 @@ export async function getActionCardSettings(gameId: number) {
     if (error && error.code === 'PGRST116' && data === null) {
         return null
     } else if (error) {
-        console.error(new Error(error.message))
-        return null
+        throw new Error(error.message)
     }
 
     return data
@@ -175,13 +174,11 @@ export async function getActionCardSettingsTranslations(settingsId: number) {
             .eq('action_card_settings_id', settingsId)
 
     if (error) {
-        console.error(new Error(error.message))
-        return []
+        throw new Error(error.message)
     }
 
     if (!data) {
-        console.error(new Error('No action card settings translations found'))
-        return []
+        throw new Error('No action card settings translations found')
     }
 
     return data
@@ -211,12 +208,10 @@ export async function getActionCards(settingsId: number) {
         .eq('action_card_settings_id', settingsId)
 
     if (error) {
-        console.error(new Error(`Failed to fetch action cards: ${error.message}`))
-        return null
+        throw new Error(`Failed to fetch action cards: ${error.message}`)
     }
 
     if (!data || data.length === 0) {
-        console.error(new Error('No action cards found'))
         return null
     }
 

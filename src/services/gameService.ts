@@ -163,8 +163,7 @@ export async function getGame(gameId: number) {
         .single()
 
     if (error) {
-        console.error(new Error(`Error fetching game: ${error.message}`))
-        return null
+        throw new Error(`Error fetching game: ${error.message}`)
     }
 
     return data
@@ -181,8 +180,7 @@ export async function getGameTranslations(gameId: number) {
         .eq('game_id', gameId)
 
     if (error) {
-        console.error(new Error(`Error fetching game translations: ${error.message}`))
-        return []
+        throw new Error(`Error fetching game translations: ${error.message}`)
     }
 
     return data
