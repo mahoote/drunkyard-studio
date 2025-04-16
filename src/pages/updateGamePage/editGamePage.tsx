@@ -176,7 +176,12 @@ export default function EditGamePage() {
                     onClick={() => void handleSelectGame(game.id)}
                 >
                     <CardContent>
-                        <Typography>{game.name}</Typography>
+                        <Typography>
+                            <Typography sx={{ color: 'text.secondary' }} component="span">
+                                ({game.id}) -
+                            </Typography>{' '}
+                            {game.name}
+                        </Typography>
                         <Typography sx={{ color: 'text.secondary' }}>
                             {game.game_translation[0].intro_description}
                         </Typography>

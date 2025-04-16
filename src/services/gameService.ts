@@ -100,6 +100,7 @@ async function getPreviewGamesByPage(pageIndex: number, pageSize = 100) {
     const { data, error }: SupabaseResponse<GamePreview[]> = await supabaseGame
         .from('game')
         .select(`id, name, game_translation!left (intro_description)`)
+        .order('id', { ascending: false })
         .range(from, to)
 
     if (error) {
