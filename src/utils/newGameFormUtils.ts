@@ -39,20 +39,19 @@ export async function createNewGame(
     // New Game Translations
     const newGameTranslationInsertDtos: GameTranslationInsertDto[] = []
 
-    if (!newGameData.id) {
-        newGameTranslationInsertDtos.push({
-            language: 'en',
-            name: newGameData.name,
-            intro_description: validString(newGameData.introDescription),
-            descriptions: getValidDescriptions(newGameData.descriptions),
-            custom_end_game_sentence: validString(
-                advancedDefaultSettings.customEndGameSentence
-            ),
-            has_winner_prompt: validString(advancedDefaultSettings.hasWinnerPrompt),
-        })
-    }
+    newGameTranslationInsertDtos.push({
+        id: newGameTranslations['en'].id,
+        language: 'en',
+        name: newGameData.name,
+        intro_description: validString(newGameData.introDescription),
+        descriptions: getValidDescriptions(newGameData.descriptions),
+        custom_end_game_sentence: validString(advancedDefaultSettings.customEndGameSentence),
+        has_winner_prompt: validString(advancedDefaultSettings.hasWinnerPrompt),
+    })
 
     Object.entries(newGameTranslations).forEach(([key, translation]) => {
+        if (key === 'en') return
+
         newGameTranslationInsertDtos.push({
             id: translation.id,
             language: key,
