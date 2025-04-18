@@ -7,10 +7,8 @@ import {
 } from '../../../../utils/inputUtils'
 import ChipsAutocompleteComponent from '../../../../components/chipsAutocompleteComponent'
 import { getGameTypeCombinations } from '../../../../utils/gameTypeUtils'
-import TextFieldSuggestionsComponent from '../../../../components/textFieldSuggestionsComponent'
 import PreviewWindowComponent from './previewWindowComponent'
 import { activityLevels, drunkLevels } from '../../../../constants/NEW_GAME_FORM_DATA'
-import { actionCardSuggestions } from '../../../../constants/WORD_SUGGESTION_DATA'
 import { GenericType } from '../../../../types/genericType'
 import ErrorMessageComponent from '../../../../components/errorMessageComponent'
 import PageLoaderComponent from '../../../../components/pageLoaderComponent'
@@ -137,22 +135,6 @@ function NewGameFormComponent() {
                             </FormControl>
                         </Grid>
                     </Grid>
-
-                    <TextFieldSuggestionsComponent
-                        wordSuggestions={actionCardSuggestions}
-                        label="Intro Description"
-                        variant="filled"
-                        name="introDescription"
-                        value={newGame.introDescription}
-                        setValue={newValue =>
-                            setNewGame({
-                                ...newGame,
-                                introDescription: newValue,
-                            })
-                        }
-                        required
-                        multiline
-                    />
 
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={4}>

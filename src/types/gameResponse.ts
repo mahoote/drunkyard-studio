@@ -1,3 +1,9 @@
+export interface GameDescription {
+    text: string
+    side: 'left' | 'right'
+    pause?: boolean
+}
+
 export interface GameResponse {
     id: number
     created_at: string
@@ -37,8 +43,15 @@ export interface GameTranslationResponse {
     game_id: number
     language: string
     name: string
-    intro_description: string
-    descriptions: string[]
+    descriptions: GameDescription[]
     custom_end_game_sentence?: string
     has_winner_prompt?: string
+}
+
+export interface GamePreviewResponse {
+    id: number
+    name: string
+    game_translation: {
+        descriptions: GameDescription[]
+    }[]
 }

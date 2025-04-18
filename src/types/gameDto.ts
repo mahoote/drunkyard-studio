@@ -1,21 +1,20 @@
-import { GenericType } from './genericType'
+import { GameDescription } from './gameResponse'
 
-type GameDto = {
+type Game = {
     id: number
-    name: string
-    intro_description?: string
-    descriptions: string[]
+    created_at: string
+    deleted_at?: string
     min_players: number
     max_players?: number
-    activity_level?: number
-    drunk_level?: number
-    minutes?: number
-    player_group_type_id?: number
+    activity_level: number
+    drunk_level: number
+    minutes: number
+    game_end_type: string
+    game_category_id: number
     game_audience_id?: number
-    game_category: GenericType
-    accessories: { id: number }[]
-    game_types: { id: number }[]
-    created_at: string
+    custom_rules_image_url?: string
+    name: string
+    has_winner: boolean
 }
 
 type GameInsertDto = {
@@ -37,18 +36,9 @@ type GameTranslationInsertDto = {
     game_id?: number
     language: string
     name: string
-    intro_description?: string
-    descriptions: string[]
+    descriptions: GameDescription[]
     custom_end_game_sentence?: string
     has_winner_prompt?: string
 }
 
-export interface GamePreview {
-    id: number
-    name: string
-    game_translation: {
-        intro_description: string
-    }[]
-}
-
-export type { GameDto, GameInsertDto, GameTranslationInsertDto }
+export type { Game, GameInsertDto, GameTranslationInsertDto }

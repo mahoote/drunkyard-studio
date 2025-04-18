@@ -6,7 +6,7 @@ import NewGamePage from './pages/newGamePage/newGamePage'
 import LoginPage from './pages/loginPage/loginPage'
 import { useAuthStore } from './hooks/useAuthStore'
 import PageLoaderComponent from './components/pageLoaderComponent'
-import EditGamePage from './pages/updateGamePage/editGamePage'
+import EditGamePage from './pages/editGamePage/editGamePage'
 
 function App() {
     return (

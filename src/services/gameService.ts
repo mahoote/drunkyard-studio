@@ -1,14 +1,13 @@
 import { supabaseGame } from '../supabaseClient'
-import {
-    GameDto,
-    GameInsertDto,
-    GamePreview,
-    GameTranslationInsertDto,
-} from '../types/gameDto'
+import { Game, GameInsertDto, GameTranslationInsertDto } from '../types/gameDto'
 import { SupabaseResponse } from '../types/supabaseResponse'
 import { GameHasAccessoryDto } from '../types/gameHasAccessoryDto'
 import { cleanUndefined } from '../utils/objectUtils'
-import { GameResponse, GameTranslationResponse } from '../types/gameResponse'
+import {
+    GamePreviewResponse,
+    GameResponse,
+    GameTranslationResponse,
+} from '../types/gameResponse'
 
 /**
  * Creates a new game.
@@ -17,9 +16,9 @@ import { GameResponse, GameTranslationResponse } from '../types/gameResponse'
  * @param gameTranslations
  */
 async function createGame(game: GameInsertDto, gameTranslations: GameTranslationInsertDto[]) {
-    const { data, error }: SupabaseResponse<GameDto> = await supabaseGame
+    const { data, error }: SupabaseResponse<Game> = await supabaseGame
         .from('game')
-        .upsert([cleanUndefined(game)])
+        .upsert(cleanUndefined(game))
         .select()
         .single()
 
@@ -48,10 +47,7 @@ async function createGame(game: GameInsertDto, gameTranslations: GameTranslation
  * @param gameId
  */
 async function deleteNewGame(gameId: number) {
-    const { error }: SupabaseResponse<GameDto> = await supabaseGame
-        .from('game')
-        .delete()
-        .eq('id', gameId)
+    const { error } = await supabaseGame.from('game').delete().eq('id', gameId)
 
     if (error) {
         throw new Error(error.message)
@@ -95,9 +91,9 @@ async function createGameHasGameType(gameId: number, gameTypeId: number) {
 }
 
 async function createGameTranslation(gameTranslation: GameTranslationInsertDto) {
-    const { error }: SupabaseResponse<GameDto> = await supabaseGame
+    const { error } = await supabaseGame
         .from('game_translation')
-        .upsert([cleanUndefined(gameTranslation)])
+        .upsert(cleanUndefined(gameTranslation))
 
     if (error) {
         throw new Error(error.message)
@@ -113,9 +109,9 @@ async function getPreviewGamesByPage(pageIndex: number, pageSize = 100) {
     const from = pageIndex * pageSize
     const to = from + pageSize - 1
 
-    const { data, error }: SupabaseResponse<GamePreview[]> = await supabaseGame
+    const { data, error }: SupabaseResponse<GamePreviewResponse[]> = await supabaseGame
         .from('game')
-        .select(`id, name, game_translation!left (intro_description)`)
+        .select(`id, name, game_translation!left (descriptions)`)
         .order('id', { ascending: false })
         .range(from, to)
 

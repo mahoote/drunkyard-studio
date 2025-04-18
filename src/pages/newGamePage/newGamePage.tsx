@@ -25,7 +25,7 @@ import {
     initialActionCardInputs,
     initialActionCardSettingsData,
 } from '../../constants/ACTION_CARD_SETTINGS_DATA'
-import { GameDto } from '../../types/gameDto'
+import { Game } from '../../types/gameDto'
 import TranslationsFormComponent from './components/translations/translationsFormComponent'
 import NewGameSummaryComponent from './components/summary/newGameSummaryComponent'
 import { deleteNewGame } from '../../services/gameService'
@@ -94,7 +94,7 @@ function NewGamePage() {
     }
 
     const submitForm = async () => {
-        let createdGame: GameDto | null = null
+        let createdGame: Game | null = null
 
         const isUpdatingGame = newGame.id !== undefined
 

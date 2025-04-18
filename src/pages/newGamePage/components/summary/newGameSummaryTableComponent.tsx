@@ -2,9 +2,8 @@ import React from 'react'
 import { useNewGameStore } from '../../../../hooks/useNewGameStore'
 import { useGameOptionsStore } from '../../../../hooks/useGameOptionsStore'
 import { Box, TableBody, TableCell, TableHead, TableRow } from '@mui/material'
-import MultilineComponent from '../../../../components/multilineComponent'
 import { activityLevels, drunkLevels } from '../../../../constants/NEW_GAME_FORM_DATA'
-import { getValidDescriptions } from '../../../../utils/newGameFormUtils'
+import MultilineComponent from '../../../../components/multilineComponent'
 
 const NewGameSummaryTableComponent = () => {
     const { newGame, selectedGameTypes, selectedAccessories } = useNewGameStore()
@@ -53,26 +52,18 @@ const NewGameSummaryTableComponent = () => {
                 </TableRow>
                 <TableRow>
                     <TableCell sx={{ verticalAlign: 'top' }} scope="row">
-                        Intro Description
-                    </TableCell>
-                    <TableCell sx={{ verticalAlign: 'top' }}>
-                        <MultilineComponent text={newGame.introDescription ?? ''} />
-                    </TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell sx={{ verticalAlign: 'top' }} scope="row">
                         Descriptions
                     </TableCell>
                     <TableCell sx={{ verticalAlign: 'top' }}>
-                        {getValidDescriptions(newGame.descriptions).map(
-                            (description, index) => (
-                                <Box component="ul" key={index} px={1}>
-                                    <Box component="li">
-                                        <MultilineComponent text={description} />
-                                    </Box>
+                        {newGame.descriptions.map((description, index) => (
+                            <Box component="ul" key={index} px={1}>
+                                <Box component="li">
+                                    <MultilineComponent
+                                        text={`${description.text}\n\nside:${description.side}, pause:${!!description.pause}`}
+                                    />
                                 </Box>
-                            )
-                        )}
+                            </Box>
+                        ))}
                     </TableCell>
                 </TableRow>
                 <TableRow>

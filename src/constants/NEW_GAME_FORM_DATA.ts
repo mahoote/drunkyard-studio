@@ -7,7 +7,6 @@ export const initialNewGameData: NewGame = {
     descriptions: [],
     drunkLevel: 0,
     gameAudienceId: 0,
-    introDescription: '',
     maxPlayers: undefined,
     minPlayers: undefined,
     minutes: undefined,
