@@ -43,8 +43,7 @@ export async function createNewGame(
         id: newGameTranslations['en']?.id,
         language: 'en',
         name: newGameData.name,
-        intro_description: validString(newGameData.introDescription),
-        descriptions: getValidDescriptions(newGameData.descriptions),
+        descriptions: newGameData.descriptions,
         custom_end_game_sentence: validString(advancedDefaultSettings.customEndGameSentence),
         has_winner_prompt: validString(advancedDefaultSettings.hasWinnerPrompt),
     })
@@ -56,8 +55,7 @@ export async function createNewGame(
             id: translation.id,
             language: key,
             name: translation.name,
-            intro_description: validString(translation.introDescription),
-            descriptions: getValidDescriptions(translation.descriptions),
+            descriptions: translation.descriptions,
             custom_end_game_sentence: validString(translation.customEndGameSentence),
             has_winner_prompt: validString(translation.hasWinnerPrompt),
         })
@@ -139,12 +137,4 @@ export async function addGameTypesToGame(
 
         await createGameHasGameType(newGameId, gameTypeId)
     }
-}
-
-/**
- * Filters out empty descriptions.
- * @param descriptions
- */
-export const getValidDescriptions = (descriptions: string[]): string[] => {
-    return descriptions.filter(description => description !== '')
 }

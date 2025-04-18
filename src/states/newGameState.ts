@@ -9,13 +9,14 @@ import {
 } from '../types/newGame'
 import { RefObject } from 'react'
 import { GenericType } from '../types/genericType'
+import { GameDescription } from '../types/gameResponse'
 
 export interface NewGameState {
     newGame: NewGame
     setNewGame: (game: NewGame) => void
 
-    descriptions: string[]
-    setDescriptions: (descriptions: string[]) => void
+    descriptions: GameDescription[]
+    setDescriptions: (descriptions: GameDescription[]) => void
 
     selectedAccessories: string[]
     setSelectedAccessories: (accessories: string[]) => void

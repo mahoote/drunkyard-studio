@@ -1,16 +1,16 @@
 import { GenericType } from './genericType'
+import { GameDescription } from './gameResponse'
 
 export type NewGame = {
     id?: number
     activityLevel: number
     categoryId: number
-    descriptions: string[]
+    descriptions: GameDescription[]
     drunkLevel: number
     minPlayers?: number
     minutes?: number
     name: string
     maxPlayers?: number
-    introDescription?: string
     gameAudienceId?: number
 }
 
@@ -52,8 +52,7 @@ export type WritingSettings = {
 export type GameTranslation = {
     id?: number
     name: string
-    introDescription?: string
-    descriptions: string[]
+    descriptions: GameDescription[]
     customEndGameSentence?: string
     accessories?: string[]
     hasWinnerPrompt?: string

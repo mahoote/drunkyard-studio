@@ -5,7 +5,6 @@ import {
     getPreviewGamesByPage,
 } from '../../services/gameService'
 import { Box, Card, CardContent, Typography, useTheme } from '@mui/material'
-import { GamePreview } from '../../types/gameDto'
 import { useNewGameStore } from '../../hooks/useNewGameStore'
 import { useNavigate } from 'react-router-dom'
 import {
@@ -15,6 +14,7 @@ import {
 } from '../../services/actionCardService'
 import { ActionCardSettingsTranslations, GameTranslations } from '../../types/newGame'
 import PageLoaderComponent from '../../components/pageLoaderComponent'
+import { GamePreviewResponse } from '../../types/gameResponse'
 
 export default function EditGamePage() {
     const theme = useTheme()
@@ -34,7 +34,7 @@ export default function EditGamePage() {
         setActionCardTranslations,
     } = useNewGameStore()
 
-    const [games, setGames] = useState<GamePreview[]>([])
+    const [games, setGames] = useState<GamePreviewResponse[]>([])
     const [loading, setLoading] = useState<boolean>(false)
 
     const handleSelectGame = async (gameId: number) => {
@@ -68,7 +68,6 @@ export default function EditGamePage() {
                 minPlayers: game.min_players,
                 minutes: game.minutes,
                 descriptions: [],
-                introDescription: englishGameTranslation?.intro_description,
             })
 
             setDescriptions(englishGameTranslation?.descriptions ?? [])
@@ -99,7 +98,6 @@ export default function EditGamePage() {
                 newGameTranslations[translation.language] = {
                     id: translation.id,
                     name: translation.name,
-                    introDescription: translation.intro_description,
                     descriptions: translation.descriptions,
                     accessories: game.accessories.flatMap(
                         accessory =>
@@ -185,7 +183,7 @@ export default function EditGamePage() {
             setLoading(false)
         }
 
-        fetchGames()
+        void fetchGames()
     }, [])
 
     if (loading) {
@@ -214,7 +212,7 @@ export default function EditGamePage() {
                             {game.name}
                         </Typography>
                         <Typography sx={{ color: 'text.secondary' }}>
-                            {game.game_translation[0].intro_description}
+                            {game.game_translation[0].descriptions[0]?.text}
                         </Typography>
                     </CardContent>
                 </Card>
