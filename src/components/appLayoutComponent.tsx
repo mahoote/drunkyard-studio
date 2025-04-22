@@ -26,7 +26,7 @@ function AppLayoutComponent() {
         <div>
             <AppAlertComponent />
             <HeaderBarComponent pages={pages} />
-            <Container sx={{ my: 2 }}>
+            <Container sx={{ my: 2, px: { xs: 2, sm: 4, lg: 0 } }} disableGutters>
                 <Outlet />
             </Container>
         </div>

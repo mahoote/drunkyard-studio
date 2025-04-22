@@ -7,14 +7,32 @@ import {
     ToggleButtonGroup,
     Typography,
 } from '@mui/material'
-import { Add, Delete } from '@mui/icons-material'
+import { Add, Delete, MoveDown, MoveUp } from '@mui/icons-material'
 import TextFieldSuggestionsComponent from '../../../../components/textFieldSuggestionsComponent'
 import { actionCardSuggestions } from '../../../../constants/WORD_SUGGESTION_DATA'
 import { useNewGameStore } from '../../../../hooks/useNewGameStore'
 import { GameDescription } from '../../../../types/gameResponse'
 
+interface MoveButtonsProps {
+    onUp: () => void
+    onDown: () => void
+}
+
 interface DeleteButtonProps {
     onClick: () => void
+}
+
+function MoveButtonsComponent({ onUp, onDown }: MoveButtonsProps) {
+    return (
+        <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center">
+            <IconButton aria-label="delete" sx={{ width: 34, height: 34 }} onClick={onUp}>
+                <MoveUp fontSize="small" />
+            </IconButton>
+            <IconButton aria-label="delete" sx={{ width: 34, height: 34 }} onClick={onDown}>
+                <MoveDown fontSize="small" />
+            </IconButton>
+        </Box>
+    )
 }
 
 function DeleteButtonComponent({ onClick }: DeleteButtonProps) {
@@ -47,6 +65,25 @@ export default function PreviewWindowComponent() {
     const handleAddDescription = () => {
         setDescriptions([...descriptions, { text: '', side: 'left', pause: false }])
     }
+
+    const moveDescription = (from: number, to: number) => {
+        if (to < 0 || to >= descriptions.length) return
+
+        const updatedGameTranslations = Object.fromEntries(
+            Object.entries(gameTranslations).map(([lang, translation]) => {
+                const desc = [...translation.descriptions]
+                const [moved] = desc.splice(from, 1)
+                desc.splice(to, 0, moved)
+                return [lang, { ...translation, descriptions: desc }]
+            })
+        )
+
+        setGameTranslations(updatedGameTranslations)
+    }
+
+    const handleMoveMessageUp = (index: number) => moveDescription(index, index - 1)
+
+    const handleMoveMessageDown = (index: number) => moveDescription(index, index + 1)
 
     /**
      * Loops through all the languages and filters out the description index selected.
@@ -132,6 +169,12 @@ export default function PreviewWindowComponent() {
                                     required
                                     fullWidth
                                 />
+                                <Box sx={{ display: { xs: 'flex', lg: 'none' } }}>
+                                    <MoveButtonsComponent
+                                        onUp={() => handleMoveMessageUp(index)}
+                                        onDown={() => handleMoveMessageDown(index)}
+                                    />
+                                </Box>
                             </Box>
                             <Box display="flex" gap={2}>
                                 <ToggleButtonGroup
@@ -168,6 +211,12 @@ export default function PreviewWindowComponent() {
                                         onClick={() => handleRemoveDescription(index)}
                                     />
                                 </Box>
+                            </Box>
+                            <Box sx={{ display: { xs: 'none', lg: 'flex' } }}>
+                                <MoveButtonsComponent
+                                    onUp={() => handleMoveMessageUp(index)}
+                                    onDown={() => handleMoveMessageDown(index)}
+                                />
                             </Box>
                         </Box>
                     ))}
