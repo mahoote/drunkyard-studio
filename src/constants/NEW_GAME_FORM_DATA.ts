@@ -1,16 +1,12 @@
 import { GenericType } from '../types/genericType'
-import { NewGame } from '../types/newGame'
+import { GameTranslations, NewGame } from '../types/newGame'
+import { ActionCardSettingsTranslations, ActionCardTranslations } from '../types/actionCard'
 
 export const initialNewGameData: NewGame = {
     activityLevel: 0,
     categoryId: 1,
-    descriptions: [],
     drunkLevel: 0,
     gameAudienceId: 0,
-    maxPlayers: undefined,
-    minPlayers: undefined,
-    minutes: undefined,
-    name: '',
 }
 
 export const initialAccessoriesData: string[] = []
@@ -28,21 +24,23 @@ export const activityLevels: GenericType[] = [
     { id: 2, name: 'High' },
 ]
 
-export const initialNewGameTranslations = {
+export const initialGameTranslations: GameTranslations = {
+    en: {
+        name: '',
+        descriptions: [],
+    },
     no: {
         name: '',
-        introDescription: undefined,
         descriptions: [],
-        customEndGameSentence: undefined,
     },
 }
 
-export const initialActionCardSettingsTranslations = {
-    no: {
-        prompt: undefined,
-    },
+export const initialActionCardSettingsTranslations: ActionCardSettingsTranslations = {
+    en: {},
+    no: {},
 }
 
-export const initialActionCardsTranslations = {
+export const initialActionCardsTranslations: ActionCardTranslations = {
+    en: [],
     no: [],
 }

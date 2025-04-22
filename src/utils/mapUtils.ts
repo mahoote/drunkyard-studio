@@ -1,5 +1,6 @@
 import { ActionCardSettingsInsertDto } from '../types/actionCardDto'
-import { ActionCardSettings } from '../types/newGame'
+
+import { ActionCardSettings } from '../types/actionCard'
 
 export function mapActionCardSettings(
     gameId: number,

@@ -1,25 +1,25 @@
+import { AdvancedSettings, NewGame, GameTranslations, WritingSettings } from '../types/newGame'
+import { RefObject } from 'react'
+import { GameDescription } from '../types/gameResponse'
+import { GameLanguage } from '../types/language'
 import {
     ActionCardSettings,
-    AdvancedSettings,
-    NewGame,
-    GameTranslations,
-    WritingSettings,
     ActionCardSettingsTranslations,
+    ActionCardTranslation,
     ActionCardTranslations,
-} from '../types/newGame'
-import { RefObject } from 'react'
-import { GenericType } from '../types/genericType'
-import { GameDescription } from '../types/gameResponse'
+} from '../types/actionCard'
 
 export interface NewGameState {
+    resetStore: () => void
+
     newGame: NewGame
     setNewGame: (game: NewGame) => void
 
-    descriptions: GameDescription[]
-    setDescriptions: (descriptions: GameDescription[]) => void
+    gameTranslations: GameTranslations
+    setGameTranslations: (translations: GameTranslations) => void
 
-    selectedAccessories: string[]
-    setSelectedAccessories: (accessories: string[]) => void
+    setDescriptions: (descriptions: GameDescription[], language?: GameLanguage) => void
+    setSelectedAccessories: (accessories: string[], language?: GameLanguage) => void
 
     selectedGameTypes: string[]
     setSelectedGameTypes: (gameTypes: string[]) => void
@@ -27,8 +27,19 @@ export interface NewGameState {
     actionCardSettingsData: ActionCardSettings | undefined
     setActionCardSettingsData: (settings: ActionCardSettings | undefined) => void
 
-    actionCardInputs: GenericType[] | undefined
-    setActionCardInputs: (inputs: GenericType[] | undefined) => void
+    actionCardSettingsTranslations: ActionCardSettingsTranslations
+    setActionCardSettingsTranslations: (translations: ActionCardSettingsTranslations) => void
+
+    actionCardTranslations: ActionCardTranslations
+    setActionCardTranslations: (translations: ActionCardTranslations) => void
+
+    setActionCards: (
+        inputs: ActionCardTranslation[] | undefined,
+        language?: GameLanguage
+    ) => void
+
+    deletedActionCards: number[] | undefined
+    setDeletedActionCards: (deleted: number[] | undefined) => void
 
     activeFormRef: RefObject<HTMLFormElement> | null
     setActiveFormRef: (ref: RefObject<HTMLFormElement>) => void
@@ -38,15 +49,6 @@ export interface NewGameState {
 
     advancedSettingsData: AdvancedSettings
     setAdvancedSettingsData: (settings: AdvancedSettings) => void
-
-    newGameTranslations: GameTranslations
-    setNewGameTranslations: (translations: GameTranslations) => void
-
-    actionCardSettingsTranslations: ActionCardSettingsTranslations
-    setActionCardSettingsTranslations: (translations: ActionCardSettingsTranslations) => void
-
-    actionCardTranslations: ActionCardTranslations
-    setActionCardTranslations: (translations: ActionCardTranslations) => void
 
     formStepIndex: number
     setFormStepIndex: (step: number) => void

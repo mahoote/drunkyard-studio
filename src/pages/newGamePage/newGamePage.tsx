@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import {
     addAccessoriesToGame,
     addGameTypesToGame,
@@ -8,29 +8,17 @@ import NewGameFormComponent from './components/newGame/newGameFormComponent'
 import LinearStepperComponent from '../../components/linearStepperComponent'
 import AdvancedSettingsFormComponent from './components/advancedSettings/advancedSettingsFormComponent'
 import { isActionCardSettingsDataValid } from '../../utils/actionCardSettingsUtils'
-import {
-    initialAccessoriesData,
-    initialActionCardSettingsTranslations,
-    initialActionCardsTranslations,
-    initialGameTypesData,
-    initialNewGameData,
-    initialNewGameTranslations,
-} from '../../constants/NEW_GAME_FORM_DATA'
+
 import { useNewGameStore } from '../../hooks/useNewGameStore'
 import { useGameOptionsStore } from '../../hooks/useGameOptionsStore'
 import { Box, IconButton, Tooltip } from '@mui/material'
 import { RestartAlt } from '@mui/icons-material'
-import { initialAdvancedSettingsData } from '../../constants/ADVANCED_SETTINGS_DATA'
-import {
-    initialActionCardInputs,
-    initialActionCardSettingsData,
-} from '../../constants/ACTION_CARD_SETTINGS_DATA'
+
 import { Game } from '../../types/gameDto'
 import TranslationsFormComponent from './components/translations/translationsFormComponent'
 import NewGameSummaryComponent from './components/summary/newGameSummaryComponent'
 import { deleteNewGame } from '../../services/gameService'
 import { createAdvancedSettingsData } from '../../utils/advancedSettingsUtils'
-import { initialWritingSettingsData } from '../../constants/WRITING_SETTINGS_DATA'
 import { useAlertStore } from '../../hooks/useAlertStore'
 
 /**
@@ -40,30 +28,18 @@ import { useAlertStore } from '../../hooks/useAlertStore'
  */
 function NewGamePage() {
     const {
+        resetStore,
         newGame,
-        setNewGame,
-        selectedAccessories,
-        setDescriptions,
-        descriptions,
+        gameTranslations,
         selectedGameTypes,
-        setSelectedGameTypes,
-        setSelectedAccessories,
         actionCardSettingsData,
-        setActionCardSettingsData,
-        actionCardInputs,
         activeFormRef,
         advancedSettingsData,
-        setAdvancedSettingsData,
-        setActionCardInputs,
-        setNewGameTranslations,
         formStepIndex,
         setFormStepIndex,
-        newGameTranslations,
-        setWritingSettingsData,
-        setActionCardSettingsTranslations,
-        setActionCardTranslations,
         actionCardSettingsTranslations,
         actionCardTranslations,
+        deletedActionCards,
     } = useNewGameStore()
 
     const { gameTypes, accessories } = useGameOptionsStore()
@@ -71,25 +47,7 @@ function NewGamePage() {
     const { setAlert } = useAlertStore()
 
     const handleResetForm = (reloadPage: boolean = true) => {
-        // Default settings
-        setFormStepIndex(0)
-
-        setNewGame(initialNewGameData)
-        setDescriptions(initialNewGameData.descriptions)
-        setSelectedGameTypes(initialGameTypesData)
-        setSelectedAccessories(initialAccessoriesData)
-
-        // Advanced settings
-        setAdvancedSettingsData(initialAdvancedSettingsData)
-        setActionCardSettingsData(initialActionCardSettingsData)
-        setActionCardInputs(initialActionCardInputs)
-        setWritingSettingsData(initialWritingSettingsData)
-
-        // Translations
-        setNewGameTranslations(initialNewGameTranslations)
-        setActionCardSettingsTranslations(initialActionCardSettingsTranslations)
-        setActionCardTranslations(initialActionCardsTranslations)
-
+        resetStore()
         if (reloadPage) window.location.reload()
     }
 
@@ -99,11 +57,7 @@ function NewGamePage() {
         const isUpdatingGame = newGame.id !== undefined
 
         try {
-            createdGame = await createNewGame(
-                newGame,
-                advancedSettingsData,
-                newGameTranslations
-            )
+            createdGame = await createNewGame(newGame, advancedSettingsData, gameTranslations)
         } catch (error) {
             console.error('Submit form:', error)
             setAlert({
@@ -120,12 +74,7 @@ function NewGamePage() {
 
         try {
             // Add accessories and game types
-            await addAccessoriesToGame(
-                selectedAccessories,
-                accessories,
-                createdGame.id,
-                newGameTranslations
-            )
+            await addAccessoriesToGame(accessories, createdGame.id, gameTranslations)
             await addGameTypesToGame(selectedGameTypes, gameTypes, createdGame.id)
 
             // Add advanced settings
@@ -135,7 +84,7 @@ function NewGamePage() {
                 actionCardSettingsTranslations,
                 actionCardTranslations,
                 actionCardSettingsData,
-                actionCardInputs
+                deletedActionCards
             )
 
             setAlert({
@@ -167,13 +116,6 @@ function NewGamePage() {
         }
     }
 
-    useEffect(() => {
-        setNewGame({
-            ...newGame,
-            descriptions: descriptions,
-        })
-    }, [setNewGame, descriptions])
-
     return (
         <Box>
             <Box display="flex" justifyContent="center" mb={1}>
@@ -195,7 +137,7 @@ function NewGamePage() {
                         customValidation: () =>
                             isActionCardSettingsDataValid(
                                 actionCardSettingsData,
-                                actionCardInputs
+                                actionCardTranslations.en
                             ),
                     },
                     {

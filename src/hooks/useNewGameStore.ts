@@ -1,12 +1,11 @@
 import { create } from 'zustand'
 import { NewGameState } from '../states/newGameState'
 import {
-    initialAccessoriesData,
     initialActionCardSettingsTranslations,
     initialActionCardsTranslations,
     initialGameTypesData,
     initialNewGameData,
-    initialNewGameTranslations,
+    initialGameTranslations,
 } from '../constants/NEW_GAME_FORM_DATA'
 import { initialAdvancedSettingsData } from '../constants/ADVANCED_SETTINGS_DATA'
 import { persist } from 'zustand/middleware'
@@ -17,11 +16,32 @@ export const useNewGameStore = create<NewGameState>()(
             newGame: initialNewGameData,
             setNewGame: game => set({ newGame: game }),
 
-            descriptions: initialNewGameData.descriptions,
-            setDescriptions: descriptions => set({ descriptions }),
+            gameTranslations: initialGameTranslations,
+            setGameTranslations: translations => set({ gameTranslations: translations }),
 
-            selectedAccessories: initialAccessoriesData,
-            setSelectedAccessories: accessories => set({ selectedAccessories: accessories }),
+            setDescriptions: (descriptions, language = 'en') => {
+                set(state => ({
+                    gameTranslations: {
+                        ...state.gameTranslations,
+                        [language]: {
+                            ...state.gameTranslations.en,
+                            descriptions,
+                        },
+                    },
+                }))
+            },
+
+            setSelectedAccessories: (accessories, language = 'en') => {
+                set(state => ({
+                    gameTranslations: {
+                        ...state.gameTranslations,
+                        [language]: {
+                            ...state.gameTranslations.en,
+                            accessories,
+                        },
+                    },
+                }))
+            },
 
             selectedGameTypes: initialGameTypesData,
             setSelectedGameTypes: gameTypes => set({ selectedGameTypes: gameTypes }),
@@ -29,8 +49,25 @@ export const useNewGameStore = create<NewGameState>()(
             actionCardSettingsData: undefined,
             setActionCardSettingsData: settings => set({ actionCardSettingsData: settings }),
 
-            actionCardInputs: undefined,
-            setActionCardInputs: inputs => set({ actionCardInputs: inputs }),
+            actionCardSettingsTranslations: initialActionCardSettingsTranslations,
+            setActionCardSettingsTranslations: translations =>
+                set({ actionCardSettingsTranslations: translations }),
+
+            actionCardTranslations: initialActionCardsTranslations,
+            setActionCardTranslations: translations =>
+                set({ actionCardTranslations: translations }),
+
+            setActionCards: (actionCards, language = 'en') => {
+                set(state => ({
+                    actionCardTranslations: {
+                        ...state.actionCardTranslations,
+                        [language]: actionCards,
+                    },
+                }))
+            },
+
+            deletedActionCards: undefined,
+            setDeletedActionCards: deleted => set({ deletedActionCards: deleted }),
 
             activeFormRef: null,
             setActiveFormRef: ref => set({ activeFormRef: ref }),
@@ -41,19 +78,24 @@ export const useNewGameStore = create<NewGameState>()(
             advancedSettingsData: initialAdvancedSettingsData,
             setAdvancedSettingsData: settings => set({ advancedSettingsData: settings }),
 
-            newGameTranslations: initialNewGameTranslations,
-            setNewGameTranslations: translations => set({ newGameTranslations: translations }),
-
             formStepIndex: 0,
             setFormStepIndex: step => set({ formStepIndex: step }),
 
-            actionCardSettingsTranslations: initialActionCardSettingsTranslations,
-            setActionCardSettingsTranslations: translations =>
-                set({ actionCardSettingsTranslations: translations }),
-
-            actionCardTranslations: initialActionCardsTranslations,
-            setActionCardTranslations: translations =>
-                set({ actionCardTranslations: translations }),
+            resetStore: () => {
+                set({
+                    newGame: initialNewGameData,
+                    gameTranslations: initialGameTranslations,
+                    selectedGameTypes: initialGameTypesData,
+                    actionCardSettingsData: undefined,
+                    actionCardSettingsTranslations: initialActionCardSettingsTranslations,
+                    actionCardTranslations: initialActionCardsTranslations,
+                    deletedActionCards: undefined,
+                    activeFormRef: null,
+                    writingSettingsData: undefined,
+                    advancedSettingsData: initialAdvancedSettingsData,
+                    formStepIndex: 0,
+                })
+            },
         }),
         {
             name: 'newGameStorage',

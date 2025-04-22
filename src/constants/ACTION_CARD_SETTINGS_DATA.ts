@@ -1,9 +1,8 @@
-import { ActionCardSettings } from '../types/newGame'
-import { GenericType } from '../types/genericType'
+import { ActionCardSettings, ActionCardTranslation } from '../types/actionCard'
 
 export const initialActionCardSettingsData: ActionCardSettings = {
     stateId: 1,
     allowSentence: true,
 }
 
-export const initialActionCardInputs: GenericType[] = []
+export const initialActionCardInputs: ActionCardTranslation[] = []

@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react'
 import { Box, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import {
+    handleGameTranslationChange,
     handleNumberChange,
     handleSelectChange,
-    handleTextChange,
 } from '../../../../utils/inputUtils'
 import ChipsAutocompleteComponent from '../../../../components/chipsAutocompleteComponent'
 import { getGameTypeCombinations } from '../../../../utils/gameTypeUtils'
@@ -19,16 +19,19 @@ function NewGameFormComponent() {
     const {
         newGame,
         setNewGame,
-        selectedAccessories,
         setSelectedAccessories,
         selectedGameTypes,
         setSelectedGameTypes,
         activeFormRef,
         setActiveFormRef,
+        setGameTranslations,
+        gameTranslations,
     } = useNewGameStore()
 
     const { fetchApi, loading, error, gameCategories, gameTypes, accessories, gameAudience } =
         useGameOptionsStore()
+
+    const gameName = gameTranslations.en.name
 
     // Set active form ref if it doesn't exist
     const formRef = useRef(null)
@@ -60,9 +63,13 @@ function NewGameFormComponent() {
                                 label="Name"
                                 variant="filled"
                                 name="name"
-                                value={newGame.name}
+                                value={gameName}
                                 onChange={event =>
-                                    handleTextChange(event, newGame, setNewGame)
+                                    handleGameTranslationChange(
+                                        event,
+                                        gameTranslations,
+                                        setGameTranslations
+                                    )
                                 }
                                 required
                                 fullWidth
@@ -221,7 +228,7 @@ function NewGameFormComponent() {
 
                     <ChipsAutocompleteComponent
                         predefinedValues={accessories?.map(accessory => accessory.name) ?? []}
-                        selectedValues={selectedAccessories}
+                        selectedValues={gameTranslations.en.accessories ?? []}
                         setSelectedValues={setSelectedAccessories}
                         label="Accessories"
                         freeSolo={true}
@@ -229,7 +236,7 @@ function NewGameFormComponent() {
                 </Box>
             </Grid>
             <Grid item xs={12} md={6}>
-                <PreviewWindowComponent name={newGame.name} />
+                <PreviewWindowComponent />
             </Grid>
         </Grid>
     )
