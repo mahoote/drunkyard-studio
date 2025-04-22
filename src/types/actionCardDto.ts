@@ -44,4 +44,5 @@ export type ActionCardTranslationInsertDto = {
     action_card_id?: number
     language: string
     value: string
+    deleted?: boolean
 }

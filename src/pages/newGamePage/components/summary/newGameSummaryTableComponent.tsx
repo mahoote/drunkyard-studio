@@ -6,9 +6,13 @@ import { activityLevels, drunkLevels } from '../../../../constants/NEW_GAME_FORM
 import MultilineComponent from '../../../../components/multilineComponent'
 
 const NewGameSummaryTableComponent = () => {
-    const { newGame, selectedGameTypes, selectedAccessories } = useNewGameStore()
+    const { newGame, selectedGameTypes, gameTranslations } = useNewGameStore()
 
     const { gameCategories, gameAudience } = useGameOptionsStore()
+
+    const name = gameTranslations.en.name
+    const descriptions = gameTranslations.en.descriptions
+    const accessories = gameTranslations.en.accessories
 
     return (
         <>
@@ -24,7 +28,7 @@ const NewGameSummaryTableComponent = () => {
                     <TableCell sx={{ verticalAlign: 'top' }} scope="row">
                         Name
                     </TableCell>
-                    <TableCell sx={{ verticalAlign: 'top' }}>{newGame.name}</TableCell>
+                    <TableCell sx={{ verticalAlign: 'top' }}>{name}</TableCell>
                 </TableRow>
                 <TableRow>
                     <TableCell sx={{ verticalAlign: 'top' }} scope="row">
@@ -55,7 +59,7 @@ const NewGameSummaryTableComponent = () => {
                         Descriptions
                     </TableCell>
                     <TableCell sx={{ verticalAlign: 'top' }}>
-                        {newGame.descriptions.map((description, index) => (
+                        {descriptions.map((description, index) => (
                             <Box component="ul" key={index} px={1}>
                                 <Box component="li">
                                     <MultilineComponent
@@ -107,7 +111,7 @@ const NewGameSummaryTableComponent = () => {
                         Accessories
                     </TableCell>
                     <TableCell sx={{ verticalAlign: 'top' }}>
-                        {selectedAccessories.map((accessory, index) => (
+                        {accessories?.map((accessory, index) => (
                             <div key={index}>{accessory},</div>
                         ))}
                     </TableCell>

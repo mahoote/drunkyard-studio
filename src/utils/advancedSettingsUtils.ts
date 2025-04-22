@@ -1,13 +1,12 @@
+import { AdvancedSettings } from '../types/newGame'
+import { createActionCardData } from './actionCardSettingsUtils'
+import { uploadImageFile } from '../services/imageService'
+import { base64ToFile } from './fileUtils'
 import {
     ActionCardSettings,
     ActionCardSettingsTranslations,
     ActionCardTranslations,
-    AdvancedSettings,
-} from '../types/newGame'
-import { createActionCardData } from './actionCardSettingsUtils'
-import { uploadImageFile } from '../services/imageService'
-import { base64ToFile } from './fileUtils'
-import { GenericType } from '../types/genericType'
+} from '../types/actionCard'
 
 /**
  * Creates the advanced settings data based on what the user has input.
@@ -16,7 +15,7 @@ import { GenericType } from '../types/genericType'
  * @param actionCardSettingsTranslations
  * @param actionCardTranslations
  * @param actionCardSettingsData
- * @param actionCardInputs
+ * @param deletedActionCards
  */
 export async function createAdvancedSettingsData(
     gameId: number,
@@ -24,7 +23,7 @@ export async function createAdvancedSettingsData(
     actionCardSettingsTranslations: ActionCardSettingsTranslations,
     actionCardTranslations: ActionCardTranslations,
     actionCardSettingsData?: ActionCardSettings,
-    actionCardInputs?: GenericType[]
+    deletedActionCards?: number[]
 ) {
     if (advancedSettingsData.customRulesImage) {
         const imageFile = base64ToFile(
@@ -35,13 +34,13 @@ export async function createAdvancedSettingsData(
         await uploadImageFile(imageFile, 'custom-rules-images', 'game', gameId)
     }
 
-    if (actionCardSettingsData && actionCardInputs) {
+    if (actionCardSettingsData) {
         await createActionCardData(
             gameId,
             actionCardSettingsData,
-            actionCardInputs,
             actionCardSettingsTranslations,
-            actionCardTranslations
+            actionCardTranslations,
+            deletedActionCards
         )
     }
 }

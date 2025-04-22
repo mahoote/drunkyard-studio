@@ -18,13 +18,13 @@ import {
     handleSelectChange,
     handleTextChange,
 } from '../../../../utils/inputUtils'
-import MultiInputComponent from '../../../../components/multiInput/multiInputComponent'
 import TextFieldSuggestionsComponent from '../../../../components/textFieldSuggestionsComponent'
 import { actionCardSuggestions } from '../../../../constants/WORD_SUGGESTION_DATA'
 import ErrorMessageComponent from '../../../../components/errorMessageComponent'
 import PageLoaderComponent from '../../../../components/pageLoaderComponent'
 import { useNewGameStore } from '../../../../hooks/useNewGameStore'
 import { useActionCardStore } from '../../../../hooks/useActionCardStore'
+import ActionCardsInputComponent from '../../../../components/actionCardsInputComponent'
 
 /**
  * All the different settings to add to a game with "Action Card" game type.
@@ -34,8 +34,9 @@ function ActionCardSettingsComponent() {
     const {
         actionCardSettingsData,
         setActionCardSettingsData,
-        actionCardInputs,
-        setActionCardInputs,
+        actionCardSettingsTranslations,
+        setActionCardSettingsTranslations,
+        actionCardTranslations,
     } = useNewGameStore()
 
     const { actionCardStates, loading, error, fetchApi } = useActionCardStore()
@@ -44,7 +45,7 @@ function ActionCardSettingsComponent() {
         fetchApi()
     }, [fetchApi])
 
-    if (!actionCardInputs || !actionCardSettingsData) {
+    if (!actionCardTranslations.en || !actionCardSettingsData) {
         return (
             <>
                 <Box my={3}>
@@ -177,11 +178,14 @@ function ActionCardSettingsComponent() {
                                 variant="outlined"
                                 name="prompt"
                                 fullWidth
-                                value={actionCardSettingsData.prompt}
+                                value={actionCardSettingsTranslations.en.prompt}
                                 setValue={newValue =>
-                                    setActionCardSettingsData({
-                                        ...actionCardSettingsData,
-                                        prompt: newValue,
+                                    setActionCardSettingsTranslations({
+                                        ...actionCardSettingsTranslations,
+                                        en: {
+                                            ...actionCardSettingsTranslations.en,
+                                            prompt: newValue,
+                                        },
                                     })
                                 }
                             />
@@ -202,11 +206,16 @@ function ActionCardSettingsComponent() {
                                     multiline
                                     fullWidth
                                     required
-                                    value={actionCardSettingsData.playerCreativePrompt}
+                                    value={
+                                        actionCardSettingsTranslations.en.playerCreativePrompt
+                                    }
                                     setValue={newValue =>
-                                        setActionCardSettingsData({
-                                            ...actionCardSettingsData,
-                                            playerCreativePrompt: newValue,
+                                        setActionCardSettingsTranslations({
+                                            ...actionCardSettingsTranslations,
+                                            en: {
+                                                ...actionCardSettingsTranslations.en,
+                                                playerCreativePrompt: newValue,
+                                            },
                                         })
                                     }
                                 />
@@ -376,13 +385,7 @@ function ActionCardSettingsComponent() {
                     </Grid>
                 </Grid>
                 <Typography>Cards</Typography>
-                <MultiInputComponent
-                    wordSuggestions={actionCardSuggestions}
-                    multiline={actionCardSettingsData.allowSentence}
-                    inputs={actionCardInputs}
-                    setInputs={setActionCardInputs}
-                    variant="filled"
-                />
+                <ActionCardsInputComponent />
             </Box>
         </>
     )

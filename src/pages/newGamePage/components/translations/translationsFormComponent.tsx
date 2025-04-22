@@ -11,17 +11,14 @@ import AppModalComponent from '../../../../components/appModalComponent'
 import { generateTranslationPrompt } from '../../../../utils/prompts'
 import { useAlertStore } from '../../../../hooks/useAlertStore'
 import { codeToLanguage } from '../../../../utils/languageUtils'
+import { ActionCardTranslation } from '../../../../types/actionCard'
 
 const TranslationsFormComponent = () => {
     const {
-        newGame,
-        advancedSettingsData,
         actionCardSettingsData,
-        actionCardInputs,
         activeFormRef,
-        newGameTranslations,
-        setNewGameTranslations,
-        selectedAccessories,
+        gameTranslations,
+        setGameTranslations,
         actionCardSettingsTranslations,
         actionCardTranslations,
         setActionCardSettingsTranslations,
@@ -29,6 +26,14 @@ const TranslationsFormComponent = () => {
     } = useNewGameStore()
 
     const { setAlert } = useAlertStore()
+
+    const descriptions = gameTranslations.en.descriptions
+    const accessories = gameTranslations.en.accessories
+    const customEndGameSentence = gameTranslations.en.customEndGameSentence
+    const hasWinnerPrompt = gameTranslations.en.hasWinnerPrompt
+    const actionCardPrompt = actionCardSettingsTranslations.en.prompt
+    const playerCreativePrompt = actionCardSettingsTranslations.en.playerCreativePrompt
+    const actionCardsEn = actionCardTranslations.en
 
     const languages = ['no']
 
@@ -47,22 +52,13 @@ const TranslationsFormComponent = () => {
     const handleCopyFromEnglish = async () => {
         const englishTranslations: CombinedTranslations = {
             game: {
-                en: {
-                    name: newGame.name,
-                    descriptions: newGame.descriptions,
-                    customEndGameSentence: advancedSettingsData.customEndGameSentence,
-                    accessories: selectedAccessories ?? undefined,
-                    hasWinnerPrompt: advancedSettingsData.hasWinnerPrompt,
-                },
+                en: gameTranslations.en,
             },
             actionCardSettings: {
-                en: {
-                    prompt: actionCardSettingsData?.prompt,
-                    playerCreativePrompt: actionCardSettingsData?.playerCreativePrompt,
-                },
+                en: actionCardSettingsTranslations.en,
             },
             actionCards: {
-                en: actionCardInputs,
+                en: actionCardsEn,
             },
         }
 
@@ -100,27 +96,39 @@ const TranslationsFormComponent = () => {
         try {
             const newTranslations = JSON.parse(userJsonInput) as CombinedTranslations
 
-            setNewGameTranslations(newTranslations.game)
+            setGameTranslations({ ...newTranslations.game, en: gameTranslations.en })
             if (
                 actionCardSettingsData &&
                 newTranslations.actionCardSettings &&
                 newTranslations.actionCards
             ) {
-                setActionCardSettingsTranslations(newTranslations.actionCardSettings)
+                setActionCardSettingsTranslations({
+                    ...newTranslations.actionCardSettings,
+                    en: actionCardSettingsTranslations.en,
+                })
 
                 // Iterates through the original translated action cards,
                 // and sets their id on the new translated ones.
-                const actionCards = Object.fromEntries(
-                    Object.entries(newTranslations.actionCards).map(([key, translations]) => [
-                        key,
-                        translations?.map(({ name }, index) => ({
-                            id: actionCardTranslations[key]?.[index].id,
-                            name,
-                        })),
-                    ])
-                )
+                const actionCards: { [k: string]: ActionCardTranslation[] | undefined } =
+                    Object.fromEntries(
+                        Object.entries(newTranslations.actionCards).map(
+                            ([key, translations]) => [
+                                key,
+                                translations?.map(
+                                    ({ id, value, actionCardId }, index) =>
+                                        ({
+                                            id: actionCardTranslations[key]?.[index]?.id ?? id,
+                                            value,
+                                            actionCardId:
+                                                actionCardTranslations[key]?.[index]
+                                                    ?.actionCardId ?? actionCardId,
+                                        }) as ActionCardTranslation
+                                ),
+                            ]
+                        )
+                    )
 
-                setActionCardTranslations(actionCards)
+                setActionCardTranslations({ ...actionCards, en: actionCardsEn })
             }
 
             setOpenModal(false)
@@ -137,10 +145,10 @@ const TranslationsFormComponent = () => {
 
     useEffect(() => {
         const hasPromptToTranslate =
-            !!actionCardSettingsData?.prompt || !!actionCardSettingsData?.isPlayerCreative
+            !!actionCardPrompt || !!actionCardSettingsData?.isPlayerCreative
 
         setPromptToTranslate(hasPromptToTranslate)
-    }, [actionCardSettingsData?.prompt, actionCardSettingsData?.isPlayerCreative])
+    }, [actionCardPrompt, actionCardSettingsData?.isPlayerCreative])
 
     return (
         <Box>
@@ -217,7 +225,7 @@ const TranslationsFormComponent = () => {
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                             <div>
                                 <h3>Name</h3>
-                                <div>{newGame.name}</div>
+                                <div>{gameTranslations.en.name}</div>
                             </div>
                             {languages.map(language => (
                                 <TextField
@@ -227,12 +235,12 @@ const TranslationsFormComponent = () => {
                                     name={`${language}Name`}
                                     required
                                     fullWidth
-                                    value={newGameTranslations[language]?.name}
+                                    value={gameTranslations[language]?.name}
                                     onChange={event =>
-                                        setNewGameTranslations({
-                                            ...newGameTranslations,
+                                        setGameTranslations({
+                                            ...gameTranslations,
                                             [language]: {
-                                                ...newGameTranslations[language],
+                                                ...gameTranslations[language],
                                                 name: event.target.value,
                                             },
                                         })
@@ -256,26 +264,24 @@ const TranslationsFormComponent = () => {
                                 {codeToLanguage(language)} *
                             </Typography>
                             <TranslateStringArrayComponent
-                                values={newGame.descriptions.map(
-                                    description => description.text
-                                )}
+                                values={descriptions.map(description => description.text)}
                                 minRows={2}
                                 minHeight="6rem"
                                 gridXs={12}
                                 gridMd={6}
                                 multiline={true}
-                                inputValues={newGameTranslations[language]?.descriptions.map(
+                                inputValues={gameTranslations[language]?.descriptions.map(
                                     description => description.text
                                 )}
                                 setInputValues={values =>
-                                    setNewGameTranslations({
-                                        ...newGameTranslations,
+                                    setGameTranslations({
+                                        ...gameTranslations,
                                         [language]: {
-                                            ...newGameTranslations[language],
+                                            ...gameTranslations[language],
                                             descriptions: values.map((value, index) => ({
                                                 text: value,
-                                                side: newGame.descriptions[index].side,
-                                                pause: newGame.descriptions[index].pause,
+                                                side: descriptions[index].side,
+                                                pause: descriptions[index].pause,
                                             })),
                                         },
                                     })
@@ -286,7 +292,7 @@ const TranslationsFormComponent = () => {
                 </Box>
                 <Divider />
 
-                {selectedAccessories.length > 0 && (
+                {accessories && accessories.length > 0 && (
                     <>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                             <h3>Accessories</h3>
@@ -299,18 +305,16 @@ const TranslationsFormComponent = () => {
                                         {codeToLanguage(language)} *
                                     </Typography>
                                     <TranslateStringArrayComponent
-                                        values={selectedAccessories}
+                                        values={accessories}
                                         gridXs={12}
                                         gridMd={6}
                                         noWhiteSpace={false}
-                                        inputValues={
-                                            newGameTranslations[language]?.accessories
-                                        }
+                                        inputValues={gameTranslations[language]?.accessories}
                                         setInputValues={values =>
-                                            setNewGameTranslations({
-                                                ...newGameTranslations,
+                                            setGameTranslations({
+                                                ...gameTranslations,
                                                 [language]: {
-                                                    ...newGameTranslations[language],
+                                                    ...gameTranslations[language],
                                                     accessories: values,
                                                 },
                                             })
@@ -323,14 +327,12 @@ const TranslationsFormComponent = () => {
                     </>
                 )}
 
-                {advancedSettingsData.customEndGameSentence && (
+                {customEndGameSentence && (
                     <>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                             <div>
                                 <h3>Custom 'How to End the Game' Sentence</h3>
-                                <MultilineComponent
-                                    text={advancedSettingsData.customEndGameSentence}
-                                />
+                                <MultilineComponent text={customEndGameSentence} />
                             </div>
                             {languages.map(language => (
                                 <TextField
@@ -341,14 +343,12 @@ const TranslationsFormComponent = () => {
                                     fullWidth
                                     multiline
                                     required
-                                    value={
-                                        newGameTranslations[language]?.customEndGameSentence
-                                    }
+                                    value={gameTranslations[language]?.customEndGameSentence}
                                     onChange={event =>
-                                        setNewGameTranslations({
-                                            ...newGameTranslations,
+                                        setGameTranslations({
+                                            ...gameTranslations,
                                             [language]: {
-                                                ...newGameTranslations[language],
+                                                ...gameTranslations[language],
                                                 customEndGameSentence: event.target.value,
                                             },
                                         })
@@ -360,14 +360,12 @@ const TranslationsFormComponent = () => {
                     </>
                 )}
 
-                {advancedSettingsData.hasWinnerPrompt && (
+                {hasWinnerPrompt && (
                     <>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                             <div>
                                 <h3>Has Winner Prompt</h3>
-                                <MultilineComponent
-                                    text={advancedSettingsData.hasWinnerPrompt}
-                                />
+                                <MultilineComponent text={hasWinnerPrompt} />
                             </div>
                             {languages.map(language => (
                                 <TextField
@@ -378,12 +376,12 @@ const TranslationsFormComponent = () => {
                                     fullWidth
                                     multiline
                                     required
-                                    value={newGameTranslations[language]?.hasWinnerPrompt}
+                                    value={gameTranslations[language]?.hasWinnerPrompt}
                                     onChange={event =>
-                                        setNewGameTranslations({
-                                            ...newGameTranslations,
+                                        setGameTranslations({
+                                            ...gameTranslations,
                                             [language]: {
-                                                ...newGameTranslations[language],
+                                                ...gameTranslations[language],
                                                 hasWinnerPrompt: event.target.value,
                                             },
                                         })
@@ -402,7 +400,7 @@ const TranslationsFormComponent = () => {
                 {promptToTranslate && (
                     <>
                         <Grid container spacing={2}>
-                            {actionCardSettingsData?.prompt && (
+                            {actionCardPrompt && (
                                 <Grid item xs={12} md={6}>
                                     <Box
                                         sx={{
@@ -413,9 +411,7 @@ const TranslationsFormComponent = () => {
                                     >
                                         <div>
                                             <h3>Prompt</h3>
-                                            <MultilineComponent
-                                                text={actionCardSettingsData.prompt}
-                                            />
+                                            <MultilineComponent text={actionCardPrompt} />
                                         </div>
                                         {languages.map(language => (
                                             <TextFieldSuggestionsComponent
@@ -447,7 +443,7 @@ const TranslationsFormComponent = () => {
                                 </Grid>
                             )}
                             {actionCardSettingsData?.isPlayerCreative &&
-                                actionCardSettingsData?.playerCreativePrompt && (
+                                playerCreativePrompt && (
                                     <Grid item xs={12} md={6}>
                                         <Box
                                             sx={{
@@ -459,9 +455,7 @@ const TranslationsFormComponent = () => {
                                             <div>
                                                 <h3>Player Creative Prompt</h3>
                                                 <MultilineComponent
-                                                    text={
-                                                        actionCardSettingsData.playerCreativePrompt
-                                                    }
+                                                    text={playerCreativePrompt}
                                                 />
                                             </div>
                                             {languages.map(language => (
@@ -501,7 +495,7 @@ const TranslationsFormComponent = () => {
                     </>
                 )}
 
-                {actionCardInputs && (
+                {actionCardsEn && (
                     <>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                             <h3>Action Cards</h3>
@@ -514,24 +508,26 @@ const TranslationsFormComponent = () => {
                                         {codeToLanguage(language)} *
                                     </Typography>
                                     <TranslateStringArrayComponent
-                                        values={actionCardInputs.map(card => card.name)}
+                                        values={actionCardsEn.map(card => card.value)}
                                         gridXs={12}
                                         gridSm={6}
                                         multiline={actionCardSettingsData?.allowSentence}
                                         inputValues={actionCardTranslations[language]?.map(
-                                            card => card.name
+                                            card => card.value
                                         )}
                                         setInputValues={values =>
                                             setActionCardTranslations({
                                                 ...actionCardTranslations,
-                                                [language]: actionCardInputs.map(
-                                                    (_, index) => ({
-                                                        id: actionCardTranslations[language]?.[
+                                                [language]: actionCardsEn.map((_, index) => ({
+                                                    id: actionCardTranslations[language]?.[
+                                                        index
+                                                    ]?.id,
+                                                    value: values[index],
+                                                    actionCardId:
+                                                        actionCardTranslations[language]?.[
                                                             index
-                                                        ].id,
-                                                        name: values[index],
-                                                    })
-                                                ),
+                                                        ]?.actionCardId,
+                                                })),
                                             })
                                         }
                                     />

@@ -96,6 +96,20 @@ export async function createAccessory(
 }
 
 /**
+ * Removes all rows in the game_has_accessory table for a specific game.
+ */
+export async function removeAllGameAccessories(gameId: number) {
+    const { error } = await supabaseGame
+        .from('game_has_accessory')
+        .delete()
+        .eq('game_id', gameId)
+
+    if (error) {
+        throw new Error(error.message)
+    }
+}
+
+/**
  * Takes the accessory id and accessory translation and creates a row in the accessory_translation table.
  * @param data
  * @param accessory

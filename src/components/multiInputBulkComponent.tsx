@@ -1,7 +1,7 @@
 import { Box, Button, TextField } from '@mui/material'
 import React, { useState } from 'react'
 import { Add } from '@mui/icons-material'
-import AppModalComponent from '../appModalComponent'
+import AppModalComponent from './appModalComponent'
 
 type MultiInputBulkProps = {
     open: boolean

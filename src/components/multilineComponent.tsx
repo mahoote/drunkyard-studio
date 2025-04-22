@@ -8,7 +8,7 @@ const MultilineComponent = ({ text }: MultilineComponentProps) => {
     return (
         <div
             dangerouslySetInnerHTML={{
-                __html: text.replace(/\n/g, '<br>'),
+                __html: text?.replace(/\n/g, '<br>'),
             }}
         />
     )

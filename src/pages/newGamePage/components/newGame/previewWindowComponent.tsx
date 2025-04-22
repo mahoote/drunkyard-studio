@@ -13,10 +13,6 @@ import { actionCardSuggestions } from '../../../../constants/WORD_SUGGESTION_DAT
 import { useNewGameStore } from '../../../../hooks/useNewGameStore'
 import { GameDescription } from '../../../../types/gameResponse'
 
-type PreviewWindowProps = {
-    name: string
-}
-
 interface DeleteButtonProps {
     onClick: () => void
 }
@@ -31,8 +27,11 @@ function DeleteButtonComponent({ onClick }: DeleteButtonProps) {
     )
 }
 
-function PreviewWindowComponent({ name }: PreviewWindowProps) {
-    const { descriptions, setDescriptions } = useNewGameStore()
+export default function PreviewWindowComponent() {
+    const { gameTranslations, setDescriptions, setGameTranslations } = useNewGameStore()
+
+    const gameName = gameTranslations.en.name
+    const descriptions = gameTranslations.en.descriptions
 
     /**
      * Updates a given description in the descriptions array.
@@ -49,9 +48,22 @@ function PreviewWindowComponent({ name }: PreviewWindowProps) {
         setDescriptions([...descriptions, { text: '', side: 'left', pause: false }])
     }
 
+    /**
+     * Loops through all the languages and filters out the description index selected.
+     * @param index
+     */
     const handleRemoveDescription = (index: number) => {
-        const updatedDescriptions = descriptions.filter((_, i) => i !== index)
-        setDescriptions(updatedDescriptions)
+        const updatedGameTranslations = Object.fromEntries(
+            Object.entries(gameTranslations).map(([key, translation]) => [
+                key,
+                {
+                    ...translation,
+                    descriptions: translation.descriptions.filter((_, i) => i !== index),
+                },
+            ])
+        )
+
+        setGameTranslations(updatedGameTranslations)
     }
 
     /**
@@ -83,7 +95,7 @@ function PreviewWindowComponent({ name }: PreviewWindowProps) {
                 padding={2}
             >
                 <Typography variant="h6" component="div" textAlign="center" marginY={3}>
-                    {name === '' ? 'Game Name' : name}
+                    {gameName === '' ? 'Game Name' : gameName}
                 </Typography>
                 <Box
                     display="flex"
@@ -171,5 +183,3 @@ function PreviewWindowComponent({ name }: PreviewWindowProps) {
         </Box>
     )
 }
-
-export default PreviewWindowComponent

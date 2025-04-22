@@ -12,23 +12,25 @@ import {
     getActionCardSettings,
     getActionCardSettingsTranslations,
 } from '../../services/actionCardService'
-import { ActionCardSettingsTranslations, GameTranslations } from '../../types/newGame'
+import { GameTranslations } from '../../types/newGame'
 import PageLoaderComponent from '../../components/pageLoaderComponent'
 import { GamePreviewResponse } from '../../types/gameResponse'
+import { ActionCardSettingsTranslations } from '../../types/actionCard'
 
 export default function EditGamePage() {
     const theme = useTheme()
     const navigate = useNavigate()
 
     const {
+        resetStore,
         setNewGame,
         setDescriptions,
         setAdvancedSettingsData,
         setActionCardSettingsData,
         setSelectedGameTypes,
         setSelectedAccessories,
-        setActionCardInputs,
-        setNewGameTranslations,
+        setActionCards,
+        setGameTranslations,
         setFormStepIndex,
         setActionCardSettingsTranslations,
         setActionCardTranslations,
@@ -39,6 +41,8 @@ export default function EditGamePage() {
 
     const handleSelectGame = async (gameId: number) => {
         setLoading(true)
+
+        resetStore()
 
         try {
             const game = await getGame(gameId)
@@ -59,7 +63,6 @@ export default function EditGamePage() {
 
             setNewGame({
                 id: game.id,
-                name: game.name,
                 gameAudienceId: game.game_audience_id,
                 activityLevel: game.activity_level,
                 categoryId: game.game_category_id,
@@ -67,7 +70,6 @@ export default function EditGamePage() {
                 maxPlayers: game.max_players,
                 minPlayers: game.min_players,
                 minutes: game.minutes,
-                descriptions: [],
             })
 
             setDescriptions(englishGameTranslation?.descriptions ?? [])
@@ -88,9 +90,7 @@ export default function EditGamePage() {
             )
 
             setAdvancedSettingsData({
-                hasWinnerPrompt: englishGameTranslation?.has_winner_prompt,
                 hasWinner: game.has_winner,
-                customEndGameSentence: englishGameTranslation?.custom_end_game_sentence,
                 gameEndType: game.game_end_type ?? '',
             })
 
@@ -110,7 +110,7 @@ export default function EditGamePage() {
                 }
             })
 
-            setNewGameTranslations(newGameTranslations)
+            setGameTranslations(newGameTranslations)
 
             if (actionCardSettings) {
                 const actionCardSettingsTranslations = await getActionCardSettingsTranslations(
@@ -124,21 +124,13 @@ export default function EditGamePage() {
                     return
                 }
 
-                const englishActionCardSettingsTranslation =
-                    actionCardSettingsTranslations.find(
-                        translation => translation.language === 'en'
-                    )
-
                 setActionCardSettingsData({
                     id: actionCardSettings.id,
                     stateId: actionCardSettings.state_id,
                     cardLimit: actionCardSettings.card_limit,
                     cardSeconds: actionCardSettings.card_seconds,
                     isAutoNext: actionCardSettings.is_auto_next,
-                    prompt: englishActionCardSettingsTranslation?.prompt,
                     isPlayerCreative: actionCardSettings.is_player_creative,
-                    playerCreativePrompt:
-                        englishActionCardSettingsTranslation?.player_creative_prompt,
                     hasBuzzer: actionCardSettings.has_buzzer,
                     allowSentence: actionCardSettings.allow_sentence,
                     canRepeat: actionCardSettings.can_repeat,
@@ -159,7 +151,7 @@ export default function EditGamePage() {
                 setActionCardSettingsTranslations(newSettingsTranslations)
 
                 if (actionCardsMap) {
-                    setActionCardInputs(actionCardsMap['en'])
+                    setActionCards(actionCardsMap['en'])
                     setActionCardTranslations(actionCardsMap)
                 }
             }

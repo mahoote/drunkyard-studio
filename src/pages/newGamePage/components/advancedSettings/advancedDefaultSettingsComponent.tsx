@@ -11,13 +11,18 @@ import {
     Tooltip,
 } from '@mui/material'
 import React from 'react'
-import { handleInputChange, handleTextChange } from '../../../../utils/inputUtils'
+import { handleInputChange, handleGameTranslationChange } from '../../../../utils/inputUtils'
 import ErrorMessageComponent from '../../../../components/errorMessageComponent'
 import { useNewGameStore } from '../../../../hooks/useNewGameStore'
 import ImageUploaderComponent from '../../../../components/imageUploaderComponent'
 
 function AdvancedDefaultSettingsComponent() {
-    const { advancedSettingsData, setAdvancedSettingsData } = useNewGameStore()
+    const {
+        advancedSettingsData,
+        setAdvancedSettingsData,
+        gameTranslations,
+        setGameTranslations,
+    } = useNewGameStore()
 
     if (!advancedSettingsData) {
         return <ErrorMessageComponent message="Could not load the Advanced Default settings" />
@@ -34,12 +39,12 @@ function AdvancedDefaultSettingsComponent() {
                                 variant="outlined"
                                 name="customEndGameSentence"
                                 fullWidth
-                                value={advancedSettingsData.customEndGameSentence}
+                                value={gameTranslations.en.customEndGameSentence}
                                 onChange={event =>
-                                    handleTextChange(
+                                    handleGameTranslationChange(
                                         event,
-                                        advancedSettingsData,
-                                        setAdvancedSettingsData
+                                        gameTranslations,
+                                        setGameTranslations
                                     )
                                 }
                                 multiline
@@ -114,12 +119,12 @@ function AdvancedDefaultSettingsComponent() {
                                     variant="filled"
                                     name="hasWinnerPrompt"
                                     fullWidth
-                                    value={advancedSettingsData.hasWinnerPrompt}
+                                    value={gameTranslations.en.hasWinnerPrompt}
                                     onChange={event =>
-                                        handleTextChange(
+                                        handleGameTranslationChange(
                                             event,
-                                            advancedSettingsData,
-                                            setAdvancedSettingsData
+                                            gameTranslations,
+                                            setGameTranslations
                                         )
                                     }
                                     multiline

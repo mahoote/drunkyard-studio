@@ -14,6 +14,7 @@ import {
     ActionCardSettingsResponse,
     ActionCardSettingsTranslationResponse,
 } from '../types/actionCardResponse'
+import { ActionCardTranslation } from '../types/actionCard'
 
 /**
  * Fetches all the action card states.
@@ -92,6 +93,7 @@ export async function createActionCard(
     actionCardTranslationInsertDtos: ActionCardTranslationInsertDto[],
     actionCardId?: number
 ) {
+    // If not deleted, upsert the action card.
     const { data, error }: SupabaseResponse<ActionCardDto> = await supabaseGame
         .from('action_card')
         .upsert([cleanUndefined({ id: actionCardId })])
@@ -216,7 +218,7 @@ export async function getActionCards(settingsId: number) {
     }
 
     const actionCards = data as unknown as ActionCardResponse[]
-    const cardMap: { [key: string]: GenericType[] } = {}
+    const cardMap: { [key: string]: ActionCardTranslation[] } = {}
 
     actionCards.map(response =>
         response.action_card.action_card_translation.map(translation => {
@@ -224,9 +226,21 @@ export async function getActionCards(settingsId: number) {
             if (!cardMap[language]) {
                 cardMap[language] = []
             }
-            cardMap[language].push({ id, name: value })
+            cardMap[language].push({ id, value, actionCardId: response.action_card.id })
         })
     )
 
     return cardMap
+}
+
+/**
+ * Deletes all the action cards for a specific list of IDs.
+ * @param ids
+ */
+export async function deleteActionCards(ids: number[]) {
+    const { error } = await supabaseGame.from('action_card').delete().in('id', ids)
+
+    if (error) {
+        throw new Error(`Failed to delete action cards: ${error.message}`)
+    }
 }

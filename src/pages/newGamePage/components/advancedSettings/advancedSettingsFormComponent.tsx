@@ -15,8 +15,7 @@ function AdvancedSettingsFormComponent() {
     const {
         selectedGameTypes,
         activeFormRef,
-        actionCardInputs,
-        setActionCardInputs,
+        setActionCards,
         actionCardSettingsData,
         setActionCardSettingsData,
         writingSettingsData,
@@ -28,15 +27,13 @@ function AdvancedSettingsFormComponent() {
 
     useEffect(() => {
         if (includesActionCard) {
-            if (!actionCardInputs) {
-                setActionCardInputs(initialActionCardInputs)
-            }
             if (!actionCardSettingsData) {
                 setActionCardSettingsData(initialActionCardSettingsData)
+                setActionCards(initialActionCardInputs)
             }
         } else {
             setActionCardSettingsData(undefined)
-            setActionCardInputs(undefined)
+            setActionCards(undefined)
         }
 
         if (includesWriting) {

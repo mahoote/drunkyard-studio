@@ -1,5 +1,31 @@
 import React, { ChangeEvent } from 'react'
 import { SelectChangeEvent } from '@mui/material'
+import { GameLanguage } from '../types/language'
+import { GameTranslations } from '../types/newGame'
+
+/**
+ * Updates a nested object property in the form data
+ * @param event
+ * @param formData
+ * @param setFormData
+ * @param language
+ */
+export const handleGameTranslationChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    formData: GameTranslations,
+    setFormData: React.Dispatch<React.SetStateAction<GameTranslations>>,
+    language: GameLanguage = 'en'
+) => {
+    const { name, value } = event.target
+
+    setFormData({
+        ...formData,
+        [language]: {
+            ...formData[language],
+            [name]: value,
+        },
+    })
+}
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 

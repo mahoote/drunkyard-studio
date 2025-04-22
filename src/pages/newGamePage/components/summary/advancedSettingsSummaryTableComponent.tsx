@@ -8,11 +8,19 @@ const AdvancedSettingsSummaryTableComponent = () => {
     const {
         advancedSettingsData,
         actionCardSettingsData,
-        actionCardInputs,
         writingSettingsData,
+        gameTranslations,
+        actionCardSettingsTranslations,
+        actionCardTranslations,
     } = useNewGameStore()
 
     const { actionCardStates } = useActionCardStore()
+
+    const customEndGameSentence = gameTranslations.en.customEndGameSentence ?? ''
+    const hasWinnerPrompt = gameTranslations.en.hasWinnerPrompt
+    const playerCreativePrompt = actionCardSettingsTranslations.en.playerCreativePrompt ?? ''
+    const actionCardPrompt = actionCardSettingsTranslations.en.prompt
+    const actionCards = actionCardTranslations.en
 
     return (
         <>
@@ -35,9 +43,7 @@ const AdvancedSettingsSummaryTableComponent = () => {
                         Custom End Game Sentence
                     </TableCell>
                     <TableCell>
-                        <MultilineComponent
-                            text={advancedSettingsData.customEndGameSentence ?? ''}
-                        />
+                        <MultilineComponent text={customEndGameSentence} />
                     </TableCell>
                 </TableRow>
                 <TableRow>
@@ -51,7 +57,7 @@ const AdvancedSettingsSummaryTableComponent = () => {
                         <TableCell sx={{ verticalAlign: 'top' }} scope="row">
                             Has Winner Prompt
                         </TableCell>
-                        <TableCell>{advancedSettingsData.hasWinnerPrompt}</TableCell>
+                        <TableCell>{hasWinnerPrompt}</TableCell>
                     </TableRow>
                 )}
                 <TableRow>
@@ -185,11 +191,7 @@ const AdvancedSettingsSummaryTableComponent = () => {
                                     Player Creative Prompt
                                 </TableCell>
                                 <TableCell>
-                                    <MultilineComponent
-                                        text={
-                                            actionCardSettingsData.playerCreativePrompt ?? ''
-                                        }
-                                    />
+                                    <MultilineComponent text={playerCreativePrompt} />
                                 </TableCell>
                             </TableRow>
                         )}
@@ -197,17 +199,17 @@ const AdvancedSettingsSummaryTableComponent = () => {
                             <TableCell sx={{ verticalAlign: 'top' }} scope="row">
                                 Action Card Prompt
                             </TableCell>
-                            <TableCell>{actionCardSettingsData.prompt}</TableCell>
+                            <TableCell>{actionCardPrompt}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell sx={{ verticalAlign: 'top' }} scope="row">
                                 Action Cards
                             </TableCell>
                             <TableCell>
-                                {actionCardInputs?.map((input, index) => (
+                                {actionCards?.map((input, index) => (
                                     <Box component="ul" key={index} px={1}>
                                         <Box component="li">
-                                            <MultilineComponent text={input.name} />
+                                            <MultilineComponent text={input.value} />
                                         </Box>
                                     </Box>
                                 ))}
