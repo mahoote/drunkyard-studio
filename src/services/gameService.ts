@@ -112,6 +112,7 @@ async function getPreviewGamesByPage(pageIndex: number, pageSize = 100) {
     const { data, error }: SupabaseResponse<GamePreviewResponse[]> = await supabaseGame
         .from('game')
         .select(`id, name, game_translation!left (descriptions)`)
+        .eq('game_translation.language', 'en')
         .order('id', { ascending: false })
         .range(from, to)
 
