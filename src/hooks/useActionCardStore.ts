@@ -17,7 +17,7 @@ export const useActionCardStore = create<ActionCardState>()(
             setActionCardStates: actionCardStates => set({ actionCardStates }),
 
             fetchApi: () => {
-                if (canFetchData('gameOptionsLastFetched')) {
+                if (canFetchData('actionCardOptionsLastFetched')) {
                     set({ loading: true })
                     void fetchActionCardOptionsAsync(set).finally(() => {
                         set({ loading: false })
