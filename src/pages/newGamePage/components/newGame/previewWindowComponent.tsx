@@ -25,10 +25,10 @@ interface DeleteButtonProps {
 function MoveButtonsComponent({ onUp, onDown }: MoveButtonsProps) {
     return (
         <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center">
-            <IconButton aria-label="delete" sx={{ width: 34, height: 34 }} onClick={onUp}>
+            <IconButton aria-label="move-up" sx={{ width: 34, height: 34 }} onClick={onUp}>
                 <MoveUp fontSize="small" />
             </IconButton>
-            <IconButton aria-label="delete" sx={{ width: 34, height: 34 }} onClick={onDown}>
+            <IconButton aria-label="move-down" sx={{ width: 34, height: 34 }} onClick={onDown}>
                 <MoveDown fontSize="small" />
             </IconButton>
         </Box>
