@@ -6,22 +6,22 @@ import { GameTranslations } from '../types/newGame'
 /**
  * Updates a nested object property in the form data
  * @param event
- * @param formData
- * @param setFormData
+ * @param gameTranslations
+ * @param setGameTranslations
  * @param language
  */
 export const handleGameTranslationChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    formData: GameTranslations,
-    setFormData: React.Dispatch<React.SetStateAction<GameTranslations>>,
+    gameTranslations: GameTranslations,
+    setGameTranslations: (translations: GameTranslations) => void,
     language: GameLanguage = 'en'
 ) => {
     const { name, value } = event.target
 
-    setFormData({
-        ...formData,
+    setGameTranslations({
+        ...gameTranslations,
         [language]: {
-            ...formData[language],
+            ...gameTranslations[language],
             [name]: value,
         },
     })
