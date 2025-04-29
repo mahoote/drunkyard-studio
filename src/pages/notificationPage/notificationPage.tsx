@@ -6,6 +6,8 @@ import PageLoaderComponent from '../../components/pageLoaderComponent'
 import { useNotificationStore } from '../../hooks/useNotificationStore'
 import { handleTextChange } from '../../utils/inputUtils'
 import { validNewAlert } from '../../utils/notificationsUtils'
+import { setNewAlert } from '../../services/alertService'
+import { initialInAppAlert } from '../../constants/NOTIFICATION_DATA'
 
 const NotificationPage = () => {
     const [loading, setLoading] = useState<boolean>(true)
@@ -35,6 +37,20 @@ const NotificationPage = () => {
                 await fetchLatestAppVersion()
             } catch (error) {
                 console.error('Error setting new app version:', error)
+            } finally {
+                setLoading(false)
+            }
+        }
+    }
+
+    const handleSetNewAlert = async () => {
+        if (validNewAlert(inAppAlert)) {
+            try {
+                setLoading(true)
+                await setNewAlert(inAppAlert)
+                setInAppAlert(initialInAppAlert)
+            } catch (error) {
+                console.error('Error setting new alert:', error)
             } finally {
                 setLoading(false)
             }
@@ -120,6 +136,7 @@ const NotificationPage = () => {
                             }
                             fullWidth
                             required
+                            multiline
                         />
                     </Grid>
                 </Grid>
@@ -152,7 +169,7 @@ const NotificationPage = () => {
                 <Button
                     variant="contained"
                     disabled={!validNewAlert(inAppAlert)}
-                    onClick={() => {}}
+                    onClick={() => void handleSetNewAlert()}
                 >
                     Add Alert
                 </Button>
