@@ -15,3 +15,11 @@ Directly connected to the Supabase API through the use of the Supabase JS librar
 
 This feature is used to create a new game in the database.
 There is a lot of information that needs to be filled in order to create a new game. The information is divided into 3 sections: New Game, Advanced Settings and Translations.
+
+## Edit Game
+
+This page displays a list of all the existing games in the database. You can select one and will be able to edit the content of that game.
+
+## Notifications
+
+The notifications page is an interface for adding in-app alerts. You can also set new app versions so that the app will display an in-app alert regarding updating the app.
