@@ -34,7 +34,7 @@ function AuthRoutes() {
                 <Route path="/" element={<AppLayoutComponent />}>
                     <Route index element={<NewGamePage />} />
                     <Route path="edit" element={<EditGamePage />} />
-                    <Route path="notification" element={<NotificationPage />} />
+                    <Route path="notifications" element={<NotificationPage />} />
                     <Route path="*" element={<div>This page does not exist</div>} />
                 </Route>
             ) : (

@@ -1,14 +1,19 @@
-import { Box, Button, Divider, TextField } from '@mui/material'
+import { Box, Button, Divider, Grid, TextField } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { getLatestAppVersion, setNewAppVersion } from '../../services/appVersionService'
 import { validNewAppVersion } from '../../utils/appVersionUtils'
 import PageLoaderComponent from '../../components/pageLoaderComponent'
+import { useNotificationStore } from '../../hooks/useNotificationStore'
+import { handleTextChange } from '../../utils/inputUtils'
+import { validNewAlert } from '../../utils/notificationsUtils'
 
 const NotificationPage = () => {
     const [loading, setLoading] = useState<boolean>(true)
 
     const [appVersion, setAppVersion] = useState<string>('undefined')
     const [appVersionInput, setAppVersionInput] = useState<string>('')
+
+    const { inAppAlert, setInAppAlert } = useNotificationStore()
 
     const fetchLatestAppVersion = async () => {
         const result = await getLatestAppVersion()
@@ -73,8 +78,84 @@ const NotificationPage = () => {
                 </Box>
                 <Divider />
             </Box>
-            <Box display="flex" flexDirection="column" gap={2}>
+            <Box display="flex" flexDirection="column" gap={2} component="form">
                 <h3>New In-App Alert</h3>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            label="Target Version"
+                            variant="filled"
+                            name="targetVersion"
+                            value={inAppAlert.targetVersion}
+                            onChange={event =>
+                                handleTextChange(event, inAppAlert, setInAppAlert)
+                            }
+                            fullWidth
+                            required
+                        />
+                    </Grid>
+                </Grid>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            label="Title"
+                            variant="filled"
+                            name="title"
+                            value={inAppAlert.title}
+                            onChange={event =>
+                                handleTextChange(event, inAppAlert, setInAppAlert)
+                            }
+                            fullWidth
+                            required
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            label="Description"
+                            variant="filled"
+                            name="description"
+                            value={inAppAlert.description}
+                            onChange={event =>
+                                handleTextChange(event, inAppAlert, setInAppAlert)
+                            }
+                            fullWidth
+                            required
+                        />
+                    </Grid>
+                </Grid>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            label="Button Title"
+                            variant="outlined"
+                            name="buttonTitle"
+                            value={inAppAlert.buttonTitle}
+                            onChange={event =>
+                                handleTextChange(event, inAppAlert, setInAppAlert)
+                            }
+                            fullWidth
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            label="Button Url"
+                            variant="outlined"
+                            name="buttonUrl"
+                            value={inAppAlert.buttonUrl}
+                            onChange={event =>
+                                handleTextChange(event, inAppAlert, setInAppAlert)
+                            }
+                            fullWidth
+                        />
+                    </Grid>
+                </Grid>
+                <Button
+                    variant="contained"
+                    disabled={!validNewAlert(inAppAlert)}
+                    onClick={() => {}}
+                >
+                    Add Alert
+                </Button>
             </Box>
         </Box>
     )

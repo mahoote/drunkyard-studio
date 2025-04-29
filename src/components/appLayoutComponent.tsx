@@ -21,7 +21,7 @@ const pages: Page[] = [
     },
     {
         name: 'Notifications',
-        path: '/notification',
+        path: '/notifications',
         icon: <NotificationAdd />,
     },
 ]
