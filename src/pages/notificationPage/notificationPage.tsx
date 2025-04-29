@@ -1,26 +1,42 @@
-import { Box, Button, Divider, Grid, TextField } from '@mui/material'
+import {
+    Box,
+    Button,
+    Divider,
+    FormControl,
+    Grid,
+    InputLabel,
+    MenuItem,
+    Select,
+    TextField,
+} from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import { getLatestAppVersion, setNewAppVersion } from '../../services/appVersionService'
+import { getAllAppVersions, setNewAppVersion } from '../../services/appVersionService'
 import { validNewAppVersion } from '../../utils/appVersionUtils'
 import PageLoaderComponent from '../../components/pageLoaderComponent'
 import { useNotificationStore } from '../../hooks/useNotificationStore'
-import { handleTextChange } from '../../utils/inputUtils'
+import { handleSelectChange, handleTextChange } from '../../utils/inputUtils'
 import { validNewAlert } from '../../utils/notificationsUtils'
 import { setNewAlert } from '../../services/alertService'
 import { initialInAppAlert } from '../../constants/NOTIFICATION_DATA'
 
 const NotificationPage = () => {
-    const [loading, setLoading] = useState<boolean>(true)
-
-    const [appVersion, setAppVersion] = useState<string>('undefined')
-    const [appVersionInput, setAppVersionInput] = useState<string>('')
-
     const { inAppAlert, setInAppAlert } = useNotificationStore()
 
-    const fetchLatestAppVersion = async () => {
-        const result = await getLatestAppVersion()
-        const latestVersion = result?.latestVersion || 'undefined'
-        setAppVersion(latestVersion)
+    const [loading, setLoading] = useState<boolean>(true)
+    const [latestAppVersion, setLatestAppVersion] = useState<string>('undefined')
+    const [allAppVersions, setAllAppVersions] = useState<string[]>([inAppAlert.targetVersion])
+    const [appVersionInput, setAppVersionInput] = useState<string>('')
+
+    const fetchAppVersions = async () => {
+        const allVersionsResult = await getAllAppVersions()
+        const allVersions = allVersionsResult?.versions || []
+
+        setLatestAppVersion(allVersions[0])
+        setAllAppVersions(allVersions)
+
+        if (!validNewAppVersion(inAppAlert.targetVersion)) {
+            inAppAlert.targetVersion = allVersions[0]
+        }
     }
 
     /**
@@ -34,7 +50,7 @@ const NotificationPage = () => {
                 setLoading(true)
                 await setNewAppVersion(appVersionInput)
                 setAppVersionInput('')
-                await fetchLatestAppVersion()
+                await fetchAppVersions()
             } catch (error) {
                 console.error('Error setting new app version:', error)
             } finally {
@@ -60,7 +76,7 @@ const NotificationPage = () => {
     useEffect(() => {
         try {
             setLoading(true)
-            void fetchLatestAppVersion()
+            void fetchAppVersions()
         } catch (error) {
             console.error('Error fetching latest app version:', error)
         } finally {
@@ -78,7 +94,7 @@ const NotificationPage = () => {
                 <h3>New App Version</h3>
                 <Box display="flex" gap={2} alignItems="center">
                     <TextField
-                        label={`${appVersion} (latest)`}
+                        label={`${latestAppVersion} (latest)`}
                         variant="filled"
                         name="appVersion"
                         value={appVersionInput}
@@ -98,17 +114,25 @@ const NotificationPage = () => {
                 <h3>New In-App Alert</h3>
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={6}>
-                        <TextField
-                            label="Target Version"
-                            variant="filled"
-                            name="targetVersion"
-                            value={inAppAlert.targetVersion}
-                            onChange={event =>
-                                handleTextChange(event, inAppAlert, setInAppAlert)
-                            }
-                            fullWidth
-                            required
-                        />
+                        <FormControl variant="outlined" fullWidth>
+                            <InputLabel id="target-version-id">Game Audience</InputLabel>
+                            <Select
+                                variant="filled"
+                                labelId="target-version-id"
+                                label="Target Version"
+                                name="targetVersion"
+                                value={inAppAlert.targetVersion}
+                                onChange={event =>
+                                    handleSelectChange(event, inAppAlert, setInAppAlert)
+                                }
+                            >
+                                {allAppVersions.map((version, index) => (
+                                    <MenuItem key={index} value={version}>
+                                        {version}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
                     </Grid>
                 </Grid>
                 <Grid container spacing={2}>

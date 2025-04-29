@@ -32,3 +32,18 @@ export async function setNewAppVersion(version: string) {
         throw new Error('Failed to set new app version.' + error.message)
     }
 }
+
+/**
+ * Calls the edge function to get all app versions
+ */
+export async function getAllAppVersions() {
+    const { data, error } = await supabaseFunction<{ versions: string[] }>('app-version/all', {
+        method: 'GET',
+    })
+
+    if (error) {
+        throw new Error('Failed to fetch all app versions. ' + error.message)
+    }
+
+    return data
+}
