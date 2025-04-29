@@ -52,26 +52,30 @@ const NotificationPage = () => {
     }
 
     return (
-        <Box display="flex" flexDirection="column" gap={2}>
-            <h3>New App Version</h3>
-            <Box display="flex" gap={2} alignItems="center">
-                <TextField
-                    label={`${appVersion} (latest)`}
-                    variant="filled"
-                    name="appVersion"
-                    value={appVersionInput}
-                    onChange={e => setAppVersionInput(e.target.value)}
-                />
-                <Button
-                    variant="contained"
-                    disabled={!validNewAppVersion(appVersionInput)}
-                    sx={{ height: '100%' }}
-                    onClick={() => void handleSetNewAppVersion()}
-                >
-                    Add Version
-                </Button>
+        <Box display="flex" flexDirection="column" gap={3}>
+            <Box display="flex" flexDirection="column" gap={2}>
+                <h3>New App Version</h3>
+                <Box display="flex" gap={2} alignItems="center">
+                    <TextField
+                        label={`${appVersion} (latest)`}
+                        variant="filled"
+                        name="appVersion"
+                        value={appVersionInput}
+                        onChange={e => setAppVersionInput(e.target.value)}
+                    />
+                    <Button
+                        variant="contained"
+                        disabled={!validNewAppVersion(appVersionInput)}
+                        onClick={() => void handleSetNewAppVersion()}
+                    >
+                        Add Version
+                    </Button>
+                </Box>
+                <Divider />
             </Box>
-            <Divider />
+            <Box display="flex" flexDirection="column" gap={2}>
+                <h3>New In-App Alert</h3>
+            </Box>
         </Box>
     )
 }
