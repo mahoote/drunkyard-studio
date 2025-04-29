@@ -115,7 +115,7 @@ const NotificationPage = () => {
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={6}>
                         <FormControl variant="outlined" fullWidth>
-                            <InputLabel id="target-version-id">Game Audience</InputLabel>
+                            <InputLabel id="target-version-id">Target Version</InputLabel>
                             <Select
                                 variant="filled"
                                 labelId="target-version-id"
