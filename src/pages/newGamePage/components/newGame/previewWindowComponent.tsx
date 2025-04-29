@@ -142,6 +142,7 @@ export default function PreviewWindowComponent() {
                 >
                     {descriptions.map((description, index) => (
                         <Box
+                            key={index}
                             sx={{
                                 display: { xs: 'block', lg: 'flex' },
                                 gap: 2,

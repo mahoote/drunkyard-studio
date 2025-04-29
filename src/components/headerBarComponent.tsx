@@ -4,32 +4,72 @@ import { Link } from 'react-router-dom'
 
 import { Page } from '../types/page'
 import { Logout, Menu } from '@mui/icons-material'
-import { supabase } from '../supabaseClient'
-import { AuthError } from '@supabase/supabase-js'
-import { removeGameOptionsLastFetched } from '../utils/storageUtils'
+import { handleSignOut } from '../utils/headerUtils'
 
 interface HeaderBarProps {
     pages: Page[]
 }
 
-function HeaderBarComponent({ pages }: HeaderBarProps) {
+/**
+ * A drawer layout component for mobile devices.
+ * @param pages
+ * @param handleSignOut
+ * @constructor
+ */
+function MobileMenu({ pages }: HeaderBarProps) {
     const [open, setOpen] = useState<boolean>(false)
 
     const toggleDrawer = (newOpen: boolean) => () => {
         setOpen(newOpen)
     }
 
-    const handleSignOut = () => {
-        const signOut = async () => {
-            removeGameOptionsLastFetched()
-            await supabase.auth.signOut()
-        }
+    return (
+        <>
+            <Button
+                variant="text"
+                onClick={toggleDrawer(true)}
+                sx={{ color: 'white', display: { xs: 'flex', md: 'none' } }}
+            >
+                <Menu />
+            </Button>
+            <Drawer
+                open={open}
+                onClose={toggleDrawer(false)}
+                anchor="right"
+                sx={{
+                    display: { xs: 'inherit', md: 'none' },
+                }}
+            >
+                <Box display="flex" flexDirection="column" gap={3} padding={4}>
+                    {pages.map((page, index) => (
+                        <Link
+                            key={index}
+                            to={page.path}
+                            style={{
+                                color: 'white',
+                                textDecoration: 'none',
+                                textAlign: 'end',
+                            }}
+                        >
+                            {page.name}
+                        </Link>
+                    ))}
+                    <IconButton onClick={() => void handleSignOut()} edge="end">
+                        <Logout />
+                    </IconButton>
+                </Box>
+            </Drawer>
+        </>
+    )
+}
 
-        signOut().catch((error: AuthError | null) => {
-            console.error('Error signing out:', error?.message)
-        })
-    }
-
+/**
+ * Header bar component for the application.
+ * Displays the application name and navigation links + sign out button.
+ * @param pages
+ * @constructor
+ */
+function HeaderBarComponent({ pages }: HeaderBarProps) {
     return (
         <AppBar position={'static'}>
             <Toolbar>
@@ -56,66 +96,35 @@ function HeaderBarComponent({ pages }: HeaderBarProps) {
                             DRUNKYARD STUDIO
                         </Typography>
 
-                        <>
-                            <Button
-                                variant="text"
-                                onClick={toggleDrawer(true)}
-                                sx={{ color: 'white', display: { xs: 'flex', md: 'none' } }}
-                            >
-                                <Menu />
-                            </Button>
-                            <Drawer
-                                open={open}
-                                onClose={toggleDrawer(false)}
-                                anchor="right"
-                                sx={{
-                                    display: { xs: 'inherit', md: 'none' },
-                                }}
-                            >
-                                <Box display="flex" flexDirection="column" gap={3} padding={4}>
-                                    {pages.map((page, index) => (
-                                        <Link
-                                            key={index}
-                                            to={page.path}
-                                            style={{ color: 'white', textDecoration: 'none' }}
-                                        >
-                                            {page.name}
-                                        </Link>
-                                    ))}
-                                    <IconButton onClick={handleSignOut} edge="end">
-                                        <Logout />
-                                    </IconButton>
-                                </Box>
-                            </Drawer>
-                            <Box
-                                sx={{
-                                    ml: 2,
-                                    display: { xs: 'none', md: 'flex' },
-                                }}
-                                flexGrow={1}
-                            >
-                                {pages.map((page, index) => (
-                                    <Button
-                                        key={index}
-                                        component={Link}
-                                        to={page.path}
-                                        sx={{
-                                            my: 2,
-                                            color: 'white',
-                                            display: 'flex',
-                                        }}
-                                        startIcon={page.icon}
-                                    >
-                                        {page.name}
-                                    </Button>
-                                ))}
-                            </Box>
-                        </>
+                        <Box
+                            sx={{
+                                ml: 2,
+                                display: { xs: 'none', md: 'flex' },
+                                gap: 1,
+                            }}
+                            flexGrow={1}
+                        >
+                            {pages.map((page, index) => (
+                                <Button
+                                    key={index}
+                                    component={Link}
+                                    to={page.path}
+                                    sx={{
+                                        my: 2,
+                                        color: 'white',
+                                        display: 'flex',
+                                    }}
+                                    startIcon={page.icon}
+                                >
+                                    {page.name}
+                                </Button>
+                            ))}
+                        </Box>
                     </Box>
                 </Box>
 
                 <IconButton
-                    onClick={handleSignOut}
+                    onClick={() => void handleSignOut()}
                     edge="end"
                     sx={{
                         display: { xs: 'none', md: 'flex' },
@@ -123,6 +132,7 @@ function HeaderBarComponent({ pages }: HeaderBarProps) {
                 >
                     <Logout />
                 </IconButton>
+                <MobileMenu pages={pages} />
             </Toolbar>
         </AppBar>
     )
