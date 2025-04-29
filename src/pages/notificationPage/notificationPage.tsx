@@ -4,10 +4,12 @@ import {
     Divider,
     FormControl,
     Grid,
+    IconButton,
     InputLabel,
     MenuItem,
     Select,
     TextField,
+    Tooltip,
 } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { getAllAppVersions, setNewAppVersion } from '../../services/appVersionService'
@@ -18,6 +20,7 @@ import { handleSelectChange, handleTextChange } from '../../utils/inputUtils'
 import { validNewAlert } from '../../utils/notificationsUtils'
 import { setNewAlert } from '../../services/alertService'
 import { initialInAppAlert } from '../../constants/NOTIFICATION_DATA'
+import { RestartAlt } from '@mui/icons-material'
 
 const NotificationPage = () => {
     const { inAppAlert, setInAppAlert } = useNotificationStore()
@@ -73,6 +76,14 @@ const NotificationPage = () => {
         }
     }
 
+    /**
+     * Removes existing values.
+     */
+    const handleResetPage = () => {
+        setInAppAlert(initialInAppAlert)
+        setAppVersionInput('')
+    }
+
     useEffect(() => {
         try {
             setLoading(true)
@@ -90,25 +101,34 @@ const NotificationPage = () => {
 
     return (
         <Box display="flex" flexDirection="column" gap={3}>
-            <Box display="flex" flexDirection="column" gap={2}>
-                <h3>New App Version</h3>
-                <Box display="flex" gap={2} alignItems="center">
-                    <TextField
-                        label={`${latestAppVersion} (latest)`}
-                        variant="filled"
-                        name="appVersion"
-                        value={appVersionInput}
-                        onChange={e => setAppVersionInput(e.target.value)}
-                    />
-                    <Button
-                        variant="contained"
-                        disabled={!validNewAppVersion(appVersionInput)}
-                        onClick={() => void handleSetNewAppVersion()}
-                    >
-                        Add Version
-                    </Button>
+            <Box>
+                <Box display="flex" justifyContent="center">
+                    <Tooltip title="Reset this page">
+                        <IconButton aria-label="reset" onClick={() => void handleResetPage()}>
+                            <RestartAlt />
+                        </IconButton>
+                    </Tooltip>
                 </Box>
-                <Divider />
+                <Box display="flex" flexDirection="column" gap={2}>
+                    <h3>New App Version</h3>
+                    <Box display="flex" gap={2} alignItems="center">
+                        <TextField
+                            label={`${latestAppVersion} (latest)`}
+                            variant="filled"
+                            name="appVersion"
+                            value={appVersionInput}
+                            onChange={e => setAppVersionInput(e.target.value)}
+                        />
+                        <Button
+                            variant="contained"
+                            disabled={!validNewAppVersion(appVersionInput)}
+                            onClick={() => void handleSetNewAppVersion()}
+                        >
+                            Add Version
+                        </Button>
+                    </Box>
+                    <Divider />
+                </Box>
             </Box>
             <Box display="flex" flexDirection="column" gap={2} component="form">
                 <h3>New In-App Alert</h3>
