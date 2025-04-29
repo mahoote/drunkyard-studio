@@ -6,7 +6,7 @@ import { Page } from '../types/page'
 
 import HeaderBarComponent from './headerBarComponent'
 import AppAlertComponent from './appAlertComponent'
-import { Add, Edit } from '@mui/icons-material'
+import { Add, Edit, NotificationAdd } from '@mui/icons-material'
 
 const pages: Page[] = [
     {
@@ -18,6 +18,11 @@ const pages: Page[] = [
         name: 'Edit Game',
         path: '/edit',
         icon: <Edit />,
+    },
+    {
+        name: 'Notifications',
+        path: '/notification',
+        icon: <NotificationAdd />,
     },
 ]
 

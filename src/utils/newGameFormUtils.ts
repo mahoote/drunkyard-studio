@@ -7,7 +7,7 @@ import { GameInsertDto, GameTranslationInsertDto } from '../types/gameDto'
 import { GenericType } from '../types/genericType'
 import { AdvancedSettings, NewGame, GameTranslations } from '../types/newGame'
 import { createAccessory, removeAllGameAccessories } from '../services/accessoryService'
-import { removeGameOptionsLastFetched } from './storageUtils'
+import { removeLastFetched } from './storageUtils'
 import { validNaturalNumber, validString } from './inputUtils'
 
 /**
@@ -92,7 +92,7 @@ export async function addAccessoriesToGame(
             accessoryId = newAccessory?.id
 
             // Remove the last fetched game options to force a re-fetch.
-            removeGameOptionsLastFetched()
+            removeLastFetched()
         }
 
         if (accessoryId) {
