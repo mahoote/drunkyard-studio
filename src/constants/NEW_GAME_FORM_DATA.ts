@@ -1,6 +1,12 @@
 import { GenericType } from '../types/genericType'
-import { GameTranslations, NewGame } from '../types/newGame'
-import { ActionCardSettingsTranslations, ActionCardTranslations } from '../types/actionCard'
+import { GameTranslation, GameTranslations, NewGame } from '../types/newGame'
+import {
+    ActionCardSettingsTranslation,
+    ActionCardSettingsTranslations,
+    ActionCardTranslation,
+    ActionCardTranslations,
+} from '../types/actionCard'
+import { ALL_LANGUAGES } from './LANGUAGES'
 
 export const initialNewGameData: NewGame = {
     activityLevel: 0,
@@ -8,8 +14,6 @@ export const initialNewGameData: NewGame = {
     drunkLevel: 0,
     gameAudienceId: 0,
 }
-
-export const initialAccessoriesData: string[] = []
 
 export const initialGameTypesData: string[] = []
 
@@ -24,23 +28,13 @@ export const activityLevels: GenericType[] = [
     { id: 2, name: 'High' },
 ]
 
-export const initialGameTranslations: GameTranslations = {
-    en: {
-        name: '',
-        descriptions: [],
-    },
-    no: {
-        name: '',
-        descriptions: [],
-    },
-}
+export const initialGameTranslations: GameTranslations = Object.fromEntries(
+    ALL_LANGUAGES.map(lang => [lang, { name: '', descriptions: [] } as GameTranslation])
+)
 
-export const initialActionCardSettingsTranslations: ActionCardSettingsTranslations = {
-    en: {},
-    no: {},
-}
+export const initialActionCardSettingsTranslations: ActionCardSettingsTranslations =
+    Object.fromEntries(ALL_LANGUAGES.map(lang => [lang, {} as ActionCardSettingsTranslation]))
 
-export const initialActionCardsTranslations: ActionCardTranslations = {
-    en: [],
-    no: [],
-}
+export const initialActionCardsTranslations: ActionCardTranslations = Object.fromEntries(
+    ALL_LANGUAGES.map(lang => [lang, [] as ActionCardTranslation[]])
+)

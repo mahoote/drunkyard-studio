@@ -1,16 +1,20 @@
-import { InAppAlertDto } from '../types/notification'
 import { validString } from './inputUtils'
 import { validNewAppVersion } from './appVersionUtils'
+import { NewAlertDto } from '../types/notification'
 
 /**
  * Validates that the alert object has a valid values:
  * - targetVersion, title, description
  * @param alert
  */
-export function validNewAlert(alert: InAppAlertDto) {
+export function validNewAlert(alert?: NewAlertDto) {
+    if (!alert) return false
+
     return (
-        validNewAppVersion(alert.targetVersion) &&
-        validString(alert.title) &&
-        validString(alert.description)
+        validNewAppVersion(alert.settings.targetVersion) &&
+        alert.translations.every(
+            translation =>
+                !!validString(translation.title) && !!validString(translation.description)
+        )
     )
 }

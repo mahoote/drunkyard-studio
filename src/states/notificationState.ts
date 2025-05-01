@@ -1,6 +1,9 @@
-import { InAppAlertDto } from '../types/notification'
+import { AlertDto, AlertTranslationsDto } from '../types/notification'
 
 export interface NotificationState {
-    inAppAlert: InAppAlertDto
-    setInAppAlert: (alert: InAppAlertDto) => void
+    alert: AlertDto
+    setAlert: (alert: AlertDto) => void
+
+    alertTranslations: AlertTranslationsDto
+    setAlertTranslations: (translations: AlertTranslationsDto) => void
 }
