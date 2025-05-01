@@ -5,7 +5,7 @@ import { actionCardSuggestions } from '../../../../constants/WORD_SUGGESTION_DAT
 import TextFieldSuggestionsComponent from '../../../../components/textFieldSuggestionsComponent'
 import MultilineComponent from '../../../../components/multilineComponent'
 import TranslateStringArrayComponent from './translateStringArrayComponent'
-import { CombinedTranslations } from '../../../../types/newGame'
+import { CombinedTranslations, GameTranslations } from '../../../../types/newGame'
 import { Add, ContentCopy, DataObject } from '@mui/icons-material'
 import AppModalComponent from '../../../../components/appModalComponent'
 import { generateTranslationPrompt } from '../../../../utils/prompts'
@@ -95,7 +95,17 @@ const TranslationsFormComponent = () => {
         try {
             const newTranslations = JSON.parse(userJsonInput) as CombinedTranslations
 
-            setGameTranslations({ ...newTranslations.game, en: gameTranslations.en })
+            const newTranslationsWithCorrectId: GameTranslations = Object.fromEntries(
+                Object.entries(newTranslations.game).map(([key, translation]) => [
+                    key,
+                    {
+                        ...translation,
+                        id: gameTranslations[key]?.id,
+                    },
+                ])
+            )
+
+            setGameTranslations({ en: gameTranslations.en, ...newTranslationsWithCorrectId })
             if (
                 actionCardSettingsData &&
                 newTranslations.actionCardSettings &&
