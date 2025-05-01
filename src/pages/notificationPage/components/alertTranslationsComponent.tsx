@@ -2,27 +2,27 @@ import React from 'react'
 import { ALL_LANGUAGES } from '../../../constants/LANGUAGES'
 import { Box, Divider, Grid, TextField } from '@mui/material'
 import { handleTextChange } from '../../../utils/inputUtils'
-import { InAppAlertTranslationDto } from '../../../types/notification'
 import { useNotificationStore } from '../../../hooks/useNotificationStore'
 import { codeToLanguage } from '../../../utils/languageUtils'
+import { AlertTranslationDto } from '../../../types/notification'
 
 interface LanguageAlertProps {
     language: string
-    inAppAlertTranslation: InAppAlertTranslationDto
-    setInAppAlertTranslation: (alert: InAppAlertTranslationDto) => void
+    alertTranslation: AlertTranslationDto
+    setAlertTranslation: (alert: AlertTranslationDto) => void
 }
 
 /**
  * The form for the in-app alert translations.
  * @param language
- * @param inAppAlertTranslation
- * @param setInAppAlertTranslation
+ * @param alertTranslation
+ * @param setAlertTranslation
  * @constructor
  */
 function AlertTranslationComponent({
     language,
-    inAppAlertTranslation,
-    setInAppAlertTranslation,
+    alertTranslation,
+    setAlertTranslation,
 }: LanguageAlertProps) {
     return (
         <>
@@ -32,13 +32,9 @@ function AlertTranslationComponent({
                         label={`${language} Title`}
                         variant="filled"
                         name="title"
-                        value={inAppAlertTranslation.title}
+                        value={alertTranslation.title}
                         onChange={event =>
-                            handleTextChange(
-                                event,
-                                inAppAlertTranslation,
-                                setInAppAlertTranslation
-                            )
+                            handleTextChange(event, alertTranslation, setAlertTranslation)
                         }
                         fullWidth
                         required
@@ -49,13 +45,9 @@ function AlertTranslationComponent({
                         label={`${language} Description`}
                         variant="filled"
                         name="description"
-                        value={inAppAlertTranslation.description}
+                        value={alertTranslation.description}
                         onChange={event =>
-                            handleTextChange(
-                                event,
-                                inAppAlertTranslation,
-                                setInAppAlertTranslation
-                            )
+                            handleTextChange(event, alertTranslation, setAlertTranslation)
                         }
                         fullWidth
                         required
@@ -69,13 +61,9 @@ function AlertTranslationComponent({
                         label={`${language} Button Title`}
                         variant="outlined"
                         name="buttonTitle"
-                        value={inAppAlertTranslation.buttonTitle}
+                        value={alertTranslation.buttonTitle}
                         onChange={event =>
-                            handleTextChange(
-                                event,
-                                inAppAlertTranslation,
-                                setInAppAlertTranslation
-                            )
+                            handleTextChange(event, alertTranslation, setAlertTranslation)
                         }
                         fullWidth
                     />
@@ -90,17 +78,17 @@ function AlertTranslationComponent({
  * @constructor
  */
 export default function AlertTranslationsComponent() {
-    const { inAppAlertTranslations, setInAppAlertTranslations } = useNotificationStore()
+    const { alertTranslations, setAlertTranslations } = useNotificationStore()
 
     return ALL_LANGUAGES.map(language => (
         <Box key={language} display="flex" flexDirection="column" gap={2}>
             <Divider />
             <AlertTranslationComponent
                 language={codeToLanguage(language)}
-                inAppAlertTranslation={inAppAlertTranslations[language]}
-                setInAppAlertTranslation={alert =>
-                    setInAppAlertTranslations({
-                        ...inAppAlertTranslations,
+                alertTranslation={alertTranslations[language]}
+                setAlertTranslation={alert =>
+                    setAlertTranslations({
+                        ...alertTranslations,
                         [language]: alert,
                     })
                 }

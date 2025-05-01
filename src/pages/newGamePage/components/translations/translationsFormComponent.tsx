@@ -9,7 +9,7 @@ import { CombinedTranslations, GameTranslations } from '../../../../types/newGam
 import { Add, ContentCopy, DataObject } from '@mui/icons-material'
 import AppModalComponent from '../../../../components/appModalComponent'
 import { generateTranslationPrompt } from '../../../../utils/prompts'
-import { useAlertStore } from '../../../../hooks/useAlertStore'
+import { useStudioStore } from '../../../../hooks/useStudioStore'
 import { codeToLanguage } from '../../../../utils/languageUtils'
 import { ActionCardTranslation } from '../../../../types/actionCard'
 import { OTHER_LANGUAGES } from '../../../../constants/LANGUAGES'
@@ -26,7 +26,7 @@ const TranslationsFormComponent = () => {
         setActionCardTranslations,
     } = useNewGameStore()
 
-    const { setAlert } = useAlertStore()
+    const { setStudioAlert } = useStudioStore()
 
     const descriptions = gameTranslations.en.descriptions
     const accessories = gameTranslations.en.accessories
@@ -65,7 +65,7 @@ const TranslationsFormComponent = () => {
             await navigator.clipboard.writeText(
                 generateTranslationPrompt(OTHER_LANGUAGES, englishTranslations)
             )
-            setAlert({
+            setStudioAlert({
                 open: true,
                 severity: 'success',
                 message: 'Copied to clipboard',
@@ -80,7 +80,7 @@ const TranslationsFormComponent = () => {
                 )
             }
 
-            setAlert({
+            setStudioAlert({
                 open: true,
                 severity: 'error',
                 message: 'Failed to copy to clipboard',
@@ -144,7 +144,7 @@ const TranslationsFormComponent = () => {
             window.location.reload()
         } catch (error) {
             console.error('Failed to parse JSON:', error)
-            setAlert({
+            setStudioAlert({
                 open: true,
                 severity: 'error',
                 message: 'Failed to parse JSON',

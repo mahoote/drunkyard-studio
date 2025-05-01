@@ -1,10 +1,10 @@
-import { InAppAlertDto, InAppAlertTranslations } from '../types/notification'
+import { AlertDto, AlertTranslationsDto } from '../types/notification'
 import { ALL_LANGUAGES } from './LANGUAGES'
 
-export const initialInAppAlert: InAppAlertDto = {
+export const initialAlert: AlertDto = {
     targetVersion: '',
 }
 
-export const initialInAppAlertTranslations: InAppAlertTranslations = Object.fromEntries(
+export const initialAlertTranslations: AlertTranslationsDto = Object.fromEntries(
     ALL_LANGUAGES.map(lang => [lang, { title: '', description: '' }])
 )

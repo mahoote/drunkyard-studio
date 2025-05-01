@@ -19,7 +19,7 @@ import TranslationsFormComponent from './components/translations/translationsFor
 import NewGameSummaryComponent from './components/summary/newGameSummaryComponent'
 import { deleteNewGame } from '../../services/gameService'
 import { createAdvancedSettingsData } from '../../utils/advancedSettingsUtils'
-import { useAlertStore } from '../../hooks/useAlertStore'
+import { useStudioStore } from '../../hooks/useStudioStore'
 
 /**
  * Mostly logic regarding the new game form.
@@ -44,7 +44,7 @@ function NewGamePage() {
 
     const { gameTypes, accessories } = useGameOptionsStore()
 
-    const { setAlert } = useAlertStore()
+    const { setStudioAlert } = useStudioStore()
 
     const handleResetForm = (reloadPage: boolean = true) => {
         resetStore()
@@ -60,7 +60,7 @@ function NewGamePage() {
             createdGame = await createNewGame(newGame, advancedSettingsData, gameTranslations)
         } catch (error) {
             console.error('Submit form:', error)
-            setAlert({
+            setStudioAlert({
                 open: true,
                 message: 'Failed to create new game. Please try again.',
                 severity: 'error',
@@ -87,7 +87,7 @@ function NewGamePage() {
                 deletedActionCards
             )
 
-            setAlert({
+            setStudioAlert({
                 open: true,
                 message: `"${createdGame?.name}"\nGame Id=${createdGame?.id}\nCreated successfully!`,
                 severity: 'success',
@@ -96,7 +96,7 @@ function NewGamePage() {
             handleResetForm(false)
         } catch (error) {
             console.error('Failed to create game:', error)
-            setAlert({
+            setStudioAlert({
                 open: true,
                 message: 'Failed to complete game creation. Please try again.',
                 severity: 'error',

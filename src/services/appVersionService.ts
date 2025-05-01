@@ -19,10 +19,10 @@ export async function getLatestAppVersion() {
 }
 
 /**
- * Calls the edge function to set a new app version
+ * Calls the edge function to create a new app version
  * @param version
  */
-export async function setNewAppVersion(version: string) {
+export async function createNewAppVersion(version: string) {
     const { error } = await supabaseFunction('app-version', {
         method: 'POST',
         body: JSON.stringify({ version }),

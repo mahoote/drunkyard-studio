@@ -12,24 +12,28 @@ import {
     Tooltip,
 } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import { getAllAppVersions, setNewAppVersion } from '../../services/appVersionService'
+import { getAllAppVersions, createNewAppVersion } from '../../services/appVersionService'
 import { validNewAppVersion } from '../../utils/appVersionUtils'
 import PageLoaderComponent from '../../components/pageLoaderComponent'
 import { useNotificationStore } from '../../hooks/useNotificationStore'
 import { handleSelectChange, handleTextChange } from '../../utils/inputUtils'
 import { validNewAlert } from '../../utils/notificationsUtils'
-import { setNewAlert } from '../../services/alertService'
-import { initialInAppAlert } from '../../constants/NOTIFICATION_DATA'
+import { createNewAlert } from '../../services/alertService'
+import { initialAlert, initialAlertTranslations } from '../../constants/NOTIFICATION_DATA'
 import { RestartAlt } from '@mui/icons-material'
 import AlertTranslationsComponent from './components/alertTranslationsComponent'
+import { useStudioStore } from '../../hooks/useStudioStore'
+import { NewAlertDto } from '../../types/notification'
 
 const NotificationPage = () => {
-    const { inAppAlert, setInAppAlert } = useNotificationStore()
+    const { setStudioAlert } = useStudioStore()
+    const { alert, setAlert, alertTranslations, setAlertTranslations } = useNotificationStore()
 
     const [loading, setLoading] = useState<boolean>(true)
     const [latestAppVersion, setLatestAppVersion] = useState<string>('undefined')
-    const [allAppVersions, setAllAppVersions] = useState<string[]>([inAppAlert.targetVersion])
+    const [allAppVersions, setAllAppVersions] = useState<string[]>([alert.targetVersion])
     const [appVersionInput, setAppVersionInput] = useState<string>('')
+    const [newAlertDto, setNewAlertDto] = useState<NewAlertDto | undefined>()
 
     const fetchAppVersions = async () => {
         const allVersionsResult = await getAllAppVersions()
@@ -38,8 +42,8 @@ const NotificationPage = () => {
         setLatestAppVersion(allVersions[0])
         setAllAppVersions(allVersions)
 
-        if (!validNewAppVersion(inAppAlert.targetVersion)) {
-            inAppAlert.targetVersion = allVersions[0]
+        if (!validNewAppVersion(alert.targetVersion)) {
+            alert.targetVersion = allVersions[0]
         }
     }
 
@@ -48,11 +52,11 @@ const NotificationPage = () => {
      * Validates the new app version and updates it if valid.
      * Fetches the latest app version after setting the new version.
      */
-    const handleSetNewAppVersion = async () => {
+    const handleCreateNewAppVersion = async () => {
         if (validNewAppVersion(appVersionInput)) {
             try {
                 setLoading(true)
-                await setNewAppVersion(appVersionInput)
+                await createNewAppVersion(appVersionInput)
                 setAppVersionInput('')
                 await fetchAppVersions()
             } catch (error) {
@@ -63,17 +67,36 @@ const NotificationPage = () => {
         }
     }
 
-    const handleSetNewAlert = async () => {
-        if (validNewAlert(inAppAlert)) {
-            try {
-                setLoading(true)
-                await setNewAlert(inAppAlert)
-                setInAppAlert(initialInAppAlert)
-            } catch (error) {
-                console.error('Error setting new alert:', error)
-            } finally {
-                setLoading(false)
-            }
+    /**
+     * Validates that the new alert object is correct.
+     * If it is, then call the edge function to create the alert, and give feedback in studio.
+     * Catches if the backend failed to create.
+     */
+    const handleCreateNewAlert = async () => {
+        if (!newAlertDto || !validNewAlert(newAlertDto)) {
+            return
+        }
+
+        try {
+            setLoading(true)
+            await createNewAlert(newAlertDto)
+            handleResetPage()
+            setStudioAlert({
+                open: true,
+                message: `Created in-app alert successfully!`,
+                severity: 'success',
+                autoHideDuration: 4000,
+            })
+        } catch (error) {
+            console.error('Error setting new alert:', error)
+            setStudioAlert({
+                open: true,
+                message: 'Failed to create in app alert. Please try again.',
+                severity: 'error',
+                autoHideDuration: 5000,
+            })
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -81,20 +104,45 @@ const NotificationPage = () => {
      * Removes existing values.
      */
     const handleResetPage = () => {
-        setInAppAlert(initialInAppAlert)
+        setAlert(initialAlert)
+        setAlertTranslations(initialAlertTranslations)
         setAppVersionInput('')
     }
 
+    /**
+     * On mount, fetches existing app versions.
+     */
     useEffect(() => {
         try {
             setLoading(true)
             void fetchAppVersions()
         } catch (error) {
-            console.error('Error fetching latest app version:', error)
+            console.error('Error fetching app versions:', error)
+            setStudioAlert({
+                open: true,
+                severity: 'error',
+                message: 'Failed to get existing app versions.',
+                autoHideDuration: 5000,
+            })
         } finally {
             setLoading(false)
         }
     }, [])
+
+    /**
+     * On alert values change, create a dto for the new alert.
+     */
+    useEffect(() => {
+        setNewAlertDto({
+            settings: alert,
+            translations: Object.entries(alertTranslations).map(([key, translation]) => ({
+                language: key,
+                title: translation.title,
+                description: translation.description,
+                buttonTitle: translation.buttonTitle,
+            })),
+        })
+    }, [alert, alertTranslations])
 
     if (loading) {
         return <PageLoaderComponent />
@@ -123,7 +171,7 @@ const NotificationPage = () => {
                         <Button
                             variant="contained"
                             disabled={!validNewAppVersion(appVersionInput)}
-                            onClick={() => void handleSetNewAppVersion()}
+                            onClick={() => void handleCreateNewAppVersion()}
                         >
                             Add Version
                         </Button>
@@ -142,10 +190,8 @@ const NotificationPage = () => {
                                 labelId="target-version-id"
                                 label="Target Version"
                                 name="targetVersion"
-                                value={inAppAlert.targetVersion}
-                                onChange={event =>
-                                    handleSelectChange(event, inAppAlert, setInAppAlert)
-                                }
+                                value={alert.targetVersion}
+                                onChange={event => handleSelectChange(event, alert, setAlert)}
                             >
                                 {allAppVersions.map((version, index) => (
                                     <MenuItem key={index} value={version}>
@@ -160,10 +206,8 @@ const NotificationPage = () => {
                             label="Button Url"
                             variant="outlined"
                             name="buttonUrl"
-                            value={inAppAlert.buttonUrl}
-                            onChange={event =>
-                                handleTextChange(event, inAppAlert, setInAppAlert)
-                            }
+                            value={alert.buttonUrl}
+                            onChange={event => handleTextChange(event, alert, setAlert)}
                             fullWidth
                         />
                     </Grid>
@@ -172,8 +216,8 @@ const NotificationPage = () => {
                 <AlertTranslationsComponent />
                 <Button
                     variant="contained"
-                    disabled={!validNewAlert(inAppAlert)}
-                    onClick={() => void handleSetNewAlert()}
+                    disabled={!validNewAlert(newAlertDto)}
+                    onClick={() => void handleCreateNewAlert()}
                 >
                     Add Alert
                 </Button>
