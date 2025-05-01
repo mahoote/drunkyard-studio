@@ -12,6 +12,7 @@ import { generateTranslationPrompt } from '../../../../utils/prompts'
 import { useAlertStore } from '../../../../hooks/useAlertStore'
 import { codeToLanguage } from '../../../../utils/languageUtils'
 import { ActionCardTranslation } from '../../../../types/actionCard'
+import { OTHER_LANGUAGES } from '../../../../constants/LANGUAGES'
 
 const TranslationsFormComponent = () => {
     const {
@@ -34,8 +35,6 @@ const TranslationsFormComponent = () => {
     const actionCardPrompt = actionCardSettingsTranslations.en.prompt
     const playerCreativePrompt = actionCardSettingsTranslations.en.playerCreativePrompt
     const actionCardsEn = actionCardTranslations.en
-
-    const languages = ['no']
 
     const [userJsonInput, setUserJsonInput] = useState<string>('')
 
@@ -64,7 +63,7 @@ const TranslationsFormComponent = () => {
 
         try {
             await navigator.clipboard.writeText(
-                generateTranslationPrompt(languages, englishTranslations)
+                generateTranslationPrompt(OTHER_LANGUAGES, englishTranslations)
             )
             setAlert({
                 open: true,
@@ -77,7 +76,7 @@ const TranslationsFormComponent = () => {
             if (!navigator.clipboard) {
                 console.error('Clipboard API is not supported in this environment.')
                 setCopyJsonBackupText(
-                    generateTranslationPrompt(languages, englishTranslations)
+                    generateTranslationPrompt(OTHER_LANGUAGES, englishTranslations)
                 )
             }
 
@@ -227,7 +226,7 @@ const TranslationsFormComponent = () => {
                                 <h3>Name</h3>
                                 <div>{gameTranslations.en.name}</div>
                             </div>
-                            {languages.map(language => (
+                            {OTHER_LANGUAGES.map(language => (
                                 <TextField
                                     key={language}
                                     label={codeToLanguage(language)}
@@ -255,7 +254,7 @@ const TranslationsFormComponent = () => {
 
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                     <h3>Description</h3>
-                    {languages.map(language => (
+                    {OTHER_LANGUAGES.map(language => (
                         <Box
                             key={language}
                             sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
@@ -296,7 +295,7 @@ const TranslationsFormComponent = () => {
                     <>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                             <h3>Accessories</h3>
-                            {languages.map(language => (
+                            {OTHER_LANGUAGES.map(language => (
                                 <Box
                                     key={language}
                                     sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
@@ -334,7 +333,7 @@ const TranslationsFormComponent = () => {
                                 <h3>Custom 'How to End the Game' Sentence</h3>
                                 <MultilineComponent text={customEndGameSentence} />
                             </div>
-                            {languages.map(language => (
+                            {OTHER_LANGUAGES.map(language => (
                                 <TextField
                                     key={language}
                                     label={codeToLanguage(language)}
@@ -367,7 +366,7 @@ const TranslationsFormComponent = () => {
                                 <h3>Has Winner Prompt</h3>
                                 <MultilineComponent text={hasWinnerPrompt} />
                             </div>
-                            {languages.map(language => (
+                            {OTHER_LANGUAGES.map(language => (
                                 <TextField
                                     key={language}
                                     label={codeToLanguage(language)}
@@ -413,7 +412,7 @@ const TranslationsFormComponent = () => {
                                             <h3>Prompt</h3>
                                             <MultilineComponent text={actionCardPrompt} />
                                         </div>
-                                        {languages.map(language => (
+                                        {OTHER_LANGUAGES.map(language => (
                                             <TextFieldSuggestionsComponent
                                                 key={language}
                                                 wordSuggestions={actionCardSuggestions}
@@ -458,7 +457,7 @@ const TranslationsFormComponent = () => {
                                                     text={playerCreativePrompt}
                                                 />
                                             </div>
-                                            {languages.map(language => (
+                                            {OTHER_LANGUAGES.map(language => (
                                                 <TextFieldSuggestionsComponent
                                                     key={language}
                                                     wordSuggestions={actionCardSuggestions}
@@ -499,7 +498,7 @@ const TranslationsFormComponent = () => {
                     <>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                             <h3>Action Cards</h3>
-                            {languages.map(language => (
+                            {OTHER_LANGUAGES.map(language => (
                                 <Box
                                     key={language}
                                     sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}

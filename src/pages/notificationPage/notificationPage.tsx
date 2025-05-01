@@ -21,6 +21,7 @@ import { validNewAlert } from '../../utils/notificationsUtils'
 import { setNewAlert } from '../../services/alertService'
 import { initialInAppAlert } from '../../constants/NOTIFICATION_DATA'
 import { RestartAlt } from '@mui/icons-material'
+import AlertTranslationsComponent from './components/alertTranslationsComponent'
 
 const NotificationPage = () => {
     const { inAppAlert, setInAppAlert } = useNotificationStore()
@@ -154,49 +155,6 @@ const NotificationPage = () => {
                             </Select>
                         </FormControl>
                     </Grid>
-                </Grid>
-                <Grid container spacing={2}>
-                    <Grid item xs={12} md={6}>
-                        <TextField
-                            label="Title"
-                            variant="filled"
-                            name="title"
-                            value={inAppAlert.title}
-                            onChange={event =>
-                                handleTextChange(event, inAppAlert, setInAppAlert)
-                            }
-                            fullWidth
-                            required
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <TextField
-                            label="Description"
-                            variant="filled"
-                            name="description"
-                            value={inAppAlert.description}
-                            onChange={event =>
-                                handleTextChange(event, inAppAlert, setInAppAlert)
-                            }
-                            fullWidth
-                            required
-                            multiline
-                        />
-                    </Grid>
-                </Grid>
-                <Grid container spacing={2}>
-                    <Grid item xs={12} md={6}>
-                        <TextField
-                            label="Button Title"
-                            variant="outlined"
-                            name="buttonTitle"
-                            value={inAppAlert.buttonTitle}
-                            onChange={event =>
-                                handleTextChange(event, inAppAlert, setInAppAlert)
-                            }
-                            fullWidth
-                        />
-                    </Grid>
                     <Grid item xs={12} md={6}>
                         <TextField
                             label="Button Url"
@@ -210,6 +168,8 @@ const NotificationPage = () => {
                         />
                     </Grid>
                 </Grid>
+                <Divider />
+                <AlertTranslationsComponent />
                 <Button
                     variant="contained"
                     disabled={!validNewAlert(inAppAlert)}
