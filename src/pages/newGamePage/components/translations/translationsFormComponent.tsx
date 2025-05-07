@@ -234,7 +234,7 @@ const TranslationsFormComponent = () => {
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                             <div>
                                 <h3>Name</h3>
-                                <div>{gameTranslations.en?.name}</div>
+                                <div>{gameTranslations.en.name}</div>
                             </div>
                             {OTHER_LANGUAGES.map(language => (
                                 <TextField
