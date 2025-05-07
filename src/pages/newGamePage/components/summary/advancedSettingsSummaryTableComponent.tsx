@@ -18,8 +18,8 @@ const AdvancedSettingsSummaryTableComponent = () => {
 
     const customEndGameSentence = gameTranslations.en.customEndGameSentence ?? ''
     const hasWinnerPrompt = gameTranslations.en.hasWinnerPrompt
-    const playerCreativePrompt = actionCardSettingsTranslations.en.playerCreativePrompt ?? ''
-    const actionCardPrompt = actionCardSettingsTranslations.en.prompt
+    const playerCreativePrompt = actionCardSettingsTranslations.en?.playerCreativePrompt ?? ''
+    const actionCardPrompt = actionCardSettingsTranslations.en?.prompt
     const actionCards = actionCardTranslations.en
 
     return (

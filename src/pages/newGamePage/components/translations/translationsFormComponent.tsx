@@ -32,8 +32,8 @@ const TranslationsFormComponent = () => {
     const accessories = gameTranslations.en.accessories
     const customEndGameSentence = gameTranslations.en.customEndGameSentence
     const hasWinnerPrompt = gameTranslations.en.hasWinnerPrompt
-    const actionCardPrompt = actionCardSettingsTranslations.en.prompt
-    const playerCreativePrompt = actionCardSettingsTranslations.en.playerCreativePrompt
+    const actionCardPrompt = actionCardSettingsTranslations.en?.prompt
+    const playerCreativePrompt = actionCardSettingsTranslations.en?.playerCreativePrompt
     const actionCardsEn = actionCardTranslations.en
 
     const [userJsonInput, setUserJsonInput] = useState<string>('')
