@@ -32,8 +32,8 @@ const TranslationsFormComponent = () => {
     const accessories = gameTranslations.en.accessories
     const customEndGameSentence = gameTranslations.en.customEndGameSentence
     const hasWinnerPrompt = gameTranslations.en.hasWinnerPrompt
-    const actionCardPrompt = actionCardSettingsTranslations.en.prompt
-    const playerCreativePrompt = actionCardSettingsTranslations.en.playerCreativePrompt
+    const actionCardPrompt = actionCardSettingsTranslations.en?.prompt
+    const playerCreativePrompt = actionCardSettingsTranslations.en?.playerCreativePrompt
     const actionCardsEn = actionCardTranslations.en
 
     const [userJsonInput, setUserJsonInput] = useState<string>('')
@@ -234,7 +234,7 @@ const TranslationsFormComponent = () => {
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                             <div>
                                 <h3>Name</h3>
-                                <div>{gameTranslations.en.name}</div>
+                                <div>{gameTranslations.en?.name}</div>
                             </div>
                             {OTHER_LANGUAGES.map(language => (
                                 <TextField

@@ -178,7 +178,7 @@ function ActionCardSettingsComponent() {
                                 variant="outlined"
                                 name="prompt"
                                 fullWidth
-                                value={actionCardSettingsTranslations.en.prompt}
+                                value={actionCardSettingsTranslations.en?.prompt}
                                 setValue={newValue =>
                                     setActionCardSettingsTranslations({
                                         ...actionCardSettingsTranslations,
@@ -207,7 +207,7 @@ function ActionCardSettingsComponent() {
                                     fullWidth
                                     required
                                     value={
-                                        actionCardSettingsTranslations.en.playerCreativePrompt
+                                        actionCardSettingsTranslations.en?.playerCreativePrompt
                                     }
                                     setValue={newValue =>
                                         setActionCardSettingsTranslations({
