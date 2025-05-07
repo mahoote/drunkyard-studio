@@ -10,8 +10,7 @@
         "lint": "eslint --ext ts,tsx --report-unused-disable-directives .",
         "format": "prettier --write .",
         "preview": "vite preview",
-        "prepare": "husky",
-        "predeploy": "npm run build"
+        "prepare": "husky"
     },
     "dependencies": {
         "@emotion/react": "^11.11.4",
