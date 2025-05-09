@@ -1,4 +1,4 @@
-import { getGame, getGameTranslations } from '../services/gameService'
+import { getGame, getGameTranslations, setGameActive } from '../services/gameService'
 import {
     getActionCards,
     getActionCardSettings,
@@ -14,6 +14,7 @@ import {
 import { NavigateFunction } from 'react-router-dom'
 import React from 'react'
 import { GameLanguage } from '../types/language'
+import { AppStudioAlert } from '../types/studio'
 
 /**
  * Handle the selection of a game.
@@ -172,7 +173,25 @@ export async function handleSelectGame(
 /**
  * Handle the click event for setting a game as active or inactive.
  * @param event
+ * @param setStudioAlert
+ * @param gameId
  */
-export function handleSetGameActive(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    event.stopPropagation()
+export async function handleSetGameActive(
+    event: React.ChangeEvent<HTMLInputElement>,
+    setStudioAlert: (alert: AppStudioAlert) => void,
+    gameId: number
+) {
+    const isChecked = event.target.checked
+
+    try {
+        await setGameActive(gameId, isChecked)
+    } catch (error) {
+        console.error(error)
+        setStudioAlert({
+            open: true,
+            message: 'Failed to update active state. Please try again.',
+            severity: 'error',
+            autoHideDuration: 5000,
+        })
+    }
 }

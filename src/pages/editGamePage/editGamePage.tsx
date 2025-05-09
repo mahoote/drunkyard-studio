@@ -20,6 +20,7 @@ import PageLoaderComponent from '../../components/pageLoaderComponent'
 import { ActiveGameType } from '../../types/gameDto'
 import { handleSelectGame, handleSetGameActive } from '../../utils/editGameUtils'
 import { useEditGameLogic } from '../../hooks/useEditGameLogic'
+import { useStudioStore } from '../../hooks/useStudioStore'
 
 export default function EditGamePage() {
     const theme = useTheme()
@@ -38,6 +39,8 @@ export default function EditGamePage() {
         setActionCardSettingsTranslations,
         setActionCardTranslations,
     } = useNewGameStore()
+
+    const { setStudioAlert } = useStudioStore()
 
     const { games, loading, setLoading } = useEditGameLogic()
 
@@ -113,7 +116,14 @@ export default function EditGamePage() {
                             <Tooltip title="Active Game" placement="top">
                                 <Switch
                                     aria-label={'Active Game'}
-                                    onClick={event => handleSetGameActive(event)}
+                                    onClick={event => event.stopPropagation()}
+                                    onChange={event =>
+                                        void handleSetGameActive(
+                                            event,
+                                            setStudioAlert,
+                                            game.id
+                                        )
+                                    }
                                     defaultChecked={game.active}
                                 />
                             </Tooltip>

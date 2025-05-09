@@ -102,24 +102,6 @@ async function createGameTranslation(gameTranslation: GameTranslationInsertDto) 
 }
 
 /**
- * Calls the edge function to get game previews by page and size
- */
-async function getPreviewGamesByPage(pageIndex: number = 0, pageSize: number = 100) {
-    const { data, error } = await supabaseFunction<GamePreviewResponse[]>(
-        `game/previews?page=${pageIndex}&size=${pageSize}`,
-        {
-            method: 'GET',
-        }
-    )
-
-    if (error || !data) {
-        throw new Error('Failed to get game previews. ' + (error?.message ?? 'Unknown error'))
-    }
-
-    return data
-}
-
-/**
  * Fetches a game from the game table by its ID.
  * @param gameId
  */
@@ -173,10 +155,38 @@ export async function getGameTranslations(gameId: number) {
     return data
 }
 
-export {
-    createGame,
-    createGameHasAccessory,
-    createGameHasGameType,
-    deleteNewGame,
-    getPreviewGamesByPage,
+/**
+ * Calls the edge function to get game previews by page and size
+ */
+export async function getPreviewGamesByPage(pageIndex: number = 0, pageSize: number = 100) {
+    const { data, error } = await supabaseFunction<GamePreviewResponse[]>(
+        `game/previews?page=${pageIndex}&size=${pageSize}`,
+        {
+            method: 'GET',
+        }
+    )
+
+    if (error || !data) {
+        throw new Error('Failed to get game previews. ' + (error?.message ?? 'Unknown error'))
+    }
+
+    return data
 }
+
+/**
+ * Calls the edge function to set a game as active or inactive.
+ * @param id
+ * @param active
+ */
+export async function setGameActive(id: number, active: boolean) {
+    const { error } = await supabaseFunction('game/active', {
+        method: 'PUT',
+        body: { id, active },
+    })
+
+    if (error) {
+        throw new Error('Failed to set game active. ' + error.message)
+    }
+}
+
+export { createGame, createGameHasAccessory, createGameHasGameType, deleteNewGame }
