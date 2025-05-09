@@ -185,7 +185,7 @@ export async function setGameActive(id: number, active: boolean) {
     })
 
     if (error) {
-        throw new Error('Failed to set game active. ' + error.message)
+        throw new Error('Failed to set game active. ' + (error?.message ?? 'Unknown error'))
     }
 }
 
