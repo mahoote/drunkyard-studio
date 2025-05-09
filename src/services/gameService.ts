@@ -8,6 +8,7 @@ import {
     GameResponse,
     GameTranslationResponse,
 } from '../types/gameResponse'
+import { supabaseFunction } from '../utils/supabaseUtils'
 
 /**
  * Creates a new game.
@@ -101,35 +102,6 @@ async function createGameTranslation(gameTranslation: GameTranslationInsertDto) 
 }
 
 /**
- * Fetches a single page of games.
- * @param pageIndex Zero-based page index (0 = first page)
- * @param pageSize Number of games per page (default: 100)
- */
-async function getPreviewGamesByPage(pageIndex: number, pageSize = 100) {
-    const from = pageIndex * pageSize
-    const to = from + pageSize - 1
-
-    const { data, error }: SupabaseResponse<GamePreviewResponse[]> = await supabaseGame
-        .from('game')
-        .select(`id, name, game_translation!left (descriptions)`)
-        .eq('game_translation.language', 'en')
-        .order('id', { ascending: false })
-        .range(from, to)
-
-    if (error) {
-        console.error(new Error(`Error fetching games: ${error.message}`))
-        return []
-    }
-
-    if (!data) {
-        console.error(new Error('No games found'))
-        return []
-    }
-
-    return data
-}
-
-/**
  * Fetches a game from the game table by its ID.
  * @param gameId
  */
@@ -183,10 +155,38 @@ export async function getGameTranslations(gameId: number) {
     return data
 }
 
-export {
-    createGame,
-    createGameHasAccessory,
-    createGameHasGameType,
-    deleteNewGame,
-    getPreviewGamesByPage,
+/**
+ * Calls the edge function to get game previews by page and size
+ */
+export async function getPreviewGamesByPage(pageIndex: number = 0, pageSize: number = 100) {
+    const { data, error } = await supabaseFunction<GamePreviewResponse[]>(
+        `game/previews?page=${pageIndex}&size=${pageSize}`,
+        {
+            method: 'GET',
+        }
+    )
+
+    if (error || !data) {
+        throw new Error('Failed to get game previews. ' + (error?.message ?? 'Unknown error'))
+    }
+
+    return data
 }
+
+/**
+ * Calls the edge function to set a game as active or inactive.
+ * @param id
+ * @param active
+ */
+export async function setGameActive(id: number, active: boolean) {
+    const { error } = await supabaseFunction('game/active', {
+        method: 'PUT',
+        body: { id, active },
+    })
+
+    if (error) {
+        throw new Error('Failed to set game active. ' + (error?.message ?? 'Unknown error'))
+    }
+}
+
+export { createGame, createGameHasAccessory, createGameHasGameType, deleteNewGame }

@@ -51,7 +51,8 @@ export interface GameTranslationResponse {
 export interface GamePreviewResponse {
     id: number
     name: string
-    game_translation: {
+    active: boolean
+    gameTranslation: {
         descriptions: GameDescription[]
     }[]
 }
