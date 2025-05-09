@@ -37,6 +37,26 @@ export default function EditGamePage() {
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <Box
+                sx={{
+                    padding: 2,
+                    paddingBottom: 1,
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                }}
+            >
+                <Typography sx={{ fontWeight: 'bold' }}>
+                    <Typography
+                        sx={{ color: 'text.secondary', fontWeight: 'bold' }}
+                        component="span"
+                    >
+                        (id)
+                    </Typography>{' '}
+                    Name
+                </Typography>
+                <Typography sx={{ fontWeight: 'bold' }}>Is Active</Typography>
+            </Box>
             {games.map((game, index) => (
                 <Card
                     key={index}
@@ -90,9 +110,9 @@ export default function EditGamePage() {
                                 </Typography>
                             </Box>
                             <Box>
-                                <Tooltip title="Active Game" placement="top">
+                                <Tooltip title="Is Active" placement="top">
                                     <Switch
-                                        aria-label={'Active Game'}
+                                        aria-label={'Is Active'}
                                         onClick={event => event.stopPropagation()}
                                         onChange={event =>
                                             void handleSetGameActive(
