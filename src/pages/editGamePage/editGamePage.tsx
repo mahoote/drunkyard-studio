@@ -114,11 +114,12 @@ export default function EditGamePage() {
                                 <Switch
                                     aria-label={'Active Game'}
                                     onClick={event => handleSetGameActive(event)}
+                                    defaultChecked={game.active}
                                 />
                             </Tooltip>
                         </Box>
                         <Typography sx={{ color: 'text.secondary' }}>
-                            {game.game_translation[0].descriptions[0]?.text}
+                            {game.gameTranslation[0].descriptions[0]?.text}
                         </Typography>
                     </CardContent>
                 </Card>
