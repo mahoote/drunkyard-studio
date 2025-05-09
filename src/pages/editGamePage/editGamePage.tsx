@@ -103,34 +103,42 @@ export default function EditGamePage() {
                         <Box
                             sx={{
                                 display: 'flex',
-                                alignItems: 'center',
                                 justifyContent: 'space-between',
+                                alignItems: 'center',
+                                gap: 1,
                             }}
                         >
-                            <Typography>
-                                <Typography sx={{ color: 'text.secondary' }} component="span">
-                                    ({game.id})
-                                </Typography>{' '}
-                                {game.name}
-                            </Typography>
-                            <Tooltip title="Active Game" placement="top">
-                                <Switch
-                                    aria-label={'Active Game'}
-                                    onClick={event => event.stopPropagation()}
-                                    onChange={event =>
-                                        void handleSetGameActive(
-                                            event,
-                                            setStudioAlert,
-                                            game.id
-                                        )
-                                    }
-                                    defaultChecked={game.active}
-                                />
-                            </Tooltip>
+                            <Box>
+                                <Typography>
+                                    <Typography
+                                        sx={{ color: 'text.secondary' }}
+                                        component="span"
+                                    >
+                                        ({game.id})
+                                    </Typography>{' '}
+                                    {game.name}
+                                </Typography>
+                                <Typography sx={{ color: 'text.secondary' }}>
+                                    {game.gameTranslation[0].descriptions[0]?.text}
+                                </Typography>
+                            </Box>
+                            <Box>
+                                <Tooltip title="Active Game" placement="top">
+                                    <Switch
+                                        aria-label={'Active Game'}
+                                        onClick={event => event.stopPropagation()}
+                                        onChange={event =>
+                                            void handleSetGameActive(
+                                                event,
+                                                setStudioAlert,
+                                                game.id
+                                            )
+                                        }
+                                        defaultChecked={game.active}
+                                    />
+                                </Tooltip>
+                            </Box>
                         </Box>
-                        <Typography sx={{ color: 'text.secondary' }}>
-                            {game.gameTranslation[0].descriptions[0]?.text}
-                        </Typography>
                     </CardContent>
                 </Card>
             ))}
