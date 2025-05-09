@@ -1,23 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 
-import {
-    Box,
-    Card,
-    CardContent,
-    FormControl,
-    InputLabel,
-    MenuItem,
-    Select,
-    Switch,
-    Tooltip,
-    Typography,
-    useTheme,
-} from '@mui/material'
+import { Box, Card, CardContent, Switch, Tooltip, Typography, useTheme } from '@mui/material'
 import { useNewGameStore } from '../../hooks/useNewGameStore'
 import { useNavigate } from 'react-router-dom'
 
 import PageLoaderComponent from '../../components/pageLoaderComponent'
-import { ActiveGameType } from '../../types/gameDto'
 import { handleSelectGame, handleSetGameActive } from '../../utils/editGameUtils'
 import { useEditGameLogic } from '../../hooks/useEditGameLogic'
 import { useStudioStore } from '../../hooks/useStudioStore'
@@ -44,32 +31,12 @@ export default function EditGamePage() {
 
     const { games, loading, setLoading } = useEditGameLogic()
 
-    const [activeGamesValue, setActiveGamesValue] = useState<ActiveGameType>('custom')
-
     if (loading) {
         return <PageLoaderComponent />
     }
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-            <FormControl>
-                <InputLabel id="active-games-select-label">Active Games</InputLabel>
-                <Select
-                    labelId="active-games-select-label"
-                    id="active-games-select"
-                    label="Active Games"
-                    value={activeGamesValue}
-                    onChange={event =>
-                        setActiveGamesValue(event.target.value as ActiveGameType)
-                    }
-                >
-                    <MenuItem value="custom" disabled={false}>
-                        Custom
-                    </MenuItem>
-                    <MenuItem value="all">All</MenuItem>
-                    <MenuItem value="none">None</MenuItem>
-                </Select>
-            </FormControl>
             {games.map((game, index) => (
                 <Card
                     key={index}

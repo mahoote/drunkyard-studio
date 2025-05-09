@@ -1,7 +1,5 @@
 import { GameDescription } from './gameResponse'
 
-export type ActiveGameType = 'all' | 'custom' | 'none'
-
 type Game = {
     id: number
     created_at: string
