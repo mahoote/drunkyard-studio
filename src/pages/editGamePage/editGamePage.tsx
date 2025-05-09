@@ -51,7 +51,7 @@ export default function EditGamePage() {
                         sx={{ color: 'text.secondary', fontWeight: 'bold' }}
                         component="span"
                     >
-                        (id)
+                        (Id)
                     </Typography>{' '}
                     Name
                 </Typography>
