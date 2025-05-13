@@ -27,10 +27,13 @@ export async function uploadImageFile(
     const imageUrl = supabase.storage.from(bucketName).getPublicUrl(fileName).data.publicUrl
 
     if (imageUrl) {
+        // Extract only the filename part from the URL
+        const imageFileName = new URL(imageUrl).pathname.split('/').pop()
+
         // Update the row in the database with the image URL
         const { error: updateError } = await supabaseGame
             .from(tableName)
-            .update({ custom_rules_image_url: imageUrl })
+            .update({ custom_rules_image_url: imageFileName })
             .eq('id', gameId)
 
         if (updateError) {
