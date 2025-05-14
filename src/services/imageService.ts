@@ -33,7 +33,7 @@ export async function uploadImageFile(
         // Update the row in the database with the image URL
         const { error: updateError } = await supabaseGame
             .from(tableName)
-            .update({ custom_rules_image_url: imageFileName })
+            .update({ custom_rules_image: imageFileName })
             .eq('id', gameId)
 
         if (updateError) {

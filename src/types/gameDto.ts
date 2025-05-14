@@ -12,7 +12,7 @@ type Game = {
     game_end_type: string
     game_category_id: number
     game_audience_id?: number
-    custom_rules_image_url?: string
+    custom_rules_image?: string
     name: string
     has_winner: boolean
 }
