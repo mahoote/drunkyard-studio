@@ -4,7 +4,7 @@ import { ChangeEvent, useState } from 'react'
 import { Delete, Image } from '@mui/icons-material'
 import { CustomImage } from '../types/newGame'
 
-const MAX_FILE_SIZE = 1024 * 1024 // 1 MB in bytes
+const MAX_FILE_SIZE = 2 * 1024 * 1024 // 2 MB in bytes
 const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/png', 'image/svg+xml']
 
 type ImageUploaderProps = {

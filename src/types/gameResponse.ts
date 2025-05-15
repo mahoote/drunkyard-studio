@@ -17,7 +17,7 @@ export interface GameResponse {
     min_players?: number
     max_players?: number
     game_end_type?: string
-    custom_rules_image_url?: string
+    custom_rules_image?: string
     name: string
 
     accessories: {
