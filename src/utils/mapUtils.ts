@@ -27,7 +27,6 @@ export function mapActionCardSettings(
             actionCardSettingsData.stateId === 6
                 ? actionCardSettingsData.excludePlayersAmount
                 : undefined,
-        card_based_timer: actionCardSettingsData.cardBasedTimer,
         one_card_per_player: actionCardSettingsData.oneCardPerPlayer,
     }
 }

@@ -11,7 +11,6 @@ export interface ActionCardSettingsResponse {
     allow_sentence: boolean
     can_repeat: boolean
     exclude_players_amount?: string
-    card_based_timer: boolean
     one_card_per_player: boolean
 }
 

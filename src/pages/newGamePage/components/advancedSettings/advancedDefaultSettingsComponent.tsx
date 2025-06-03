@@ -31,27 +31,6 @@ function AdvancedDefaultSettingsComponent() {
     return (
         <Box>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <Grid container>
-                    <Grid item xs={12}>
-                        <Tooltip title="If the game requires a more custom description on how to end the game.">
-                            <TextField
-                                label="Custom 'How to End the Game' Sentence"
-                                variant="outlined"
-                                name="customEndGameSentence"
-                                fullWidth
-                                value={gameTranslations.en.customEndGameSentence}
-                                onChange={event =>
-                                    handleGameTranslationChange(
-                                        event,
-                                        gameTranslations,
-                                        setGameTranslations
-                                    )
-                                }
-                                multiline
-                            />
-                        </Tooltip>
-                    </Grid>
-                </Grid>
                 <Grid container columnGap={4} rowGap={2}>
                     <Grid item>
                         <FormControl>
@@ -109,10 +88,8 @@ function AdvancedDefaultSettingsComponent() {
                             </Tooltip>
                         </FormControl>
                     </Grid>
-                </Grid>
-                <Grid container gap={2}>
                     {advancedSettingsData.hasWinner && (
-                        <Grid item xs={12} sm={6}>
+                        <Grid item xs={12} md={6}>
                             <Tooltip title="Specific prompt to ask the players to pick a winner.">
                                 <TextField
                                     label="Has Winner Prompt"
@@ -133,6 +110,8 @@ function AdvancedDefaultSettingsComponent() {
                             </Tooltip>
                         </Grid>
                     )}
+                </Grid>
+                <Grid container gap={2}>
                     <Grid item xs={12} alignContent="center">
                         <ImageUploaderComponent
                             image={advancedSettingsData.customRulesImage}

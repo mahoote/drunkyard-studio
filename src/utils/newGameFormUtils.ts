@@ -2,6 +2,7 @@ import {
     createGame,
     createGameHasAccessory,
     createGameHasGameType,
+    deleteGameHasGameType,
 } from '../services/gameService'
 import { GameInsertDto, GameTranslationInsertDto } from '../types/gameDto'
 import { GenericType } from '../types/genericType'
@@ -45,7 +46,6 @@ export async function createNewGame(
             language: key,
             name: translation.name,
             descriptions: translation.descriptions,
-            custom_end_game_sentence: validString(translation.customEndGameSentence),
             has_winner_prompt: validString(translation.hasWinnerPrompt),
         })
     })
@@ -102,6 +102,7 @@ export async function addAccessoriesToGame(
 }
 
 /**
+ * First, delete any existing game type for the game.
  * Iterates through the selected game types and adds them to the new game.
  * @param selectedGameTypes
  * @param gameTypes
@@ -112,6 +113,8 @@ export async function addGameTypesToGame(
     gameTypes: GenericType[] | null,
     newGameId: number
 ) {
+    await deleteGameHasGameType(newGameId)
+
     for (const gameType of selectedGameTypes) {
         const gameTypeId = gameTypes?.find(gameTypeItem => gameTypeItem.name === gameType)?.id
 

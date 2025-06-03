@@ -15,7 +15,6 @@ export type ActionCardSettings = {
     allowSentence: boolean
     canRepeat?: boolean
     excludePlayersAmount?: string
-    cardBasedTimer?: boolean
     oneCardPerPlayer?: boolean
 }
 

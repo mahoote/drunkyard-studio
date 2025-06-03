@@ -68,17 +68,22 @@ async function createGameHasAccessory(gameId: number, accessoryId: number) {
     }
 }
 
-async function createGameHasGameType(gameId: number, gameTypeId: number) {
-    // First, delete any existing game type for the game.
-    const { error: deleteError } = await supabaseGame
+/**
+ * Deletes all the game types associated with a game.
+ * @param gameId
+ */
+export async function deleteGameHasGameType(gameId: number) {
+    const { error } = await supabaseGame
         .from('game_has_game_type')
         .delete()
         .eq('game_id', gameId)
 
-    if (deleteError) {
-        console.error('Error deleting existing game type:', deleteError.message)
+    if (error) {
+        throw new Error(error.message)
     }
+}
 
+async function createGameHasGameType(gameId: number, gameTypeId: number) {
     const { error }: SupabaseResponse<GameHasAccessoryDto> = await supabaseGame
         .from('game_has_game_type')
         .upsert(

@@ -110,7 +110,6 @@ export async function handleSelectGame(
                             ?.filter(t => t.language === translation.language)
                             .map(t => t.name) ?? []
                 ),
-                customEndGameSentence: translation.custom_end_game_sentence,
                 hasWinnerPrompt: translation.has_winner_prompt,
             }
         })
@@ -140,7 +139,6 @@ export async function handleSelectGame(
                 allowSentence: actionCardSettings.allow_sentence,
                 canRepeat: actionCardSettings.can_repeat,
                 excludePlayersAmount: actionCardSettings.exclude_players_amount,
-                cardBasedTimer: actionCardSettings.card_based_timer,
                 oneCardPerPlayer: actionCardSettings.one_card_per_player,
             })
 

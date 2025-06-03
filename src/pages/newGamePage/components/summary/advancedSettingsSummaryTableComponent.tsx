@@ -16,7 +16,6 @@ const AdvancedSettingsSummaryTableComponent = () => {
 
     const { actionCardStates } = useActionCardStore()
 
-    const customEndGameSentence = gameTranslations.en.customEndGameSentence ?? ''
     const hasWinnerPrompt = gameTranslations.en.hasWinnerPrompt
     const playerCreativePrompt = actionCardSettingsTranslations.en?.playerCreativePrompt ?? ''
     const actionCardPrompt = actionCardSettingsTranslations.en?.prompt
@@ -37,14 +36,6 @@ const AdvancedSettingsSummaryTableComponent = () => {
                         Game End Type
                     </TableCell>
                     <TableCell>{advancedSettingsData.gameEndType}</TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell sx={{ verticalAlign: 'top' }} scope="row">
-                        Custom End Game Sentence
-                    </TableCell>
-                    <TableCell>
-                        <MultilineComponent text={customEndGameSentence} />
-                    </TableCell>
                 </TableRow>
                 <TableRow>
                     <TableCell sx={{ verticalAlign: 'top' }} scope="row">
@@ -159,14 +150,6 @@ const AdvancedSettingsSummaryTableComponent = () => {
                             </TableCell>
                             <TableCell>
                                 {actionCardSettingsData.canRepeat?.toString()}
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell sx={{ verticalAlign: 'top' }} scope="row">
-                                Card Based Timer
-                            </TableCell>
-                            <TableCell>
-                                {actionCardSettingsData.cardBasedTimer?.toString()}
                             </TableCell>
                         </TableRow>
                         <TableRow>

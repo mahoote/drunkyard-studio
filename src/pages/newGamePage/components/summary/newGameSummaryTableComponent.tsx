@@ -102,7 +102,11 @@ const NewGameSummaryTableComponent = () => {
                     </TableCell>
                     <TableCell sx={{ verticalAlign: 'top' }}>
                         {selectedGameTypes.map((gameType, index) => (
-                            <div key={index}>{gameType}</div>
+                            <Box component="ul" key={index} px={1}>
+                                <Box component="li">
+                                    <div>{gameType}</div>
+                                </Box>
+                            </Box>
                         ))}
                     </TableCell>
                 </TableRow>
