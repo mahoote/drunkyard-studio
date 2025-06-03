@@ -88,10 +88,8 @@ function AdvancedDefaultSettingsComponent() {
                             </Tooltip>
                         </FormControl>
                     </Grid>
-                </Grid>
-                <Grid container gap={2}>
                     {advancedSettingsData.hasWinner && (
-                        <Grid item xs={12} sm={6}>
+                        <Grid item xs={12} sm={8}>
                             <Tooltip title="Specific prompt to ask the players to pick a winner.">
                                 <TextField
                                     label="Has Winner Prompt"
@@ -112,6 +110,8 @@ function AdvancedDefaultSettingsComponent() {
                             </Tooltip>
                         </Grid>
                     )}
+                </Grid>
+                <Grid container gap={2}>
                     <Grid item xs={12} alignContent="center">
                         <ImageUploaderComponent
                             image={advancedSettingsData.customRulesImage}
