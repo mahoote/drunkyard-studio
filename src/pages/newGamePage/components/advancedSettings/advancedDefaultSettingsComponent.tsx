@@ -89,7 +89,7 @@ function AdvancedDefaultSettingsComponent() {
                         </FormControl>
                     </Grid>
                     {advancedSettingsData.hasWinner && (
-                        <Grid item xs={12} sm={8}>
+                        <Grid item xs={12} md={6}>
                             <Tooltip title="Specific prompt to ask the players to pick a winner.">
                                 <TextField
                                     label="Has Winner Prompt"
