@@ -30,6 +30,3 @@ dist-ssr
 
 # Allow .env.example
 !.env.example
-
-# Supabase
-supabase/.temp/

@@ -154,14 +154,6 @@ const AdvancedSettingsSummaryTableComponent = () => {
                         </TableRow>
                         <TableRow>
                             <TableCell sx={{ verticalAlign: 'top' }} scope="row">
-                                Card Based Timer
-                            </TableCell>
-                            <TableCell>
-                                {actionCardSettingsData.cardBasedTimer?.toString()}
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell sx={{ verticalAlign: 'top' }} scope="row">
                                 One Card Per Player
                             </TableCell>
                             <TableCell>

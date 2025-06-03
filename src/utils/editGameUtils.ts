@@ -139,7 +139,6 @@ export async function handleSelectGame(
                 allowSentence: actionCardSettings.allow_sentence,
                 canRepeat: actionCardSettings.can_repeat,
                 excludePlayersAmount: actionCardSettings.exclude_players_amount,
-                cardBasedTimer: actionCardSettings.card_based_timer,
                 oneCardPerPlayer: actionCardSettings.one_card_per_player,
             })
 

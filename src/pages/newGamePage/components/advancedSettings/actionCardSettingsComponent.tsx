@@ -10,6 +10,8 @@ import {
     Select,
     Switch,
     TextField,
+    ToggleButton,
+    ToggleButtonGroup,
     Tooltip,
     Typography,
 } from '@mui/material'
@@ -69,7 +71,8 @@ function ActionCardSettingsComponent() {
             <Box my={3}>
                 <Divider />
             </Box>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                 <Typography variant="h6">Action Card Settings</Typography>
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={6}>
@@ -97,29 +100,8 @@ function ActionCardSettingsComponent() {
                             </Select>
                         </FormControl>
                     </Grid>
-                    {actionCardSettingsData.stateId === 6 && (
-                        <Grid item xs={12} sm={2}>
-                            <Tooltip title={'The amount of players not to receive cards.'}>
-                                <TextField
-                                    label="Exclude Players Amount"
-                                    variant="filled"
-                                    name="excludePlayersAmount"
-                                    value={actionCardSettingsData.excludePlayersAmount}
-                                    onChange={event =>
-                                        handleTextChange(
-                                            event,
-                                            actionCardSettingsData,
-                                            setActionCardSettingsData
-                                        )
-                                    }
-                                    required
-                                    fullWidth
-                                />
-                            </Tooltip>
-                        </Grid>
-                    )}
 
-                    <Grid item xs={12} sm={actionCardSettingsData.stateId === 6 ? 2 : 3}>
+                    <Grid item xs={12} sm="auto">
                         <Tooltip
                             title={
                                 'How many cards there is in a game. Will end the game after the last card.'
@@ -144,7 +126,30 @@ function ActionCardSettingsComponent() {
                             />
                         </Tooltip>
                     </Grid>
-                    <Grid item xs={12} sm={actionCardSettingsData.stateId === 6 ? 2 : 3}>
+
+                    <Grid item>
+                        <ToggleButtonGroup
+                            color="primary"
+                            value={actionCardSettingsData.allowSentence ? 'sentence' : 'word'}
+                            exclusive
+                            onChange={(_, value: string) => {
+                                setActionCardSettingsData({
+                                    ...actionCardSettingsData,
+                                    allowSentence: value === 'sentence',
+                                })
+                            }}
+                            aria-label="Platform"
+                            sx={{ height: '100%' }}
+                        >
+                            <ToggleButton value="sentence">SENTENCE</ToggleButton>
+                            <ToggleButton value="word">WORD</ToggleButton>
+                        </ToggleButtonGroup>
+                    </Grid>
+                </Grid>
+
+                <Typography fontWeight="bold">Timer</Typography>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm="auto">
                         <Tooltip title={'How long each card is displayed.'}>
                             <TextField
                                 label="Card Time (Seconds)"
@@ -164,8 +169,191 @@ function ActionCardSettingsComponent() {
                             />
                         </Tooltip>
                     </Grid>
+                    {(actionCardSettingsData?.cardSeconds ?? 0) > 0 && (
+                        <Tooltip
+                            title={
+                                'If the "Card Seconds" is set, the Auto-next decides if there is a manual step between each card or if they should show the next card automatically.'
+                            }
+                        >
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        defaultChecked={actionCardSettingsData.isAutoNext}
+                                        onChange={event => {
+                                            setActionCardSettingsData({
+                                                ...actionCardSettingsData,
+                                                isAutoNext: event.target.checked,
+                                            })
+                                        }}
+                                    />
+                                }
+                                label="Auto-next"
+                                labelPlacement="top"
+                            />
+                        </Tooltip>
+                    )}
                 </Grid>
+
+                <Typography fontWeight="bold">Generic</Typography>
                 <Grid container spacing={2}>
+                    <Tooltip title={'If the action card can repeat and show up again.'}>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    defaultChecked={actionCardSettingsData.canRepeat}
+                                    onChange={event => {
+                                        setActionCardSettingsData({
+                                            ...actionCardSettingsData,
+                                            canRepeat: event.target.checked,
+                                        })
+                                    }}
+                                />
+                            }
+                            label="Can Repeat"
+                            labelPlacement="top"
+                        />
+                    </Tooltip>
+                    <Tooltip
+                        title={
+                            'If the players will be creative and make their custom action cards.'
+                        }
+                    >
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    defaultChecked={actionCardSettingsData.isPlayerCreative}
+                                    onChange={event => {
+                                        setActionCardSettingsData({
+                                            ...actionCardSettingsData,
+                                            isPlayerCreative: event.target.checked,
+                                        })
+                                    }}
+                                />
+                            }
+                            label="Custom Prompts"
+                            labelPlacement="top"
+                        />
+                    </Tooltip>
+                </Grid>
+
+                {[4, 5, 6].includes(actionCardSettingsData.stateId) && (
+                    <>
+                        <Typography fontWeight="bold">Players Without Cards</Typography>
+                        <Grid container spacing={2}>
+                            {actionCardSettingsData.stateId === 6 && (
+                                <Grid item xs={12} sm={3}>
+                                    <Tooltip
+                                        title={
+                                            <span>
+                                                The amount of players not to receive cards.
+                                                <br />
+                                                Can be a number or fraction.
+                                            </span>
+                                        }
+                                    >
+                                        <TextField
+                                            label="Player Amount Without Cards"
+                                            variant="filled"
+                                            name="excludePlayersAmount"
+                                            value={actionCardSettingsData.excludePlayersAmount}
+                                            onChange={event =>
+                                                handleTextChange(
+                                                    event,
+                                                    actionCardSettingsData,
+                                                    setActionCardSettingsData
+                                                )
+                                            }
+                                            required
+                                            fullWidth
+                                        />
+                                    </Tooltip>
+                                </Grid>
+                            )}
+                            {actionCardSettingsData.stateId === 4 && (
+                                <Tooltip
+                                    title={
+                                        'The limit of cards is automatically set to the amount of players'
+                                    }
+                                >
+                                    <FormControlLabel
+                                        control={
+                                            <Switch
+                                                defaultChecked={
+                                                    actionCardSettingsData.oneCardPerPlayer
+                                                }
+                                                onChange={event => {
+                                                    setActionCardSettingsData({
+                                                        ...actionCardSettingsData,
+                                                        oneCardPerPlayer: event.target.checked,
+                                                        cardLimit: 0,
+                                                    })
+                                                }}
+                                            />
+                                        }
+                                        label="One Card Per Player"
+                                        labelPlacement="top"
+                                    />
+                                </Tooltip>
+                            )}
+
+                            <Tooltip
+                                title={
+                                    'The players not receiving cards will be given a buzzer for the game.'
+                                }
+                            >
+                                <FormControlLabel
+                                    control={
+                                        <Switch
+                                            defaultChecked={actionCardSettingsData.hasBuzzer}
+                                            onChange={event => {
+                                                setActionCardSettingsData({
+                                                    ...actionCardSettingsData,
+                                                    hasBuzzer: event.target.checked,
+                                                })
+                                            }}
+                                        />
+                                    }
+                                    label="Buzzer"
+                                    labelPlacement="top"
+                                />
+                            </Tooltip>
+                        </Grid>
+                    </>
+                )}
+
+                <Typography fontWeight="bold">Prompts</Typography>
+                <Grid container spacing={2}>
+                    {actionCardSettingsData.isPlayerCreative && (
+                        <Grid item xs={12} sm={6}>
+                            <Tooltip
+                                title={
+                                    'This prompt will show between games if the players have checked "Player Creativity". They will write sentences or words based on this prompt.'
+                                }
+                            >
+                                <TextFieldSuggestionsComponent
+                                    wordSuggestions={actionCardSuggestions}
+                                    label='"Custom Prompts" Prompt'
+                                    variant="filled"
+                                    name="playerCreativePrompt"
+                                    multiline
+                                    fullWidth
+                                    required
+                                    value={
+                                        actionCardSettingsTranslations.en?.playerCreativePrompt
+                                    }
+                                    setValue={newValue =>
+                                        setActionCardSettingsTranslations({
+                                            ...actionCardSettingsTranslations,
+                                            en: {
+                                                ...actionCardSettingsTranslations.en,
+                                                playerCreativePrompt: newValue,
+                                            },
+                                        })
+                                    }
+                                />
+                            </Tooltip>
+                        </Grid>
+                    )}
                     <Grid item xs={12} sm={6}>
                         <Tooltip
                             title={
@@ -191,200 +379,9 @@ function ActionCardSettingsComponent() {
                             />
                         </Tooltip>
                     </Grid>
-                    {actionCardSettingsData.isPlayerCreative && (
-                        <Grid item xs={12} sm={6}>
-                            <Tooltip
-                                title={
-                                    'This prompt will show between games if the players have checked "Player Creativity". They will write sentences or words based on this prompt.'
-                                }
-                            >
-                                <TextFieldSuggestionsComponent
-                                    wordSuggestions={actionCardSuggestions}
-                                    label="Player Creative Prompt"
-                                    variant="filled"
-                                    name="playerCreativePrompt"
-                                    multiline
-                                    fullWidth
-                                    required
-                                    value={
-                                        actionCardSettingsTranslations.en?.playerCreativePrompt
-                                    }
-                                    setValue={newValue =>
-                                        setActionCardSettingsTranslations({
-                                            ...actionCardSettingsTranslations,
-                                            en: {
-                                                ...actionCardSettingsTranslations.en,
-                                                playerCreativePrompt: newValue,
-                                            },
-                                        })
-                                    }
-                                />
-                            </Tooltip>
-                        </Grid>
-                    )}
                 </Grid>
-                <Grid container>
-                    <Grid item xs={12}>
-                        <Box display="flex" flexWrap="wrap">
-                            <Tooltip title="When false, only allow a single word in the action card.">
-                                <FormControlLabel
-                                    control={
-                                        <Switch
-                                            defaultChecked={
-                                                actionCardSettingsData.allowSentence
-                                            }
-                                            onChange={event => {
-                                                setActionCardSettingsData({
-                                                    ...actionCardSettingsData,
-                                                    allowSentence: event.target.checked,
-                                                })
-                                            }}
-                                        />
-                                    }
-                                    label="Allow Sentence"
-                                    labelPlacement="top"
-                                />
-                            </Tooltip>
-                            <Tooltip
-                                title={
-                                    'If the "Card Seconds" is set, the Auto-next decides if there is a manual step between each card or if they should show the next card automatically.'
-                                }
-                            >
-                                <FormControlLabel
-                                    disabled={(actionCardSettingsData?.cardSeconds ?? 0) <= 0}
-                                    control={
-                                        <Switch
-                                            defaultChecked={actionCardSettingsData.isAutoNext}
-                                            onChange={event => {
-                                                setActionCardSettingsData({
-                                                    ...actionCardSettingsData,
-                                                    isAutoNext: event.target.checked,
-                                                })
-                                            }}
-                                        />
-                                    }
-                                    label="Auto-next"
-                                    labelPlacement="top"
-                                />
-                            </Tooltip>
-                            <Tooltip
-                                title={
-                                    'If there are players not receiving cards, they will be given a buzzer for the game.'
-                                }
-                            >
-                                <FormControlLabel
-                                    disabled={
-                                        ![4, 5, 6].includes(actionCardSettingsData.stateId)
-                                    }
-                                    control={
-                                        <Switch
-                                            defaultChecked={actionCardSettingsData.hasBuzzer}
-                                            onChange={event => {
-                                                setActionCardSettingsData({
-                                                    ...actionCardSettingsData,
-                                                    hasBuzzer: event.target.checked,
-                                                })
-                                            }}
-                                        />
-                                    }
-                                    label="Buzzer"
-                                    labelPlacement="top"
-                                />
-                            </Tooltip>
-                            <Tooltip
-                                title={
-                                    'If the players will be creative and make their own cards.'
-                                }
-                            >
-                                <FormControlLabel
-                                    control={
-                                        <Switch
-                                            defaultChecked={
-                                                actionCardSettingsData.isPlayerCreative
-                                            }
-                                            onChange={event => {
-                                                setActionCardSettingsData({
-                                                    ...actionCardSettingsData,
-                                                    isPlayerCreative: event.target.checked,
-                                                })
-                                            }}
-                                        />
-                                    }
-                                    label="Player Creative"
-                                    labelPlacement="top"
-                                />
-                            </Tooltip>
-                            <Tooltip
-                                title={'If the action card can repeat and show up again.'}
-                            >
-                                <FormControlLabel
-                                    control={
-                                        <Switch
-                                            defaultChecked={actionCardSettingsData.canRepeat}
-                                            onChange={event => {
-                                                setActionCardSettingsData({
-                                                    ...actionCardSettingsData,
-                                                    canRepeat: event.target.checked,
-                                                })
-                                            }}
-                                        />
-                                    }
-                                    label="Can Repeat"
-                                    labelPlacement="top"
-                                />
-                            </Tooltip>
-                            <Tooltip
-                                title={
-                                    'Instead of the global game timer, it will use timer per card.'
-                                }
-                            >
-                                <FormControlLabel
-                                    control={
-                                        <Switch
-                                            defaultChecked={
-                                                actionCardSettingsData.cardBasedTimer
-                                            }
-                                            onChange={event => {
-                                                setActionCardSettingsData({
-                                                    ...actionCardSettingsData,
-                                                    cardBasedTimer: event.target.checked,
-                                                })
-                                            }}
-                                        />
-                                    }
-                                    label="Card Based Timer"
-                                    labelPlacement="top"
-                                />
-                            </Tooltip>
-                            <Tooltip
-                                title={
-                                    'The limit of cards is automatically set to the amount of players'
-                                }
-                            >
-                                <FormControlLabel
-                                    disabled={actionCardSettingsData.stateId !== 4}
-                                    control={
-                                        <Switch
-                                            defaultChecked={
-                                                actionCardSettingsData.oneCardPerPlayer
-                                            }
-                                            onChange={event => {
-                                                setActionCardSettingsData({
-                                                    ...actionCardSettingsData,
-                                                    oneCardPerPlayer: event.target.checked,
-                                                    cardLimit: 0,
-                                                })
-                                            }}
-                                        />
-                                    }
-                                    label="One Card Per Player"
-                                    labelPlacement="top"
-                                />
-                            </Tooltip>
-                        </Box>
-                    </Grid>
-                </Grid>
-                <Typography>Cards</Typography>
+
+                <Typography fontWeight="bold">Cards</Typography>
                 <ActionCardsInputComponent />
             </Box>
         </>
