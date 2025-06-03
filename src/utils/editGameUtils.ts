@@ -110,7 +110,6 @@ export async function handleSelectGame(
                             ?.filter(t => t.language === translation.language)
                             .map(t => t.name) ?? []
                 ),
-                customEndGameSentence: translation.custom_end_game_sentence,
                 hasWinnerPrompt: translation.has_winner_prompt,
             }
         })

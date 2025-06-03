@@ -30,7 +30,6 @@ const TranslationsFormComponent = () => {
 
     const descriptions = gameTranslations.en.descriptions
     const accessories = gameTranslations.en.accessories
-    const customEndGameSentence = gameTranslations.en.customEndGameSentence
     const hasWinnerPrompt = gameTranslations.en.hasWinnerPrompt
     const actionCardPrompt = actionCardSettingsTranslations.en?.prompt
     const playerCreativePrompt = actionCardSettingsTranslations.en?.playerCreativePrompt
@@ -330,39 +329,6 @@ const TranslationsFormComponent = () => {
                                         }
                                     />
                                 </Box>
-                            ))}
-                        </Box>
-                        <Divider />
-                    </>
-                )}
-
-                {customEndGameSentence && (
-                    <>
-                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                            <div>
-                                <h3>Custom 'How to End the Game' Sentence</h3>
-                                <MultilineComponent text={customEndGameSentence} />
-                            </div>
-                            {OTHER_LANGUAGES.map(language => (
-                                <TextField
-                                    key={language}
-                                    label={codeToLanguage(language)}
-                                    variant="filled"
-                                    name={`${language}CustomEndGameSentence`}
-                                    fullWidth
-                                    multiline
-                                    required
-                                    value={gameTranslations[language]?.customEndGameSentence}
-                                    onChange={event =>
-                                        setGameTranslations({
-                                            ...gameTranslations,
-                                            [language]: {
-                                                ...gameTranslations[language],
-                                                customEndGameSentence: event.target.value,
-                                            },
-                                        })
-                                    }
-                                />
                             ))}
                         </Box>
                         <Divider />

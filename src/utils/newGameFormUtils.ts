@@ -46,7 +46,6 @@ export async function createNewGame(
             language: key,
             name: translation.name,
             descriptions: translation.descriptions,
-            custom_end_game_sentence: validString(translation.customEndGameSentence),
             has_winner_prompt: validString(translation.hasWinnerPrompt),
         })
     })

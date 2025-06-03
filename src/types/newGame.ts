@@ -33,7 +33,6 @@ export type GameTranslation = {
     id?: number
     name: string
     descriptions: GameDescription[]
-    customEndGameSentence?: string
     accessories?: string[]
     hasWinnerPrompt?: string
 }

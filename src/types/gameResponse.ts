@@ -44,7 +44,6 @@ export interface GameTranslationResponse {
     language: string
     name: string
     descriptions: GameDescription[]
-    custom_end_game_sentence?: string
     has_winner_prompt?: string
 }
 
