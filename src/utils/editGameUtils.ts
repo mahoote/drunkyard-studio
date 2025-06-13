@@ -146,6 +146,7 @@ export async function handleSelectGame(
 
             actionCardSettingsTranslations.forEach(translation => {
                 newSettingsTranslations[translation.language] = {
+                    id: translation.id,
                     prompt: translation?.prompt,
                     playerCreativePrompt: translation?.player_creative_prompt,
                 }
