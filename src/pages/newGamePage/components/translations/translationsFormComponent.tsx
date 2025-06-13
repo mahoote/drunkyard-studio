@@ -24,13 +24,15 @@ const TranslationsFormComponent = () => {
         actionCardTranslations,
         setActionCardSettingsTranslations,
         setActionCardTranslations,
+        advancedSettingsData,
     } = useNewGameStore()
 
     const { setStudioAlert } = useStudioStore()
 
     const descriptions = gameTranslations.en.descriptions
     const accessories = gameTranslations.en.accessories
-    const hasWinnerPrompt = gameTranslations.en.hasWinnerPrompt
+    const hasWinnerPrompt =
+        advancedSettingsData.hasWinner && gameTranslations.en.hasWinnerPrompt
     const actionCardPrompt = actionCardSettingsTranslations.en?.prompt
     const playerCreativePrompt = actionCardSettingsTranslations.en?.playerCreativePrompt
     const actionCardsEn = actionCardTranslations.en
