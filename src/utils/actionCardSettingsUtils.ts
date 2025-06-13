@@ -35,14 +35,18 @@ export async function createActionCardData(
     const actionCardSettingsInsertDto = mapActionCardSettings(gameId, actionCardSettingsData)
     const settingsTranslationInsertDtos: ActionCardSettingsTranslationInsertDto[] = []
 
+    const englishTranslation = actionCardSettingsTranslations['en']
+
     Object.entries(actionCardSettingsTranslations).forEach(([key, translation]) => {
         settingsTranslationInsertDtos.push({
             id: translation.id,
             language: key,
-            prompt: validString(translation.prompt),
-            player_creative_prompt: actionCardSettingsData.isPlayerCreative
+            prompt: validString(englishTranslation.prompt)
+                ? validString(translation.prompt)
+                : null,
+            player_creative_prompt: validString(englishTranslation.playerCreativePrompt)
                 ? validString(translation.playerCreativePrompt)
-                : undefined,
+                : null,
         })
     })
 

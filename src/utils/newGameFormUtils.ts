@@ -37,6 +37,10 @@ export async function createNewGame(
         has_winner: advancedDefaultSettings.hasWinner,
     }
 
+    const englishTranslation = gameTranslations.en
+    const validWinnerPrompt =
+        advancedDefaultSettings.hasWinner && validString(englishTranslation.hasWinnerPrompt)
+
     // New Game Translations
     const newGameTranslationInsertDtos: GameTranslationInsertDto[] = []
 
@@ -46,7 +50,9 @@ export async function createNewGame(
             language: key,
             name: translation.name,
             descriptions: translation.descriptions,
-            has_winner_prompt: validString(translation.hasWinnerPrompt),
+            has_winner_prompt: validWinnerPrompt
+                ? validString(translation.hasWinnerPrompt)
+                : null,
         })
     })
 

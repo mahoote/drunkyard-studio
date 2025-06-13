@@ -37,7 +37,7 @@ type GameTranslationInsertDto = {
     language: string
     name: string
     descriptions: GameDescription[]
-    has_winner_prompt?: string
+    has_winner_prompt?: string | null
 }
 
 export type { Game, GameInsertDto, GameTranslationInsertDto }
