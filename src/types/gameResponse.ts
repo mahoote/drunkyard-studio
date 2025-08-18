@@ -1,6 +1,5 @@
 export interface GameDescription {
     text: string
-    side: 'left' | 'right'
     pause?: boolean
 }
 

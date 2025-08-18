@@ -63,7 +63,7 @@ const NewGameSummaryTableComponent = () => {
                             <Box component="ul" key={index} px={1}>
                                 <Box component="li">
                                     <MultilineComponent
-                                        text={`${description.text}\n\nside:${description.side}, pause:${!!description.pause}`}
+                                        text={`${description.text}\n\npause:${!!description.pause}`}
                                     />
                                 </Box>
                             </Box>

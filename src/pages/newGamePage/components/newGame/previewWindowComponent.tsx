@@ -63,7 +63,7 @@ export default function PreviewWindowComponent() {
     }
 
     const handleAddDescription = () => {
-        setDescriptions([...descriptions, { text: '', side: 'left', pause: false }])
+        setDescriptions([...descriptions, { text: '', pause: false }])
     }
 
     const moveDescription = (from: number, to: number) => {
@@ -108,7 +108,7 @@ export default function PreviewWindowComponent() {
      */
     useEffect(() => {
         if (descriptions.length === 0) {
-            setDescriptions([{ text: '', side: 'left', pause: false }])
+            setDescriptions([{ text: '', pause: false }])
         }
     }, [setDescriptions, descriptions.length])
 
@@ -178,21 +178,6 @@ export default function PreviewWindowComponent() {
                                 </Box>
                             </Box>
                             <Box display="flex" gap={2}>
-                                <ToggleButtonGroup
-                                    color="primary"
-                                    value={description.side}
-                                    exclusive
-                                    onChange={(_, value: 'right' | 'left') =>
-                                        handleDescriptionChange(
-                                            { ...description, side: value },
-                                            index
-                                        )
-                                    }
-                                    aria-label="Platform"
-                                >
-                                    <ToggleButton value="left">Left</ToggleButton>
-                                    <ToggleButton value="right">Right</ToggleButton>
-                                </ToggleButtonGroup>
                                 <ToggleButtonGroup
                                     color="primary"
                                     value={description.pause ? 'pause' : undefined}
