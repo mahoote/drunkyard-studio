@@ -7,19 +7,18 @@ import MultilineComponent from '../../../../components/multilineComponent'
 const AdvancedSettingsSummaryTableComponent = () => {
     const {
         advancedSettingsData,
-        actionCardSettingsData,
+        actionCardState,
         writingSettingsData,
         gameTranslations,
-        actionCardSettingsTranslations,
-        actionCardTranslations,
+        actionCardTranslationsState,
     } = useNewGameStore()
 
     const { actionCardStates } = useActionCardStore()
 
     const hasWinnerPrompt = gameTranslations.en.hasWinnerPrompt
-    const playerCreativePrompt = actionCardSettingsTranslations.en?.playerCreativePrompt ?? ''
-    const actionCardPrompt = actionCardSettingsTranslations.en?.prompt
-    const actionCards = actionCardTranslations.en
+    const playerCreativePrompt = actionCardTranslationsState.en?.playerCreativePrompt ?? ''
+    const actionCardPrompt = actionCardTranslationsState.en?.prompt
+    const actionCards = actionCardTranslationsState.en.texts
 
     return (
         <>
@@ -72,7 +71,7 @@ const AdvancedSettingsSummaryTableComponent = () => {
                 </TableRow>
             </TableBody>
 
-            {actionCardSettingsData && (
+            {actionCardState && (
                 <>
                     <TableHead>
                         <TableRow>
@@ -89,42 +88,38 @@ const AdvancedSettingsSummaryTableComponent = () => {
                             <TableCell>
                                 {
                                     actionCardStates.find(
-                                        s => s.id === actionCardSettingsData.stateId
+                                        s => s.id === actionCardState.stateId
                                     )?.name
                                 }
                             </TableCell>
                         </TableRow>
-                        {actionCardSettingsData.stateId === 6 && (
+                        {actionCardState.stateId === 6 && (
                             <TableRow>
                                 <TableCell sx={{ verticalAlign: 'top' }} scope="row">
                                     Exclude Players Amount
                                 </TableCell>
-                                <TableCell>
-                                    {actionCardSettingsData.excludePlayersAmount}
-                                </TableCell>
+                                <TableCell>{actionCardState.excludePlayersAmount}</TableCell>
                             </TableRow>
                         )}
                         <TableRow>
                             <TableCell sx={{ verticalAlign: 'top' }} scope="row">
                                 Allow Sentence
                             </TableCell>
-                            <TableCell>
-                                {actionCardSettingsData.allowSentence.toString()}
-                            </TableCell>
+                            <TableCell>{actionCardState.allowSentence.toString()}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell sx={{ verticalAlign: 'top' }} scope="row">
                                 Limit
                             </TableCell>
-                            <TableCell>{actionCardSettingsData.cardLimit}</TableCell>
+                            <TableCell>{actionCardState.cardLimit}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell sx={{ verticalAlign: 'top' }} scope="row">
                                 Time
                             </TableCell>
                             <TableCell>
-                                {actionCardSettingsData.cardSeconds && (
-                                    <>{actionCardSettingsData.cardSeconds} seconds</>
+                                {actionCardState.cardSeconds && (
+                                    <>{actionCardState.cardSeconds} seconds</>
                                 )}
                             </TableCell>
                         </TableRow>
@@ -132,32 +127,26 @@ const AdvancedSettingsSummaryTableComponent = () => {
                             <TableCell sx={{ verticalAlign: 'top' }} scope="row">
                                 Auto Next
                             </TableCell>
-                            <TableCell>
-                                {actionCardSettingsData.isAutoNext?.toString()}
-                            </TableCell>
+                            <TableCell>{actionCardState.isAutoNext?.toString()}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell sx={{ verticalAlign: 'top' }} scope="row">
                                 Buzzer
                             </TableCell>
-                            <TableCell>
-                                {actionCardSettingsData.hasBuzzer?.toString()}
-                            </TableCell>
+                            <TableCell>{actionCardState.hasBuzzer?.toString()}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell sx={{ verticalAlign: 'top' }} scope="row">
                                 Can Repeat
                             </TableCell>
-                            <TableCell>
-                                {actionCardSettingsData.canRepeat?.toString()}
-                            </TableCell>
+                            <TableCell>{actionCardState.canRepeat?.toString()}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell sx={{ verticalAlign: 'top' }} scope="row">
                                 One Card Per Player
                             </TableCell>
                             <TableCell>
-                                {actionCardSettingsData.oneCardPerPlayer?.toString()}
+                                {actionCardState.oneCardPerPlayer?.toString()}
                             </TableCell>
                         </TableRow>
                         <TableRow>
@@ -165,10 +154,10 @@ const AdvancedSettingsSummaryTableComponent = () => {
                                 Player Creative
                             </TableCell>
                             <TableCell>
-                                {actionCardSettingsData.isPlayerCreative?.toString()}
+                                {actionCardState.isPlayerCreative?.toString()}
                             </TableCell>
                         </TableRow>
-                        {actionCardSettingsData.isPlayerCreative && (
+                        {actionCardState.isPlayerCreative && (
                             <TableRow>
                                 <TableCell sx={{ verticalAlign: 'top' }} scope="row">
                                     Player Creative Prompt
@@ -192,7 +181,7 @@ const AdvancedSettingsSummaryTableComponent = () => {
                                 {actionCards?.map((input, index) => (
                                     <Box component="ul" key={index} px={1}>
                                         <Box component="li">
-                                            <MultilineComponent text={input.value} />
+                                            <MultilineComponent text={input} />
                                         </Box>
                                     </Box>
                                 ))}

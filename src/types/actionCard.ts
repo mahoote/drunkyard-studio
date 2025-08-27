@@ -1,10 +1,4 @@
-export interface ActionCardTranslation {
-    id?: number
-    value: string
-    actionCardId?: number
-}
-
-export type ActionCardSettings = {
+export type ActionCard = {
     id?: number
     stateId: number
     cardLimit?: number
@@ -18,16 +12,13 @@ export type ActionCardSettings = {
     oneCardPerPlayer?: boolean
 }
 
-export interface ActionCardSettingsTranslation {
+export interface ActionCardTranslation {
     id?: number
     prompt?: string
     playerCreativePrompt?: string
+    texts?: string[]
 }
 
 export interface ActionCardTranslations {
-    [key: string]: ActionCardTranslation[] | undefined
-}
-
-export interface ActionCardSettingsTranslations {
-    [key: string]: ActionCardSettingsTranslation
+    [key: string]: ActionCardTranslation
 }

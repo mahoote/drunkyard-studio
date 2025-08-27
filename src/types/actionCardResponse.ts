@@ -1,4 +1,4 @@
-export interface ActionCardSettingsResponse {
+export interface ActionCardResponse {
     id: number
     game_id: number
     state_id: number
@@ -14,22 +14,11 @@ export interface ActionCardSettingsResponse {
     one_card_per_player: boolean
 }
 
-export interface ActionCardSettingsTranslationResponse {
+export interface ActionCardTranslationResponse {
     id: number
     action_card_settings_id: number
     language: string
     prompt?: string
     player_creative_prompt?: string
-}
-
-export interface ActionCardResponse {
-    action_card: {
-        id: number
-        created_at: string
-        action_card_translation: {
-            id: number
-            language: string
-            value: string
-        }[]
-    }
+    texts: string[]
 }

@@ -7,7 +7,10 @@ import {
 import NewGameFormComponent from './components/newGame/newGameFormComponent'
 import LinearStepperComponent from '../../components/linearStepperComponent'
 import AdvancedSettingsFormComponent from './components/advancedSettings/advancedSettingsFormComponent'
-import { isActionCardSettingsDataValid } from '../../utils/actionCardSettingsUtils'
+import {
+    createActionCardData,
+    isActionCardTextsValid,
+} from '../../utils/actionCardSettingsUtils'
 
 import { useNewGameStore } from '../../hooks/useNewGameStore'
 import { useGameOptionsStore } from '../../hooks/useGameOptionsStore'
@@ -18,7 +21,7 @@ import { Game } from '../../types/gameDto'
 import TranslationsFormComponent from './components/translations/translationsFormComponent'
 import NewGameSummaryComponent from './components/summary/newGameSummaryComponent'
 import { deleteNewGame } from '../../services/gameService'
-import { createAdvancedSettingsData } from '../../utils/advancedSettingsUtils'
+import { uploadCustomRulesImage } from '../../utils/advancedSettingsUtils'
 import { useStudioStore } from '../../hooks/useStudioStore'
 
 /**
@@ -32,14 +35,12 @@ function NewGamePage() {
         newGame,
         gameTranslations,
         selectedGameTypes,
-        actionCardSettingsData,
+        actionCardState,
         activeFormRef,
         advancedSettingsData,
         formStepIndex,
         setFormStepIndex,
-        actionCardSettingsTranslations,
-        actionCardTranslations,
-        deletedActionCards,
+        actionCardTranslationsState,
     } = useNewGameStore()
 
     const { gameTypes, accessories } = useGameOptionsStore()
@@ -73,19 +74,15 @@ function NewGamePage() {
         if (!createdGame) return
 
         try {
+            const gameId = createdGame.id
+
             // Add accessories and game types
-            await addAccessoriesToGame(accessories, createdGame.id, gameTranslations)
-            await addGameTypesToGame(selectedGameTypes, gameTypes, createdGame.id)
+            await addAccessoriesToGame(accessories, gameId, gameTranslations)
+            await addGameTypesToGame(selectedGameTypes, gameTypes, gameId)
 
             // Add advanced settings
-            await createAdvancedSettingsData(
-                createdGame.id,
-                advancedSettingsData,
-                actionCardSettingsTranslations,
-                actionCardTranslations,
-                actionCardSettingsData,
-                deletedActionCards
-            )
+            await uploadCustomRulesImage(gameId, advancedSettingsData)
+            await createActionCardData(gameId, actionCardTranslationsState, actionCardState)
 
             setStudioAlert({
                 open: true,
@@ -135,9 +132,9 @@ function NewGamePage() {
                         label: 'Advanced Settings',
                         content: <AdvancedSettingsFormComponent />,
                         customValidation: () =>
-                            isActionCardSettingsDataValid(
-                                actionCardSettingsData,
-                                actionCardTranslations.en
+                            isActionCardTextsValid(
+                                actionCardState,
+                                actionCardTranslationsState.en.texts
                             ),
                     },
                     {

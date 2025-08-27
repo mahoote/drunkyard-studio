@@ -30,10 +30,7 @@ Translate to one object in the format:
     game: {
         ${languagesString}
     },
-    actionCardSettings: {
-        ${languagesString}
-    },
-    actionCards: {
+    actionCard: {
         ${languagesString}
     },
 }"

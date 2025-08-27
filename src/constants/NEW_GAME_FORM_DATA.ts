@@ -1,11 +1,6 @@
 import { GenericType } from '../types/genericType'
 import { GameTranslation, GameTranslations, NewGame } from '../types/newGame'
-import {
-    ActionCardSettingsTranslation,
-    ActionCardSettingsTranslations,
-    ActionCardTranslation,
-    ActionCardTranslations,
-} from '../types/actionCard'
+import { ActionCardTranslation, ActionCardTranslations } from '../types/actionCard'
 import { ALL_LANGUAGES } from './LANGUAGES'
 
 export const initialNewGameData: NewGame = {
@@ -32,9 +27,6 @@ export const initialGameTranslations: GameTranslations = Object.fromEntries(
     ALL_LANGUAGES.map(lang => [lang, { name: '', descriptions: [] } as GameTranslation])
 )
 
-export const initialActionCardSettingsTranslations: ActionCardSettingsTranslations =
-    Object.fromEntries(ALL_LANGUAGES.map(lang => [lang, {} as ActionCardSettingsTranslation]))
-
-export const initialActionCardsTranslations: ActionCardTranslations = Object.fromEntries(
-    ALL_LANGUAGES.map(lang => [lang, [] as ActionCardTranslation[]])
+export const initialActionCardTranslations: ActionCardTranslations = Object.fromEntries(
+    ALL_LANGUAGES.map(lang => [lang, {} as ActionCardTranslation])
 )

@@ -32,13 +32,12 @@ import ActionCardsInputComponent from '../../../../components/actionCardsInputCo
  * All the different settings to add to a game with "Action Card" game type.
  * @constructor
  */
-function ActionCardSettingsComponent() {
+function ActionCardComponent() {
     const {
-        actionCardSettingsData,
-        setActionCardSettingsData,
-        actionCardSettingsTranslations,
-        setActionCardSettingsTranslations,
-        actionCardTranslations,
+        actionCardState,
+        actionCardTranslationsState,
+        setActionCardDataState,
+        setActionCardTranslationsState,
     } = useNewGameStore()
 
     const { actionCardStates, loading, error, fetchApi } = useActionCardStore()
@@ -47,7 +46,7 @@ function ActionCardSettingsComponent() {
         fetchApi()
     }, [fetchApi])
 
-    if (!actionCardTranslations.en || !actionCardSettingsData) {
+    if (!actionCardTranslationsState.en || !actionCardState) {
         return (
             <>
                 <Box my={3}>
@@ -83,12 +82,12 @@ function ActionCardSettingsComponent() {
                                 labelId="state-id"
                                 label="State"
                                 name="stateId"
-                                value={actionCardSettingsData.stateId}
+                                value={actionCardState.stateId}
                                 onChange={event =>
                                     handleSelectChange(
                                         event,
-                                        actionCardSettingsData,
-                                        setActionCardSettingsData
+                                        actionCardState,
+                                        setActionCardDataState
                                     )
                                 }
                             >
@@ -113,16 +112,16 @@ function ActionCardSettingsComponent() {
                                 name="cardLimit"
                                 type="number"
                                 inputProps={{ min: 0 }}
-                                value={actionCardSettingsData.cardLimit}
+                                value={actionCardState.cardLimit}
                                 onChange={event =>
                                     handleNumberChange(
                                         event,
-                                        actionCardSettingsData,
-                                        setActionCardSettingsData
+                                        actionCardState,
+                                        setActionCardDataState
                                     )
                                 }
                                 fullWidth
-                                disabled={actionCardSettingsData.oneCardPerPlayer}
+                                disabled={actionCardState.oneCardPerPlayer}
                             />
                         </Tooltip>
                     </Grid>
@@ -130,11 +129,11 @@ function ActionCardSettingsComponent() {
                     <Grid item>
                         <ToggleButtonGroup
                             color="primary"
-                            value={actionCardSettingsData.allowSentence ? 'sentence' : 'word'}
+                            value={actionCardState.allowSentence ? 'sentence' : 'word'}
                             exclusive
                             onChange={(_, value: string) => {
-                                setActionCardSettingsData({
-                                    ...actionCardSettingsData,
+                                setActionCardDataState({
+                                    ...actionCardState,
                                     allowSentence: value === 'sentence',
                                 })
                             }}
@@ -157,19 +156,19 @@ function ActionCardSettingsComponent() {
                                 name="cardSeconds"
                                 type="number"
                                 inputProps={{ min: 0 }}
-                                value={actionCardSettingsData.cardSeconds}
+                                value={actionCardState.cardSeconds}
                                 onChange={event =>
                                     handleNumberChange(
                                         event,
-                                        actionCardSettingsData,
-                                        setActionCardSettingsData
+                                        actionCardState,
+                                        setActionCardDataState
                                     )
                                 }
                                 fullWidth
                             />
                         </Tooltip>
                     </Grid>
-                    {(actionCardSettingsData?.cardSeconds ?? 0) > 0 && (
+                    {(actionCardState?.cardSeconds ?? 0) > 0 && (
                         <Tooltip
                             title={
                                 'If the "Card Seconds" is set, the Auto-next decides if there is a manual step between each card or if they should show the next card automatically.'
@@ -178,10 +177,10 @@ function ActionCardSettingsComponent() {
                             <FormControlLabel
                                 control={
                                     <Switch
-                                        defaultChecked={actionCardSettingsData.isAutoNext}
+                                        defaultChecked={actionCardState.isAutoNext}
                                         onChange={event => {
-                                            setActionCardSettingsData({
-                                                ...actionCardSettingsData,
+                                            setActionCardDataState({
+                                                ...actionCardState,
                                                 isAutoNext: event.target.checked,
                                             })
                                         }}
@@ -200,10 +199,10 @@ function ActionCardSettingsComponent() {
                         <FormControlLabel
                             control={
                                 <Switch
-                                    defaultChecked={actionCardSettingsData.canRepeat}
+                                    defaultChecked={actionCardState.canRepeat}
                                     onChange={event => {
-                                        setActionCardSettingsData({
-                                            ...actionCardSettingsData,
+                                        setActionCardDataState({
+                                            ...actionCardState,
                                             canRepeat: event.target.checked,
                                         })
                                     }}
@@ -221,10 +220,10 @@ function ActionCardSettingsComponent() {
                         <FormControlLabel
                             control={
                                 <Switch
-                                    defaultChecked={actionCardSettingsData.isPlayerCreative}
+                                    defaultChecked={actionCardState.isPlayerCreative}
                                     onChange={event => {
-                                        setActionCardSettingsData({
-                                            ...actionCardSettingsData,
+                                        setActionCardDataState({
+                                            ...actionCardState,
                                             isPlayerCreative: event.target.checked,
                                         })
                                     }}
@@ -236,11 +235,11 @@ function ActionCardSettingsComponent() {
                     </Tooltip>
                 </Grid>
 
-                {[4, 5, 6].includes(actionCardSettingsData.stateId) && (
+                {[4, 5, 6].includes(actionCardState.stateId) && (
                     <>
                         <Typography fontWeight="bold">Players Without Cards</Typography>
                         <Grid container spacing={2}>
-                            {actionCardSettingsData.stateId === 6 && (
+                            {actionCardState.stateId === 6 && (
                                 <Grid item xs={12} sm={3}>
                                     <Tooltip
                                         title={
@@ -255,12 +254,12 @@ function ActionCardSettingsComponent() {
                                             label="Player Amount Without Cards"
                                             variant="filled"
                                             name="excludePlayersAmount"
-                                            value={actionCardSettingsData.excludePlayersAmount}
+                                            value={actionCardState.excludePlayersAmount}
                                             onChange={event =>
                                                 handleTextChange(
                                                     event,
-                                                    actionCardSettingsData,
-                                                    setActionCardSettingsData
+                                                    actionCardState,
+                                                    setActionCardDataState
                                                 )
                                             }
                                             required
@@ -269,7 +268,7 @@ function ActionCardSettingsComponent() {
                                     </Tooltip>
                                 </Grid>
                             )}
-                            {actionCardSettingsData.stateId === 4 && (
+                            {actionCardState.stateId === 4 && (
                                 <Tooltip
                                     title={
                                         'The limit of cards is automatically set to the amount of players'
@@ -279,11 +278,11 @@ function ActionCardSettingsComponent() {
                                         control={
                                             <Switch
                                                 defaultChecked={
-                                                    actionCardSettingsData.oneCardPerPlayer
+                                                    actionCardState.oneCardPerPlayer
                                                 }
                                                 onChange={event => {
-                                                    setActionCardSettingsData({
-                                                        ...actionCardSettingsData,
+                                                    setActionCardDataState({
+                                                        ...actionCardState,
                                                         oneCardPerPlayer: event.target.checked,
                                                         cardLimit: 0,
                                                     })
@@ -304,10 +303,10 @@ function ActionCardSettingsComponent() {
                                 <FormControlLabel
                                     control={
                                         <Switch
-                                            defaultChecked={actionCardSettingsData.hasBuzzer}
+                                            defaultChecked={actionCardState.hasBuzzer}
                                             onChange={event => {
-                                                setActionCardSettingsData({
-                                                    ...actionCardSettingsData,
+                                                setActionCardDataState({
+                                                    ...actionCardState,
                                                     hasBuzzer: event.target.checked,
                                                 })
                                             }}
@@ -323,7 +322,7 @@ function ActionCardSettingsComponent() {
 
                 <Typography fontWeight="bold">Prompts</Typography>
                 <Grid container spacing={2}>
-                    {actionCardSettingsData.isPlayerCreative && (
+                    {actionCardState.isPlayerCreative && (
                         <Grid item xs={12} sm={6}>
                             <Tooltip
                                 title={
@@ -339,13 +338,13 @@ function ActionCardSettingsComponent() {
                                     fullWidth
                                     required
                                     value={
-                                        actionCardSettingsTranslations.en?.playerCreativePrompt
+                                        actionCardTranslationsState.en?.playerCreativePrompt
                                     }
                                     setValue={newValue =>
-                                        setActionCardSettingsTranslations({
-                                            ...actionCardSettingsTranslations,
+                                        setActionCardTranslationsState({
+                                            ...actionCardTranslationsState,
                                             en: {
-                                                ...actionCardSettingsTranslations.en,
+                                                ...actionCardTranslationsState.en,
                                                 playerCreativePrompt: newValue,
                                             },
                                         })
@@ -366,12 +365,12 @@ function ActionCardSettingsComponent() {
                                 variant="outlined"
                                 name="prompt"
                                 fullWidth
-                                value={actionCardSettingsTranslations.en?.prompt}
+                                value={actionCardTranslationsState.en?.prompt}
                                 setValue={newValue =>
-                                    setActionCardSettingsTranslations({
-                                        ...actionCardSettingsTranslations,
+                                    setActionCardTranslationsState({
+                                        ...actionCardTranslationsState,
                                         en: {
-                                            ...actionCardSettingsTranslations.en,
+                                            ...actionCardTranslationsState.en,
                                             prompt: newValue,
                                         },
                                     })
@@ -388,4 +387,4 @@ function ActionCardSettingsComponent() {
     )
 }
 
-export default ActionCardSettingsComponent
+export default ActionCardComponent

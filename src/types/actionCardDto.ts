@@ -1,4 +1,4 @@
-export type ActionCardSettingsDto = {
+export type ActionCardDto = {
     id: number
     game_id: number
     state_id: number
@@ -10,7 +10,7 @@ export type ActionCardSettingsDto = {
     has_buzzer?: boolean
 }
 
-export type ActionCardSettingsInsertDto = {
+export type ActionCardInsertDto = {
     id?: number
     game_id: number
     state_id: number
@@ -25,22 +25,11 @@ export type ActionCardSettingsInsertDto = {
     one_card_per_player?: boolean
 }
 
-export type ActionCardSettingsTranslationInsertDto = {
-    id?: number
-    action_card_settings_id?: number
-    language: string
-    prompt?: string | null
-    player_creative_prompt?: string | null
-}
-
-export type ActionCardDto = {
-    id: number
-    created_at: string
-}
-
 export type ActionCardTranslationInsertDto = {
     id?: number
     action_card_id?: number
     language: string
-    value: string
+    prompt?: string | null
+    player_creative_prompt?: string | null
+    texts: string[]
 }

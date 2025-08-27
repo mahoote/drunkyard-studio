@@ -1,32 +1,26 @@
-import { ActionCardSettingsInsertDto } from '../types/actionCardDto'
+import { ActionCardInsertDto } from '../types/actionCardDto'
 
-import { ActionCardSettings } from '../types/actionCard'
+import { ActionCard } from '../types/actionCard'
 
-export function mapActionCardSettings(
+export function mapActionCard(
     gameId: number,
-    actionCardSettingsData: ActionCardSettings
-): ActionCardSettingsInsertDto {
+    actionCardState: ActionCard
+): ActionCardInsertDto {
     return {
-        id: actionCardSettingsData.id,
+        id: actionCardState.id,
         game_id: gameId,
-        state_id: actionCardSettingsData.stateId,
+        state_id: actionCardState.stateId,
         card_limit:
-            (actionCardSettingsData.cardLimit ?? 0) > 0
-                ? actionCardSettingsData.cardLimit
-                : undefined,
+            (actionCardState.cardLimit ?? 0) > 0 ? actionCardState.cardLimit : undefined,
         card_seconds:
-            (actionCardSettingsData.cardSeconds ?? 0) > 0
-                ? actionCardSettingsData.cardSeconds
-                : undefined,
-        is_auto_next: actionCardSettingsData.isAutoNext,
-        is_player_creative: actionCardSettingsData.isPlayerCreative,
-        has_buzzer: actionCardSettingsData.hasBuzzer,
-        allow_sentence: actionCardSettingsData.allowSentence,
-        can_repeat: actionCardSettingsData.canRepeat,
+            (actionCardState.cardSeconds ?? 0) > 0 ? actionCardState.cardSeconds : undefined,
+        is_auto_next: actionCardState.isAutoNext,
+        is_player_creative: actionCardState.isPlayerCreative,
+        has_buzzer: actionCardState.hasBuzzer,
+        allow_sentence: actionCardState.allowSentence,
+        can_repeat: actionCardState.canRepeat,
         exclude_players_amount:
-            actionCardSettingsData.stateId === 6
-                ? actionCardSettingsData.excludePlayersAmount
-                : undefined,
-        one_card_per_player: actionCardSettingsData.oneCardPerPlayer,
+            actionCardState.stateId === 6 ? actionCardState.excludePlayersAmount : undefined,
+        one_card_per_player: actionCardState.oneCardPerPlayer,
     }
 }

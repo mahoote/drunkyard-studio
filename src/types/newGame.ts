@@ -1,5 +1,5 @@
 import { GameDescription } from './gameResponse'
-import { ActionCardSettingsTranslation, ActionCardTranslation } from './actionCard'
+import { ActionCardTranslation } from './actionCard'
 
 export type NewGame = {
     id?: number
@@ -39,8 +39,7 @@ export type GameTranslation = {
 
 export interface CombinedTranslations {
     game: { [key: string]: GameTranslation }
-    actionCardSettings?: { [key: string]: ActionCardSettingsTranslation }
-    actionCards?: { [key: string]: ActionCardTranslation[] | undefined }
+    actionCard?: { [key: string]: ActionCardTranslation }
 }
 
 export type GameTranslations = {

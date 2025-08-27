@@ -11,20 +11,19 @@ import AppModalComponent from '../../../../components/appModalComponent'
 import { generateTranslationPrompt } from '../../../../utils/prompts'
 import { useStudioStore } from '../../../../hooks/useStudioStore'
 import { codeToLanguage } from '../../../../utils/languageUtils'
-import { ActionCardTranslation } from '../../../../types/actionCard'
 import { OTHER_LANGUAGES } from '../../../../constants/LANGUAGES'
+import { GameLanguage } from '../../../../types/language'
 
 const TranslationsFormComponent = () => {
     const {
-        actionCardSettingsData,
+        actionCardState,
         activeFormRef,
         gameTranslations,
         setGameTranslations,
-        actionCardSettingsTranslations,
-        actionCardTranslations,
-        setActionCardSettingsTranslations,
-        setActionCardTranslations,
+        actionCardTranslationsState,
+        setActionCardTranslationsState,
         advancedSettingsData,
+        setActionCardTexts,
     } = useNewGameStore()
 
     const { setStudioAlert } = useStudioStore()
@@ -33,9 +32,9 @@ const TranslationsFormComponent = () => {
     const accessories = gameTranslations.en.accessories
     const hasWinnerPrompt =
         advancedSettingsData.hasWinner && gameTranslations.en.hasWinnerPrompt
-    const actionCardPrompt = actionCardSettingsTranslations.en?.prompt
-    const playerCreativePrompt = actionCardSettingsTranslations.en?.playerCreativePrompt
-    const actionCardsEn = actionCardTranslations.en
+    const actionCardPrompt = actionCardTranslationsState.en?.prompt
+    const playerCreativePrompt = actionCardTranslationsState.en?.playerCreativePrompt
+    const actionCardsEn = actionCardTranslationsState.en.texts
 
     const [userJsonInput, setUserJsonInput] = useState<string>('')
 
@@ -54,11 +53,8 @@ const TranslationsFormComponent = () => {
             game: {
                 en: gameTranslations.en,
             },
-            actionCardSettings: {
-                en: actionCardSettingsTranslations.en,
-            },
-            actionCards: {
-                en: actionCardsEn,
+            actionCard: {
+                en: actionCardTranslationsState.en,
             },
         }
 
@@ -96,6 +92,7 @@ const TranslationsFormComponent = () => {
         try {
             const newTranslations = JSON.parse(userJsonInput) as CombinedTranslations
 
+            // Game State
             const newTranslationsWithCorrectId: GameTranslations = Object.fromEntries(
                 Object.entries(newTranslations.game).map(([key, translation]) => [
                     key,
@@ -105,40 +102,14 @@ const TranslationsFormComponent = () => {
                     },
                 ])
             )
-
             setGameTranslations({ en: gameTranslations.en, ...newTranslationsWithCorrectId })
-            if (
-                actionCardSettingsData &&
-                newTranslations.actionCardSettings &&
-                newTranslations.actionCards
-            ) {
-                setActionCardSettingsTranslations({
-                    ...newTranslations.actionCardSettings,
-                    en: actionCardSettingsTranslations.en,
+
+            // Action Card State
+            if (actionCardState && newTranslations.actionCard) {
+                setActionCardTranslationsState({
+                    ...newTranslations.actionCard,
+                    en: actionCardTranslationsState.en,
                 })
-
-                // Iterates through the original translated action cards,
-                // and sets their id on the new translated ones.
-                const actionCards: { [k: string]: ActionCardTranslation[] | undefined } =
-                    Object.fromEntries(
-                        Object.entries(newTranslations.actionCards).map(
-                            ([key, translations]) => [
-                                key,
-                                translations?.map(
-                                    ({ id, value, actionCardId }, index) =>
-                                        ({
-                                            id: actionCardTranslations[key]?.[index]?.id ?? id,
-                                            value,
-                                            actionCardId:
-                                                actionCardTranslations[key]?.[index]
-                                                    ?.actionCardId ?? actionCardId,
-                                        }) as ActionCardTranslation
-                                ),
-                            ]
-                        )
-                    )
-
-                setActionCardTranslations({ ...actionCards, en: actionCardsEn })
             }
 
             setOpenModal(false)
@@ -154,11 +125,10 @@ const TranslationsFormComponent = () => {
     }
 
     useEffect(() => {
-        const hasPromptToTranslate =
-            !!actionCardPrompt || !!actionCardSettingsData?.isPlayerCreative
+        const hasPromptToTranslate = !!actionCardPrompt || !!actionCardState?.isPlayerCreative
 
         setPromptToTranslate(hasPromptToTranslate)
-    }, [actionCardPrompt, actionCardSettingsData?.isPlayerCreative])
+    }, [actionCardPrompt, actionCardState?.isPlayerCreative])
 
     return (
         <Box>
@@ -290,7 +260,6 @@ const TranslationsFormComponent = () => {
                                             ...gameTranslations[language],
                                             descriptions: values.map((value, index) => ({
                                                 text: value,
-                                                side: descriptions[index].side,
                                                 pause: descriptions[index].pause,
                                             })),
                                         },
@@ -370,9 +339,7 @@ const TranslationsFormComponent = () => {
                     </>
                 )}
 
-                {actionCardSettingsData && (
-                    <Typography variant="h6">Action Card Settings</Typography>
-                )}
+                {actionCardState && <Typography variant="h6">Action Card Settings</Typography>}
 
                 {promptToTranslate && (
                     <>
@@ -400,14 +367,14 @@ const TranslationsFormComponent = () => {
                                                 fullWidth
                                                 required
                                                 value={
-                                                    actionCardSettingsTranslations[language]
+                                                    actionCardTranslationsState[language]
                                                         ?.prompt
                                                 }
                                                 onChange={event =>
-                                                    setActionCardSettingsTranslations({
-                                                        ...actionCardSettingsTranslations,
+                                                    setActionCardTranslationsState({
+                                                        ...actionCardTranslationsState,
                                                         [language]: {
-                                                            ...actionCardSettingsTranslations[
+                                                            ...actionCardTranslationsState[
                                                                 language
                                                             ],
                                                             prompt: event.target.value,
@@ -419,54 +386,50 @@ const TranslationsFormComponent = () => {
                                     </Box>
                                 </Grid>
                             )}
-                            {actionCardSettingsData?.isPlayerCreative &&
-                                playerCreativePrompt && (
-                                    <Grid item xs={12} md={6}>
-                                        <Box
-                                            sx={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                gap: 2,
-                                            }}
-                                        >
-                                            <div>
-                                                <h3>Player Creative Prompt</h3>
-                                                <MultilineComponent
-                                                    text={playerCreativePrompt}
-                                                />
-                                            </div>
-                                            {OTHER_LANGUAGES.map(language => (
-                                                <TextFieldSuggestionsComponent
-                                                    key={language}
-                                                    wordSuggestions={actionCardSuggestions}
-                                                    label={codeToLanguage(language)}
-                                                    variant="filled"
-                                                    name={`${language}PlayerCreativePrompt`}
-                                                    multiline
-                                                    fullWidth
-                                                    required
-                                                    value={
-                                                        actionCardSettingsTranslations[
-                                                            language
-                                                        ]?.playerCreativePrompt
-                                                    }
-                                                    onChange={event =>
-                                                        setActionCardSettingsTranslations({
-                                                            ...actionCardSettingsTranslations,
-                                                            [language]: {
-                                                                ...actionCardSettingsTranslations[
-                                                                    language
-                                                                ],
-                                                                playerCreativePrompt:
-                                                                    event.target.value,
-                                                            },
-                                                        })
-                                                    }
-                                                />
-                                            ))}
-                                        </Box>
-                                    </Grid>
-                                )}
+                            {actionCardState?.isPlayerCreative && playerCreativePrompt && (
+                                <Grid item xs={12} md={6}>
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: 2,
+                                        }}
+                                    >
+                                        <div>
+                                            <h3>Player Creative Prompt</h3>
+                                            <MultilineComponent text={playerCreativePrompt} />
+                                        </div>
+                                        {OTHER_LANGUAGES.map(language => (
+                                            <TextFieldSuggestionsComponent
+                                                key={language}
+                                                wordSuggestions={actionCardSuggestions}
+                                                label={codeToLanguage(language)}
+                                                variant="filled"
+                                                name={`${language}PlayerCreativePrompt`}
+                                                multiline
+                                                fullWidth
+                                                required
+                                                value={
+                                                    actionCardTranslationsState[language]
+                                                        ?.playerCreativePrompt
+                                                }
+                                                onChange={event =>
+                                                    setActionCardTranslationsState({
+                                                        ...actionCardTranslationsState,
+                                                        [language]: {
+                                                            ...actionCardTranslationsState[
+                                                                language
+                                                            ],
+                                                            playerCreativePrompt:
+                                                                event.target.value,
+                                                        },
+                                                    })
+                                                }
+                                            />
+                                        ))}
+                                    </Box>
+                                </Grid>
+                            )}
                         </Grid>
                         <Divider />
                     </>
@@ -485,27 +448,18 @@ const TranslationsFormComponent = () => {
                                         {codeToLanguage(language)} *
                                     </Typography>
                                     <TranslateStringArrayComponent
-                                        values={actionCardsEn.map(card => card.value)}
+                                        values={actionCardsEn}
                                         gridXs={12}
                                         gridSm={6}
-                                        multiline={actionCardSettingsData?.allowSentence}
-                                        inputValues={actionCardTranslations[language]?.map(
-                                            card => card.value
-                                        )}
+                                        multiline={actionCardState?.allowSentence}
+                                        inputValues={
+                                            actionCardTranslationsState[language].texts
+                                        }
                                         setInputValues={values =>
-                                            setActionCardTranslations({
-                                                ...actionCardTranslations,
-                                                [language]: actionCardsEn.map((_, index) => ({
-                                                    id: actionCardTranslations[language]?.[
-                                                        index
-                                                    ]?.id,
-                                                    value: values[index],
-                                                    actionCardId:
-                                                        actionCardTranslations[language]?.[
-                                                            index
-                                                        ]?.actionCardId,
-                                                })),
-                                            })
+                                            setActionCardTexts(
+                                                values,
+                                                language as GameLanguage
+                                            )
                                         }
                                     />
                                 </Box>

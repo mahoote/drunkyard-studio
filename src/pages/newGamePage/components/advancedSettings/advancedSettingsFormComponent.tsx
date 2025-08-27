@@ -1,10 +1,10 @@
-import ActionCardSettingsComponent from './actionCardSettingsComponent'
+import ActionCardComponent from './actionCardComponent'
 import { Box } from '@mui/material'
 import React, { useEffect } from 'react'
 import { GameTypeEnum } from '../../../../enums/gameTypeEnum'
 import {
-    initialActionCardInputs,
-    initialActionCardSettingsData,
+    initialActionCardTexts,
+    initialActionCardState,
 } from '../../../../constants/ACTION_CARD_SETTINGS_DATA'
 import WritingSettingsComponent from './writingSettingsComponent'
 import { initialWritingSettingsData } from '../../../../constants/WRITING_SETTINGS_DATA'
@@ -15,11 +15,11 @@ function AdvancedSettingsFormComponent() {
     const {
         selectedGameTypes,
         activeFormRef,
-        setActionCards,
-        actionCardSettingsData,
-        setActionCardSettingsData,
+        actionCardState,
+        setActionCardDataState,
         writingSettingsData,
         setWritingSettingsData,
+        setActionCardTexts,
     } = useNewGameStore()
 
     const includesActionCard = selectedGameTypes.includes(GameTypeEnum.ActionCard)
@@ -27,13 +27,13 @@ function AdvancedSettingsFormComponent() {
 
     useEffect(() => {
         if (includesActionCard) {
-            if (!actionCardSettingsData) {
-                setActionCardSettingsData(initialActionCardSettingsData)
-                setActionCards(initialActionCardInputs)
+            if (!actionCardState) {
+                setActionCardDataState(initialActionCardState)
+                setActionCardTexts(initialActionCardTexts)
             }
         } else {
-            setActionCardSettingsData(undefined)
-            setActionCards(undefined)
+            setActionCardDataState(undefined)
+            setActionCardTexts(undefined)
         }
 
         if (includesWriting) {
@@ -48,7 +48,7 @@ function AdvancedSettingsFormComponent() {
     return (
         <Box component="form" ref={activeFormRef}>
             <AdvancedDefaultSettingsComponent />
-            {includesActionCard && <ActionCardSettingsComponent />}
+            {includesActionCard && <ActionCardComponent />}
             {includesWriting && <WritingSettingsComponent />}
         </Box>
     )

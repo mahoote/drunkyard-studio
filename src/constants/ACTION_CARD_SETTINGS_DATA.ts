@@ -1,8 +1,8 @@
-import { ActionCardSettings, ActionCardTranslation } from '../types/actionCard'
+import { ActionCard } from '../types/actionCard'
 
-export const initialActionCardSettingsData: ActionCardSettings = {
+export const initialActionCardState: ActionCard = {
     stateId: 1,
     allowSentence: true,
 }
 
-export const initialActionCardInputs: ActionCardTranslation[] = []
+export const initialActionCardTexts: string[] = []

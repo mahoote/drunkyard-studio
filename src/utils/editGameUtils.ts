@@ -1,16 +1,7 @@
 import { getGame, getGameTranslations, setGameActive } from '../services/gameService'
-import {
-    getActionCards,
-    getActionCardSettings,
-    getActionCardSettingsTranslations,
-} from '../services/actionCardService'
+import { getActionCard, getActionCardTranslations } from '../services/actionCardService'
 import { AdvancedSettings, GameTranslations, NewGame } from '../types/newGame'
-import {
-    ActionCardSettings,
-    ActionCardSettingsTranslations,
-    ActionCardTranslation,
-    ActionCardTranslations,
-} from '../types/actionCard'
+import { ActionCard, ActionCardTranslations } from '../types/actionCard'
 import { NavigateFunction } from 'react-router-dom'
 import React from 'react'
 import { GameLanguage } from '../types/language'
@@ -25,12 +16,10 @@ import { AppStudioAlert } from '../types/studio'
  * @param setSelectedGameTypes
  * @param setSelectedAccessories
  * @param setAdvancedSettingsData
- * @param setActionCardSettingsData
- * @param setActionCards
+ * @param setActionCardState
  * @param setGameTranslations
  * @param setFormStepIndex
  * @param navigate
- * @param setActionCardSettingsTranslations
  * @param setActionCardTranslations
  */
 export async function handleSelectGame(
@@ -41,15 +30,10 @@ export async function handleSelectGame(
     setSelectedGameTypes: (gameTypes: string[]) => void,
     setSelectedAccessories: (accessories: string[], language?: GameLanguage) => void,
     setAdvancedSettingsData: (settings: AdvancedSettings) => void,
-    setActionCardSettingsData: (settings: ActionCardSettings | undefined) => void,
-    setActionCards: (
-        inputs: ActionCardTranslation[] | undefined,
-        language?: GameLanguage
-    ) => void,
+    setActionCardState: (settings: ActionCard | undefined) => void,
     setGameTranslations: (translations: GameTranslations) => void,
     setFormStepIndex: (step: number) => void,
     navigate: NavigateFunction,
-    setActionCardSettingsTranslations: (translations: ActionCardSettingsTranslations) => void,
     setActionCardTranslations: (translations: ActionCardTranslations) => void
 ) {
     setLoading(true)
@@ -58,7 +42,7 @@ export async function handleSelectGame(
     try {
         const game = await getGame(gameId)
         const gameTranslations = await getGameTranslations(gameId)
-        const actionCardSettings = await getActionCardSettings(gameId)
+        const actionCard = await getActionCard(gameId)
 
         if (!game || !gameTranslations) {
             console.error(new Error('Error getting game details'))
@@ -116,48 +100,41 @@ export async function handleSelectGame(
 
         setGameTranslations(newGameTranslations)
 
-        if (actionCardSettings) {
-            const actionCardSettingsTranslations = await getActionCardSettingsTranslations(
-                actionCardSettings.id
-            )
-            const actionCardsMap = await getActionCards(actionCardSettings.id)
+        if (actionCard) {
+            const actionCardTranslations = await getActionCardTranslations(actionCard.id)
 
-            if (!actionCardSettingsTranslations) {
+            if (!actionCardTranslations) {
                 console.error(new Error('Error getting action card settings translations'))
                 setLoading(false)
                 return
             }
 
-            setActionCardSettingsData({
-                id: actionCardSettings.id,
-                stateId: actionCardSettings.state_id,
-                cardLimit: actionCardSettings.card_limit,
-                cardSeconds: actionCardSettings.card_seconds,
-                isAutoNext: actionCardSettings.is_auto_next,
-                isPlayerCreative: actionCardSettings.is_player_creative,
-                hasBuzzer: actionCardSettings.has_buzzer,
-                allowSentence: actionCardSettings.allow_sentence,
-                canRepeat: actionCardSettings.can_repeat,
-                excludePlayersAmount: actionCardSettings.exclude_players_amount,
-                oneCardPerPlayer: actionCardSettings.one_card_per_player,
+            setActionCardState({
+                id: actionCard.id,
+                stateId: actionCard.state_id,
+                cardLimit: actionCard.card_limit,
+                cardSeconds: actionCard.card_seconds,
+                isAutoNext: actionCard.is_auto_next,
+                isPlayerCreative: actionCard.is_player_creative,
+                hasBuzzer: actionCard.has_buzzer,
+                allowSentence: actionCard.allow_sentence,
+                canRepeat: actionCard.can_repeat,
+                excludePlayersAmount: actionCard.exclude_players_amount,
+                oneCardPerPlayer: actionCard.one_card_per_player,
             })
 
-            const newSettingsTranslations: ActionCardSettingsTranslations = {}
+            const newTranslations: ActionCardTranslations = {}
 
-            actionCardSettingsTranslations.forEach(translation => {
-                newSettingsTranslations[translation.language] = {
+            actionCardTranslations.forEach(translation => {
+                newTranslations[translation.language] = {
                     id: translation.id,
-                    prompt: translation?.prompt,
-                    playerCreativePrompt: translation?.player_creative_prompt,
+                    prompt: translation.prompt,
+                    playerCreativePrompt: translation.player_creative_prompt,
+                    texts: translation.texts,
                 }
             })
 
-            setActionCardSettingsTranslations(newSettingsTranslations)
-
-            if (actionCardsMap) {
-                setActionCards(actionCardsMap['en'])
-                setActionCardTranslations(actionCardsMap)
-            }
+            setActionCardTranslations(newTranslations)
         }
 
         setFormStepIndex(0)
