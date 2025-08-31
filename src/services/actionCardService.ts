@@ -1,25 +1,8 @@
-import { GenericType } from '../types/genericType'
 import { supabaseGame } from '../supabaseClient'
 import { SupabaseResponse } from '../types/supabaseResponse'
-import {
-    ActionCardDto,
-    ActionCardInsertDto,
-    ActionCardTranslationInsertDto,
-} from '../types/actionCardDto'
+import { ActionCardInsertDto, ActionCardTranslationInsertDto } from '../types/actionCardDto'
 import { cleanUndefined } from '../utils/objectUtils'
 import { ActionCardResponse, ActionCardTranslationResponse } from '../types/actionCardResponse'
-
-/**
- * Fetches all the action card states.
- */
-export async function getActionCardStates(): Promise<GenericType[]> {
-    const { data, error } = await supabaseGame.from('action_card_state').select('*')
-
-    if (error) {
-        throw new Error(error.message)
-    }
-    return data as GenericType[]
-}
 
 /**
  * Creates action card settings and will be used for
@@ -33,7 +16,7 @@ export async function createActionCard(
 ) {
     const cleanActionCard = cleanUndefined(actionCardInsertDto)
 
-    const { data, error }: SupabaseResponse<ActionCardDto> = await supabaseGame
+    const { data, error }: SupabaseResponse<ActionCardResponse> = await supabaseGame
         .from('action_card')
         .upsert(cleanActionCard)
         .select()

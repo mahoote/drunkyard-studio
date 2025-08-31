@@ -27,11 +27,17 @@ export async function createActionCardData(
         translationInsertDtos.push({
             id: translation.id,
             language: key,
-            prompt: validString(englishTranslation.prompt)
-                ? validString(translation.prompt)
+            action_prompt: validString(englishTranslation.actionPrompt)
+                ? validString(translation.actionPrompt)
                 : null,
-            player_creative_prompt: validString(englishTranslation.playerCreativePrompt)
-                ? validString(translation.playerCreativePrompt)
+            custom_card_prompt: validString(englishTranslation.customCardPrompt)
+                ? validString(translation.customCardPrompt)
+                : null,
+            excluded_player_prompt: validString(englishTranslation.excludedPlayerPrompt)
+                ? validString(translation.excludedPlayerPrompt)
+                : null,
+            overtime_prompt: validString(englishTranslation.overtimePrompt)
+                ? validString(translation.overtimePrompt)
                 : null,
             texts: translation.texts ?? [],
         })

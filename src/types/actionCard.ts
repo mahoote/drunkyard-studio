@@ -1,21 +1,29 @@
 export type ActionCard = {
     id?: number
-    stateId: number
-    cardLimit?: number
+    cardLimit?: number | null
     cardSeconds?: number
     isAutoNext?: boolean
-    isPlayerCreative?: boolean
+    allowCustomCards?: boolean
     hasBuzzer?: boolean
     allowSentence: boolean
-    canRepeat?: boolean
-    excludePlayersAmount?: string
+    cardRepeat?: boolean
     oneCardPerPlayer?: boolean
+    includedPlayersAmount?: string
+    includedPlayersToggle?: string
+    shareCard?: boolean
+    uniquePlayers?: string
+    shareUniqueCard?: boolean
+    excludedPlayers?: string
+    playerRepeat?: boolean
+    hasOvertime?: boolean
 }
 
 export interface ActionCardTranslation {
     id?: number
-    prompt?: string
-    playerCreativePrompt?: string
+    actionPrompt?: string
+    customCardPrompt?: string
+    excludedPlayerPrompt?: string
+    overtimePrompt?: string
     texts?: string[]
 }
 

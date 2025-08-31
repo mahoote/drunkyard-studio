@@ -109,18 +109,31 @@ export async function handleSelectGame(
                 return
             }
 
+            const hasIncludedToggle =
+                actionCard.included_players === '1/1' || actionCard.included_players === 'host'
+
             setActionCardState({
                 id: actionCard.id,
-                stateId: actionCard.state_id,
+                includedPlayersToggle: hasIncludedToggle
+                    ? actionCard.included_players
+                    : undefined,
+                includedPlayersAmount: !hasIncludedToggle
+                    ? actionCard.included_players
+                    : undefined,
+                shareCard: actionCard.share_card,
+                uniquePlayers: actionCard.unique_players,
+                shareUniqueCard: actionCard.share_unique_card,
+                excludedPlayers: actionCard.excluded_players,
+                cardRepeat: actionCard.card_repeat,
                 cardLimit: actionCard.card_limit,
                 cardSeconds: actionCard.card_seconds,
                 isAutoNext: actionCard.is_auto_next,
-                isPlayerCreative: actionCard.is_player_creative,
-                hasBuzzer: actionCard.has_buzzer,
-                allowSentence: actionCard.allow_sentence,
-                canRepeat: actionCard.can_repeat,
-                excludePlayersAmount: actionCard.exclude_players_amount,
+                playerRepeat: actionCard.player_repeat,
                 oneCardPerPlayer: actionCard.one_card_per_player,
+                allowCustomCards: actionCard.allow_custom_cards,
+                allowSentence: actionCard.allow_sentence,
+                hasBuzzer: actionCard.has_buzzer,
+                hasOvertime: actionCard.has_overtime,
             })
 
             const newTranslations: ActionCardTranslations = {}
@@ -128,8 +141,10 @@ export async function handleSelectGame(
             actionCardTranslations.forEach(translation => {
                 newTranslations[translation.language] = {
                     id: translation.id,
-                    prompt: translation.prompt,
-                    playerCreativePrompt: translation.player_creative_prompt,
+                    actionPrompt: translation.action_prompt,
+                    customCardPrompt: translation.custom_card_prompt,
+                    excludedPlayerPrompt: translation.excluded_player_prompt,
+                    overtimePrompt: translation.overtime_prompt,
                     texts: translation.texts,
                 }
             })

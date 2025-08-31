@@ -9,18 +9,31 @@ export function mapActionCard(
     return {
         id: actionCardState.id,
         game_id: gameId,
-        state_id: actionCardState.stateId,
+        included_players:
+            actionCardState.includedPlayersToggle ??
+            actionCardState.includedPlayersAmount ??
+            '-1',
+        share_card: actionCardState.shareCard,
+        unique_players: actionCardState.uniquePlayers,
+        share_unique_card: actionCardState.shareUniqueCard,
+        excluded_players: actionCardState.excludedPlayers,
+        card_repeat: actionCardState.cardRepeat,
         card_limit:
-            (actionCardState.cardLimit ?? 0) > 0 ? actionCardState.cardLimit : undefined,
+            !actionCardState.oneCardPerPlayer &&
+            actionCardState.cardLimit &&
+            actionCardState.cardLimit > 0
+                ? actionCardState.cardLimit
+                : undefined,
         card_seconds:
-            (actionCardState.cardSeconds ?? 0) > 0 ? actionCardState.cardSeconds : undefined,
+            actionCardState.cardSeconds && actionCardState.cardSeconds > 0
+                ? actionCardState.cardSeconds
+                : undefined,
         is_auto_next: actionCardState.isAutoNext,
-        is_player_creative: actionCardState.isPlayerCreative,
-        has_buzzer: actionCardState.hasBuzzer,
-        allow_sentence: actionCardState.allowSentence,
-        can_repeat: actionCardState.canRepeat,
-        exclude_players_amount:
-            actionCardState.stateId === 6 ? actionCardState.excludePlayersAmount : undefined,
+        player_repeat: actionCardState.playerRepeat,
         one_card_per_player: actionCardState.oneCardPerPlayer,
+        allow_custom_cards: actionCardState.allowCustomCards,
+        allow_sentence: actionCardState.allowSentence,
+        has_overtime: actionCardState.hasOvertime,
+        has_buzzer: actionCardState.hasBuzzer,
     }
 }

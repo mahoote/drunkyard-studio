@@ -1,7 +1,6 @@
 import React from 'react'
 import { useNewGameStore } from '../../../../hooks/useNewGameStore'
 import { Box, TableBody, TableCell, TableHead, TableRow } from '@mui/material'
-import { useActionCardStore } from '../../../../hooks/useActionCardStore'
 import MultilineComponent from '../../../../components/multilineComponent'
 
 const AdvancedSettingsSummaryTableComponent = () => {
@@ -13,11 +12,11 @@ const AdvancedSettingsSummaryTableComponent = () => {
         actionCardTranslationsState,
     } = useNewGameStore()
 
-    const { actionCardStates } = useActionCardStore()
-
     const hasWinnerPrompt = gameTranslations.en.hasWinnerPrompt
-    const playerCreativePrompt = actionCardTranslationsState.en?.playerCreativePrompt ?? ''
-    const actionCardPrompt = actionCardTranslationsState.en?.prompt
+    const customCardPrompt = actionCardTranslationsState.en?.customCardPrompt ?? ''
+    const actionCardPrompt = actionCardTranslationsState.en?.actionPrompt
+    const excludedPlayerPrompt = actionCardTranslationsState.en?.excludedPlayerPrompt ?? ''
+    const overtimePrompt = actionCardTranslationsState.en?.overtimePrompt ?? ''
     const actionCards = actionCardTranslationsState.en.texts
 
     return (
@@ -83,39 +82,95 @@ const AdvancedSettingsSummaryTableComponent = () => {
                     <TableBody>
                         <TableRow>
                             <TableCell sx={{ verticalAlign: 'top' }} scope="row">
-                                State
+                                Players Receiving Card
                             </TableCell>
                             <TableCell>
-                                {
-                                    actionCardStates.find(
-                                        s => s.id === actionCardState.stateId
-                                    )?.name
-                                }
+                                {actionCardState.includedPlayersToggle === '1/1'
+                                    ? 'all'
+                                    : (actionCardState.includedPlayersToggle ??
+                                      actionCardState.includedPlayersAmount)}
                             </TableCell>
-                        </TableRow>
-                        {actionCardState.stateId === 6 && (
-                            <TableRow>
-                                <TableCell sx={{ verticalAlign: 'top' }} scope="row">
-                                    Exclude Players Amount
-                                </TableCell>
-                                <TableCell>{actionCardState.excludePlayersAmount}</TableCell>
-                            </TableRow>
-                        )}
-                        <TableRow>
-                            <TableCell sx={{ verticalAlign: 'top' }} scope="row">
-                                Allow Sentence
-                            </TableCell>
-                            <TableCell>{actionCardState.allowSentence.toString()}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell sx={{ verticalAlign: 'top' }} scope="row">
-                                Limit
+                                Shared Card
+                            </TableCell>
+                            <TableCell>{actionCardState.shareCard?.toString()}</TableCell>
+                        </TableRow>
+
+                        <TableRow>
+                            <TableCell sx={{ verticalAlign: 'top' }} scope="row">
+                                Players With Unique Card
+                            </TableCell>
+                            <TableCell>{actionCardState.uniquePlayers}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell sx={{ verticalAlign: 'top' }} scope="row">
+                                Share Unique Card
+                            </TableCell>
+                            <TableCell>
+                                {actionCardState.shareUniqueCard?.toString()}
+                            </TableCell>
+                        </TableRow>
+
+                        <TableRow>
+                            <TableCell sx={{ verticalAlign: 'top' }} scope="row">
+                                Players Without Card
+                            </TableCell>
+                            <TableCell>{actionCardState.excludedPlayers}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell sx={{ verticalAlign: 'top' }} scope="row">
+                                Buzzer
+                            </TableCell>
+                            <TableCell>{actionCardState.hasBuzzer?.toString()}</TableCell>
+                        </TableRow>
+
+                        <TableRow>
+                            <TableCell sx={{ verticalAlign: 'top' }} scope="row">
+                                One Card Per Player
+                            </TableCell>
+                            <TableCell>
+                                {actionCardState.oneCardPerPlayer?.toString()}
+                            </TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell sx={{ verticalAlign: 'top' }} scope="row">
+                                Card Repeat
+                            </TableCell>
+                            <TableCell>{actionCardState.cardRepeat?.toString()}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell sx={{ verticalAlign: 'top' }} scope="row">
+                                Player Repeat
+                            </TableCell>
+                            <TableCell>{actionCardState.playerRepeat?.toString()}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell sx={{ verticalAlign: 'top' }} scope="row">
+                                Custom Cards
+                            </TableCell>
+                            <TableCell>
+                                {actionCardState.allowCustomCards?.toString()}
+                            </TableCell>
+                        </TableRow>
+
+                        <TableRow>
+                            <TableCell sx={{ verticalAlign: 'top' }} scope="row">
+                                Card Limit
                             </TableCell>
                             <TableCell>{actionCardState.cardLimit}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell sx={{ verticalAlign: 'top' }} scope="row">
-                                Time
+                                Is Sentence
+                            </TableCell>
+                            <TableCell>{actionCardState.allowSentence.toString()}</TableCell>
+                        </TableRow>
+
+                        <TableRow>
+                            <TableCell sx={{ verticalAlign: 'top' }} scope="row">
+                                Card Time
                             </TableCell>
                             <TableCell>
                                 {actionCardState.cardSeconds && (
@@ -131,39 +186,39 @@ const AdvancedSettingsSummaryTableComponent = () => {
                         </TableRow>
                         <TableRow>
                             <TableCell sx={{ verticalAlign: 'top' }} scope="row">
-                                Buzzer
+                                Overtime
                             </TableCell>
-                            <TableCell>{actionCardState.hasBuzzer?.toString()}</TableCell>
+                            <TableCell>{actionCardState.hasOvertime?.toString()}</TableCell>
                         </TableRow>
-                        <TableRow>
-                            <TableCell sx={{ verticalAlign: 'top' }} scope="row">
-                                Can Repeat
-                            </TableCell>
-                            <TableCell>{actionCardState.canRepeat?.toString()}</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell sx={{ verticalAlign: 'top' }} scope="row">
-                                One Card Per Player
-                            </TableCell>
-                            <TableCell>
-                                {actionCardState.oneCardPerPlayer?.toString()}
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell sx={{ verticalAlign: 'top' }} scope="row">
-                                Player Creative
-                            </TableCell>
-                            <TableCell>
-                                {actionCardState.isPlayerCreative?.toString()}
-                            </TableCell>
-                        </TableRow>
-                        {actionCardState.isPlayerCreative && (
+
+                        {actionCardState.excludedPlayers &&
+                            actionCardState.excludedPlayers.length > 0 && (
+                                <TableRow>
+                                    <TableCell sx={{ verticalAlign: 'top' }} scope="row">
+                                        Excluded Player Prompt
+                                    </TableCell>
+                                    <TableCell>
+                                        <MultilineComponent text={excludedPlayerPrompt} />
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        {actionCardState.hasOvertime && (
                             <TableRow>
                                 <TableCell sx={{ verticalAlign: 'top' }} scope="row">
-                                    Player Creative Prompt
+                                    Overtime Prompt
                                 </TableCell>
                                 <TableCell>
-                                    <MultilineComponent text={playerCreativePrompt} />
+                                    <MultilineComponent text={overtimePrompt} />
+                                </TableCell>
+                            </TableRow>
+                        )}
+                        {actionCardState.allowCustomCards && (
+                            <TableRow>
+                                <TableCell sx={{ verticalAlign: 'top' }} scope="row">
+                                    Custom Cards Prompt
+                                </TableCell>
+                                <TableCell>
+                                    <MultilineComponent text={customCardPrompt} />
                                 </TableCell>
                             </TableRow>
                         )}

@@ -1,35 +1,31 @@
-export type ActionCardDto = {
-    id: number
-    game_id: number
-    state_id: number
-    card_limit?: number
-    card_seconds?: number
-    is_auto_next?: boolean
-    is_player_creative?: boolean
-    prompt?: string
-    has_buzzer?: boolean
-}
-
-export type ActionCardInsertDto = {
+export interface ActionCardInsertDto {
     id?: number
+    created_at?: string
     game_id: number
-    state_id: number
+    included_players: string
+    share_card?: boolean
+    unique_players?: string
+    share_unique_card?: boolean
+    excluded_players?: string
+    card_repeat?: boolean
     card_limit?: number
     card_seconds?: number
     is_auto_next?: boolean
-    is_player_creative?: boolean
-    has_buzzer?: boolean
-    allow_sentence: boolean
-    can_repeat?: boolean
-    exclude_players_amount?: string
+    player_repeat?: boolean
     one_card_per_player?: boolean
+    allow_custom_cards?: boolean
+    allow_sentence: boolean
+    has_buzzer?: boolean
+    has_overtime?: boolean
 }
 
-export type ActionCardTranslationInsertDto = {
+export interface ActionCardTranslationInsertDto {
     id?: number
     action_card_id?: number
     language: string
-    prompt?: string | null
-    player_creative_prompt?: string | null
+    action_prompt?: string | null
+    custom_card_prompt?: string | null
+    excluded_player_prompt?: string | null
+    overtime_prompt?: string | null
     texts: string[]
 }
