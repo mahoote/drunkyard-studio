@@ -13,6 +13,7 @@ import { useStudioStore } from '../../../../hooks/useStudioStore'
 import { codeToLanguage } from '../../../../utils/languageUtils'
 import { OTHER_LANGUAGES } from '../../../../constants/LANGUAGES'
 import { GameLanguage } from '../../../../types/language'
+import { useGameOptionsStore } from '../../../../hooks/useGameOptionsStore'
 
 const TranslationsFormComponent = () => {
     const {
@@ -26,10 +27,20 @@ const TranslationsFormComponent = () => {
         setActionCardTexts,
     } = useNewGameStore()
 
+    const { accessories } = useGameOptionsStore()
+
     const { setStudioAlert } = useStudioStore()
 
     const descriptions = gameTranslations.en.descriptions
-    const accessories = gameTranslations.en.accessories
+
+    const accessoryNames = new Set(accessories.map(a => a.name))
+    const englishAccessories = gameTranslations.en.accessories?.filter(
+        accessory => !accessoryNames.has(accessory)
+    )
+
+    // Action Card
+    // Only show the action card translations if there are action cards in the game.
+    // This is determined by checking if there is at least one prompt or if custom cards are allowed.
     const hasWinnerPrompt =
         advancedSettingsData.hasWinner && gameTranslations.en.hasWinnerPrompt
     const actionCardPrompt = actionCardTranslationsState.en?.actionPrompt
@@ -273,7 +284,7 @@ const TranslationsFormComponent = () => {
                 </Box>
                 <Divider />
 
-                {accessories && accessories.length > 0 && (
+                {englishAccessories && englishAccessories.length > 0 && (
                     <>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                             <h3>Accessories</h3>
@@ -286,7 +297,7 @@ const TranslationsFormComponent = () => {
                                         {codeToLanguage(language)} *
                                     </Typography>
                                     <TranslateStringArrayComponent
-                                        values={accessories}
+                                        values={englishAccessories}
                                         gridXs={12}
                                         gridMd={6}
                                         noWhiteSpace={false}
