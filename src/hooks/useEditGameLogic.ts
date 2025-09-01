@@ -13,7 +13,7 @@ export function useEditGameLogic() {
         const fetchGames = async () => {
             setLoading(true)
 
-            const games = await getPreviewGamesByPage(0, 100)
+            const games = await getPreviewGamesByPage(0, 1000)
             setGames(games)
 
             setLoading(false)
