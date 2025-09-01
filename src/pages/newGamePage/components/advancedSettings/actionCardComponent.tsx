@@ -17,6 +17,7 @@ import { actionCardSuggestions } from '../../../../constants/WORD_SUGGESTION_DAT
 import ErrorMessageComponent from '../../../../components/errorMessageComponent'
 import { useNewGameStore } from '../../../../hooks/useNewGameStore'
 import ActionCardsInputComponent from '../../../../components/actionCardsInputComponent'
+import ActionCardPreviewComponent from './actionCardPreviewComponent'
 
 /**
  * All the different settings to add to a game with "Action Card" game type.
@@ -198,6 +199,7 @@ function ActionCardComponent() {
                 </Grid>
                 <Divider />
 
+                <ActionCardPreviewComponent />
                 <Divider />
 
                 <Typography fontWeight="bold">Generic</Typography>
