@@ -14,6 +14,7 @@ import { codeToLanguage } from '../../../../utils/languageUtils'
 import { OTHER_LANGUAGES } from '../../../../constants/LANGUAGES'
 import { GameLanguage } from '../../../../types/language'
 import { useGameOptionsStore } from '../../../../hooks/useGameOptionsStore'
+import { ActionCardTranslations } from '../../../../types/actionCard'
 
 const TranslationsFormComponent = () => {
     const {
@@ -119,9 +120,19 @@ const TranslationsFormComponent = () => {
 
             // Action Card State
             if (actionCardState && newTranslations.actionCard) {
+                const acTranslationsWithCorrectId: ActionCardTranslations = Object.fromEntries(
+                    Object.entries(newTranslations.actionCard).map(([key, translation]) => [
+                        key,
+                        {
+                            ...translation,
+                            id: actionCardTranslationsState[key]?.id,
+                        },
+                    ])
+                )
+
                 setActionCardTranslationsState({
-                    ...newTranslations.actionCard,
                     en: actionCardTranslationsState.en,
+                    ...acTranslationsWithCorrectId,
                 })
             }
 
