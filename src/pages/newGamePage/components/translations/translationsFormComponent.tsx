@@ -264,7 +264,7 @@ const TranslationsFormComponent = () => {
                                 gridMd={6}
                                 multiline={true}
                                 inputValues={gameTranslations[language]?.descriptions.map(
-                                    description => description.text
+                                    description => description?.text ?? ''
                                 )}
                                 setInputValues={values =>
                                     setGameTranslations({

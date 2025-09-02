@@ -117,7 +117,6 @@ export default function PreviewWindowComponent() {
             display="flex"
             justifyContent="center"
             alignItems="center"
-            height="100%"
             width="100%"
             bgcolor="grey.900"
             borderRadius={2}
@@ -126,7 +125,6 @@ export default function PreviewWindowComponent() {
             <Box
                 className="container"
                 borderRadius={5}
-                height="30rem"
                 width="100%"
                 color="text.primary"
                 padding={2}
@@ -134,12 +132,7 @@ export default function PreviewWindowComponent() {
                 <Typography variant="h6" component="div" textAlign="center" marginY={3}>
                     {gameName === '' ? 'Game Name' : gameName}
                 </Typography>
-                <Box
-                    display="flex"
-                    flexDirection="column"
-                    gap={2}
-                    sx={{ overflowY: 'auto', maxHeight: '22rem' }}
-                >
+                <Box display="flex" flexDirection="column" gap={2} sx={{ overflowY: 'auto' }}>
                     {descriptions.map((description, index) => (
                         <Box
                             key={index}

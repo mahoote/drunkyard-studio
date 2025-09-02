@@ -5,7 +5,7 @@ import { GameTypeEnum } from '../../../../enums/gameTypeEnum'
 import {
     initialActionCardTexts,
     initialActionCardState,
-} from '../../../../constants/ACTION_CARD_SETTINGS_DATA'
+} from '../../../../constants/ACTION_CARD_DATA'
 import WritingSettingsComponent from './writingSettingsComponent'
 import { initialWritingSettingsData } from '../../../../constants/WRITING_SETTINGS_DATA'
 import AdvancedDefaultSettingsComponent from './advancedDefaultSettingsComponent'
