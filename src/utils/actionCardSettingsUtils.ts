@@ -39,6 +39,9 @@ export async function createActionCardData(
             overtime_prompt: validString(englishTranslation.overtimePrompt)
                 ? validString(translation.overtimePrompt)
                 : null,
+            buzzed_prompt: validString(englishTranslation.buzzedPrompt)
+                ? validString(translation.buzzedPrompt)
+                : null,
             texts: translation.texts ?? [],
         })
     })

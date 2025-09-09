@@ -465,6 +465,31 @@ function ActionCardComponent() {
                             </Tooltip>
                         </Grid>
                     )}
+                    {actionCardState.hasBuzzer && (
+                        <Grid item xs={12} sm={6}>
+                            <Tooltip title="This prompt will show on the screen after someone has pressed their buzzer.">
+                                <TextFieldSuggestionsComponent
+                                    wordSuggestions={actionCardSuggestions}
+                                    label="Buzzed Prompt"
+                                    variant="filled"
+                                    name="buzzedPrompt"
+                                    multiline
+                                    fullWidth
+                                    required
+                                    value={actionCardTranslationsState.en?.buzzedPrompt}
+                                    setValue={newValue =>
+                                        setActionCardTranslationsState({
+                                            ...actionCardTranslationsState,
+                                            en: {
+                                                ...actionCardTranslationsState.en,
+                                                buzzedPrompt: newValue,
+                                            },
+                                        })
+                                    }
+                                />
+                            </Tooltip>
+                        </Grid>
+                    )}
                     {actionCardState.allowCustomCards && (
                         <Grid item xs={12} sm={6}>
                             <Tooltip

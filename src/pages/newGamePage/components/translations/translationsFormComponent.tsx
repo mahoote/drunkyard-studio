@@ -48,6 +48,7 @@ const TranslationsFormComponent = () => {
     const customCardPrompt = actionCardTranslationsState.en?.customCardPrompt
     const excludedPlayerPrompt = actionCardTranslationsState.en?.excludedPlayerPrompt
     const overtimePrompt = actionCardTranslationsState.en?.overtimePrompt
+    const buzzedPrompt = actionCardTranslationsState.en?.buzzedPrompt
     const actionCardsEn = actionCardTranslationsState.en.texts
 
     const [userJsonInput, setUserJsonInput] = useState<string>('')
@@ -149,7 +150,12 @@ const TranslationsFormComponent = () => {
     }
 
     useEffect(() => {
-        const hasPromptToTranslate = !!actionCardPrompt || !!actionCardState?.allowCustomCards
+        const hasPromptToTranslate =
+            !!actionCardPrompt ||
+            !!actionCardState?.allowCustomCards ||
+            !!actionCardState?.hasOvertime ||
+            !!actionCardState?.hasBuzzer ||
+            !!(actionCardState?.excludedPlayers && actionCardState.excludedPlayers.length > 0)
 
         setPromptToTranslate(hasPromptToTranslate)
     }, [actionCardPrompt, actionCardState?.allowCustomCards])
@@ -451,6 +457,49 @@ const TranslationsFormComponent = () => {
                                                                 language
                                                             ],
                                                             overtimePrompt: event.target.value,
+                                                        },
+                                                    })
+                                                }
+                                            />
+                                        ))}
+                                    </Box>
+                                </Grid>
+                            )}
+                            {actionCardState?.hasBuzzer && buzzedPrompt && (
+                                <Grid item xs={12} md={6}>
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: 2,
+                                        }}
+                                    >
+                                        <div>
+                                            <h3>Buzzed Prompt</h3>
+                                            <MultilineComponent text={buzzedPrompt} />
+                                        </div>
+                                        {OTHER_LANGUAGES.map(language => (
+                                            <TextFieldSuggestionsComponent
+                                                key={language}
+                                                wordSuggestions={actionCardSuggestions}
+                                                label={codeToLanguage(language)}
+                                                variant="filled"
+                                                name={`${language}BuzzedPrompt`}
+                                                multiline
+                                                fullWidth
+                                                required
+                                                value={
+                                                    actionCardTranslationsState[language]
+                                                        ?.buzzedPrompt
+                                                }
+                                                onChange={event =>
+                                                    setActionCardTranslationsState({
+                                                        ...actionCardTranslationsState,
+                                                        [language]: {
+                                                            ...actionCardTranslationsState[
+                                                                language
+                                                            ],
+                                                            buzzedPrompt: event.target.value,
                                                         },
                                                     })
                                                 }

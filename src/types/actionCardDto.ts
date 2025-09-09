@@ -27,5 +27,6 @@ export interface ActionCardTranslationInsertDto {
     custom_card_prompt?: string | null
     excluded_player_prompt?: string | null
     overtime_prompt?: string | null
+    buzzed_prompt?: string | null
     texts: string[]
 }

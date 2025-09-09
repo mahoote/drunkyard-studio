@@ -145,6 +145,7 @@ export async function handleSelectGame(
                     customCardPrompt: translation.custom_card_prompt,
                     excludedPlayerPrompt: translation.excluded_player_prompt,
                     overtimePrompt: translation.overtime_prompt,
+                    buzzedPrompt: translation.buzzed_prompt,
                     texts: translation.texts,
                 }
             })

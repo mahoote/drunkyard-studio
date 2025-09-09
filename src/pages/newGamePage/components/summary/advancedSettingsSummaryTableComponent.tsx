@@ -17,6 +17,7 @@ const AdvancedSettingsSummaryTableComponent = () => {
     const actionCardPrompt = actionCardTranslationsState.en?.actionPrompt
     const excludedPlayerPrompt = actionCardTranslationsState.en?.excludedPlayerPrompt ?? ''
     const overtimePrompt = actionCardTranslationsState.en?.overtimePrompt ?? ''
+    const buzzedPrompt = actionCardTranslationsState.en?.buzzedPrompt ?? ''
     const actionCards = actionCardTranslationsState.en.texts
 
     return (
@@ -209,6 +210,16 @@ const AdvancedSettingsSummaryTableComponent = () => {
                                 </TableCell>
                                 <TableCell>
                                     <MultilineComponent text={overtimePrompt} />
+                                </TableCell>
+                            </TableRow>
+                        )}
+                        {actionCardState.hasBuzzer && (
+                            <TableRow>
+                                <TableCell sx={{ verticalAlign: 'top' }} scope="row">
+                                    Buzzed Prompt
+                                </TableCell>
+                                <TableCell>
+                                    <MultilineComponent text={buzzedPrompt} />
                                 </TableCell>
                             </TableRow>
                         )}

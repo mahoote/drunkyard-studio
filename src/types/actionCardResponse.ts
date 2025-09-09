@@ -27,5 +27,6 @@ export interface ActionCardTranslationResponse {
     custom_card_prompt?: string
     excluded_player_prompt?: string
     overtime_prompt?: string
+    buzzed_prompt?: string
     texts: string[]
 }
