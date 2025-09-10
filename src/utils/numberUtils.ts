@@ -5,7 +5,12 @@
  * @param total - The number to apply the fraction to.
  * @returns A number that is either the parsed whole number or the rounded-up result of (fraction * total).
  */
-export function getFractionAmount(fractionStr: string, total: number): number {
+export function getFractionAmount(
+    fractionStr: string | undefined | null,
+    total: number
+): number {
+    if (!fractionStr) return 0
+
     if (!fractionStr.includes('/')) {
         const number = parseInt(fractionStr, 10)
         if (isNaN(number) || number <= 0) {
