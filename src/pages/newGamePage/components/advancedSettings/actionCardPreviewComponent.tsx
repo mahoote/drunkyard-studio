@@ -53,7 +53,6 @@ const ActionCardPreviewComponent = () => {
 
             // Unique players are always at the end of the included players
             const uniqueNumbers = includedPlayers - uniquePlayers
-            // console.log({ includedPlayers, uniquePlayers, uniqueNumbers })
 
             if (index < includedPlayers && index >= uniqueNumbers) {
                 return { ...n, color: '#BD8955' }
