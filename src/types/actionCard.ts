@@ -1,33 +1,33 @@
-export interface ActionCardTranslation {
+export type ActionCard = {
     id?: number
-    value: string
-    actionCardId?: number
-}
-
-export type ActionCardSettings = {
-    id?: number
-    stateId: number
-    cardLimit?: number
+    cardLimit?: number | null
     cardSeconds?: number
     isAutoNext?: boolean
-    isPlayerCreative?: boolean
+    allowCustomCards?: boolean
     hasBuzzer?: boolean
     allowSentence: boolean
-    canRepeat?: boolean
-    excludePlayersAmount?: string
+    cardRepeat?: boolean
     oneCardPerPlayer?: boolean
+    includedPlayersAmount?: string
+    includedPlayersToggle?: string
+    shareCard?: boolean
+    uniquePlayers?: string
+    shareUniqueCard?: boolean
+    excludedPlayers?: string
+    playerRepeat?: boolean
+    hasOvertime?: boolean
 }
 
-export interface ActionCardSettingsTranslation {
+export interface ActionCardTranslation {
     id?: number
-    prompt?: string
-    playerCreativePrompt?: string
+    actionPrompt?: string
+    customCardPrompt?: string
+    excludedPlayerPrompt?: string
+    overtimePrompt?: string
+    buzzedPrompt?: string
+    texts?: string[]
 }
 
 export interface ActionCardTranslations {
-    [key: string]: ActionCardTranslation[] | undefined
-}
-
-export interface ActionCardSettingsTranslations {
-    [key: string]: ActionCardSettingsTranslation
+    [key: string]: ActionCardTranslation
 }

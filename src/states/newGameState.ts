@@ -2,12 +2,7 @@ import { AdvancedSettings, NewGame, GameTranslations, WritingSettings } from '..
 import { RefObject } from 'react'
 import { GameDescription } from '../types/gameResponse'
 import { GameLanguage } from '../types/language'
-import {
-    ActionCardSettings,
-    ActionCardSettingsTranslations,
-    ActionCardTranslation,
-    ActionCardTranslations,
-} from '../types/actionCard'
+import { ActionCard, ActionCardTranslations } from '../types/actionCard'
 
 export interface NewGameState {
     resetStore: () => void
@@ -24,22 +19,13 @@ export interface NewGameState {
     selectedGameTypes: string[]
     setSelectedGameTypes: (gameTypes: string[]) => void
 
-    actionCardSettingsData: ActionCardSettings | undefined
-    setActionCardSettingsData: (settings: ActionCardSettings | undefined) => void
+    actionCardState: ActionCard | undefined
+    setActionCardDataState: (settings: ActionCard | undefined) => void
 
-    actionCardSettingsTranslations: ActionCardSettingsTranslations
-    setActionCardSettingsTranslations: (translations: ActionCardSettingsTranslations) => void
+    actionCardTranslationsState: ActionCardTranslations
+    setActionCardTranslationsState: (translations: ActionCardTranslations) => void
 
-    actionCardTranslations: ActionCardTranslations
-    setActionCardTranslations: (translations: ActionCardTranslations) => void
-
-    setActionCards: (
-        inputs: ActionCardTranslation[] | undefined,
-        language?: GameLanguage
-    ) => void
-
-    deletedActionCards: number[] | undefined
-    setDeletedActionCards: (deleted: number[] | undefined) => void
+    setActionCardTexts: (text?: string[], language?: GameLanguage) => void
 
     activeFormRef: RefObject<HTMLFormElement> | null
     setActiveFormRef: (ref: RefObject<HTMLFormElement>) => void

@@ -4,10 +4,9 @@ import { Add, Clear, Delete, List } from '@mui/icons-material'
 import TextFieldSuggestionsComponent from './textFieldSuggestionsComponent'
 import MultiInputBulkComponent from './multiInputBulkComponent'
 import { noWhiteSpaceInput } from '../utils/inputUtils'
-import { ActionCardTranslation, ActionCardTranslations } from '../types/actionCard'
 import { useNewGameStore } from '../hooks/useNewGameStore'
 import { actionCardSuggestions } from '../constants/WORD_SUGGESTION_DATA'
-import { initialActionCardsTranslations } from '../constants/NEW_GAME_FORM_DATA'
+import { ActionCardTranslations } from '../types/actionCard'
 
 /**
  * This is a component for creating multiple input elements.
@@ -16,90 +15,86 @@ import { initialActionCardsTranslations } from '../constants/NEW_GAME_FORM_DATA'
  */
 export default function ActionCardsInputComponent() {
     const {
-        actionCardTranslations,
-        setActionCardTranslations,
-        setActionCards,
-        deletedActionCards,
-        setDeletedActionCards,
-        actionCardSettingsData,
+        actionCardTranslationsState,
+        actionCardState,
+        setActionCardTexts,
+        setActionCardTranslationsState,
     } = useNewGameStore()
 
-    const defaultActionCards = actionCardTranslations.en ?? []
-    const isMultiline = actionCardSettingsData?.allowSentence
+    const defaultActionCardTranslation = actionCardTranslationsState.en.texts ?? []
+    const isMultiline = actionCardState?.allowSentence
 
     const [openBulk, setOpenBulk] = React.useState<boolean>(false)
     const handleOpenBulk = () => setOpenBulk(true)
     const handleCloseBulk = () => setOpenBulk(false)
 
-    if (defaultActionCards.length <= 0) {
-        setActionCards([{ value: '' }])
-    }
-
-    const handleInputChange = (index: number, newValue: ActionCardTranslation) => {
-        setActionCards(defaultActionCards.map((input, i) => (i === index ? newValue : input)))
+    /**
+     * Updates the value of a specific input field.
+     * @param newValue
+     * @param index
+     */
+    const handleInputChange = (newValue: string, index: number) => {
+        defaultActionCardTranslation[index] = newValue
+        setActionCardTexts(defaultActionCardTranslation)
     }
 
     const addInputField = () => {
-        setActionCards([...defaultActionCards, { value: '' }])
+        setActionCardTexts([...defaultActionCardTranslation, ''])
     }
 
     /**
      * Filters out all the non-empty defaultActionCards and adds them to the array.
      * @param bulkInputs
      */
-    const addBulkInputs = (bulkInputs: ActionCardTranslation[]) => {
-        if (defaultActionCards.length === 1 && defaultActionCards[0].value === '') {
-            setActionCards(bulkInputs)
+    const addBulkInputs = (bulkInputs: string[]) => {
+        if (
+            defaultActionCardTranslation.length === 1 &&
+            defaultActionCardTranslation[0].length === 0
+        ) {
+            setActionCardTexts(bulkInputs)
             return
         }
 
         const filteredBulkInputs = bulkInputs.filter(
-            bulkInput => !defaultActionCards.includes(bulkInput)
+            bulkInput => !defaultActionCardTranslation.includes(bulkInput)
         )
 
-        setActionCards([...defaultActionCards, ...filteredBulkInputs])
+        setActionCardTexts([...defaultActionCardTranslation, ...filteredBulkInputs])
     }
 
     /**
-     * First it sets all the blank defaultActionCards with an id to deleted.
-     * Then just removes the blank defaultActionCards without id.
+     * Remove entries where the default array has empty strings ("")
+     * and apply that removal across all languages' texts.
      */
     const removeEmptyInputs = () => {
-        const activeTranslations: ActionCardTranslations = { ...actionCardTranslations }
+        const emptyIndexes = defaultActionCardTranslation
+            .map((text, index) => (text === '' ? index : -1))
+            .filter(i => i !== -1)
 
-        const emptyIndexes = defaultActionCards
-            .map((card, index) => (card.value === '' ? index : -1))
-            .filter(index => index !== -1)
+        if (emptyIndexes.length === 0) return
 
-        Object.entries(actionCardTranslations).forEach(([key, translation]) => {
-            activeTranslations[key] = translation?.filter(
-                (_, index) => !emptyIndexes.includes(index)
-            )
-        })
+        const toDrop = new Set(emptyIndexes)
 
-        const deletedInputs = Array.from(
-            new Set(
-                defaultActionCards
-                    .filter(card => card.id && card.value === '')
-                    .map(card => card.actionCardId as number)
-            )
+        const cleaned: ActionCardTranslations = Object.fromEntries(
+            Object.entries(actionCardTranslationsState).map(([lang, translation]) => {
+                const texts = translation.texts ?? []
+                const newTexts = texts.filter((_, i) => !toDrop.has(i))
+                return [lang, { ...translation, texts: newTexts }]
+            })
         )
 
-        setActionCardTranslations(activeTranslations)
-        setDeletedActionCards([...(deletedActionCards ?? []), ...deletedInputs])
+        setActionCardTranslationsState(cleaned)
     }
 
+    /**
+     * Removes all inputs from the array and adds a single empty input.
+     */
     const removeAllInputs = () => {
-        const deletedInputs = Array.from(
-            new Set(
-                defaultActionCards
-                    .filter(input => input.id)
-                    .map(input => input.actionCardId as number)
-            )
-        )
+        setActionCardTexts([''])
+    }
 
-        setDeletedActionCards([...(deletedActionCards ?? []), ...deletedInputs])
-        setActionCardTranslations(initialActionCardsTranslations)
+    if (defaultActionCardTranslation.length <= 0) {
+        removeAllInputs()
     }
 
     return (
@@ -107,12 +102,10 @@ export default function ActionCardsInputComponent() {
             <MultiInputBulkComponent
                 open={openBulk}
                 handleClose={handleCloseBulk}
-                handleAdd={bulkInputs =>
-                    addBulkInputs(bulkInputs.map(input => ({ value: input })))
-                }
+                handleAdd={bulkInputs => addBulkInputs(bulkInputs)}
             />
             <Grid container spacing={2}>
-                {defaultActionCards.map((input, index) => (
+                {defaultActionCardTranslation.map((input, index) => (
                     <Grid key={index} item xs={12} sm={4}>
                         <TextFieldSuggestionsComponent
                             key={index}
@@ -120,15 +113,11 @@ export default function ActionCardsInputComponent() {
                             label={`Input ${index + 1}`}
                             name={`input-${index + 1}`}
                             variant="filled"
-                            value={input.value}
+                            value={input}
                             setValue={(newValue: string) => {
                                 let newInputValue = newValue
                                 if (!isMultiline) newInputValue = noWhiteSpaceInput(newValue)
-                                return handleInputChange(index, {
-                                    id: input.id,
-                                    value: newInputValue,
-                                    actionCardId: input.actionCardId,
-                                })
+                                return handleInputChange(newInputValue, index)
                             }}
                             multiline={isMultiline}
                             required

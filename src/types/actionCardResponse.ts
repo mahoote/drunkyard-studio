@@ -1,35 +1,32 @@
-export interface ActionCardSettingsResponse {
+export interface ActionCardResponse {
     id: number
+    created_at: string
     game_id: number
-    state_id: number
+    included_players: string
+    share_card?: boolean
+    unique_players?: string
+    share_unique_card?: boolean
+    excluded_players?: string
+    card_repeat?: boolean
     card_limit?: number
     card_seconds?: number
-    is_auto_next: boolean
-    is_player_creative: boolean
-    has_buzzer: boolean
-    created_at: string
+    is_auto_next?: boolean
+    player_repeat?: boolean
+    one_card_per_player?: boolean
+    allow_custom_cards?: boolean
     allow_sentence: boolean
-    can_repeat: boolean
-    exclude_players_amount?: string
-    one_card_per_player: boolean
+    has_buzzer?: boolean
+    has_overtime?: boolean
 }
 
-export interface ActionCardSettingsTranslationResponse {
+export interface ActionCardTranslationResponse {
     id: number
-    action_card_settings_id: number
+    action_card_id: number
     language: string
-    prompt?: string
-    player_creative_prompt?: string
-}
-
-export interface ActionCardResponse {
-    action_card: {
-        id: number
-        created_at: string
-        action_card_translation: {
-            id: number
-            language: string
-            value: string
-        }[]
-    }
+    action_prompt?: string
+    custom_card_prompt?: string
+    excluded_player_prompt?: string
+    overtime_prompt?: string
+    buzzed_prompt?: string
+    texts: string[]
 }

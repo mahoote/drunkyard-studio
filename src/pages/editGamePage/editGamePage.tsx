@@ -17,14 +17,12 @@ export default function EditGamePage() {
         resetStore,
         setNewGame,
         setAdvancedSettingsData,
-        setActionCardSettingsData,
+        setActionCardDataState,
         setSelectedGameTypes,
         setSelectedAccessories,
-        setActionCards,
         setGameTranslations,
         setFormStepIndex,
-        setActionCardSettingsTranslations,
-        setActionCardTranslations,
+        setActionCardTranslationsState,
     } = useNewGameStore()
 
     const { setStudioAlert } = useStudioStore()
@@ -76,13 +74,11 @@ export default function EditGamePage() {
                             setSelectedGameTypes,
                             setSelectedAccessories,
                             setAdvancedSettingsData,
-                            setActionCardSettingsData,
-                            setActionCards,
+                            setActionCardDataState,
                             setGameTranslations,
                             setFormStepIndex,
                             navigate,
-                            setActionCardSettingsTranslations,
-                            setActionCardTranslations
+                            setActionCardTranslationsState
                         )
                     }
                 >

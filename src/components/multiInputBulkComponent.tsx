@@ -42,7 +42,7 @@ function MultiInputBulkComponent({ open, handleClose, handleAdd }: MultiInputBul
             open={open}
             handleClose={handleClose}
             title="Action Card Bulk Mode"
-            description="Paste a JSON array of action cards here."
+            description="Paste a list of action cards here. Separate them with a semicolon (;)."
         >
             <>
                 <TextField

@@ -1,32 +1,39 @@
-import { ActionCardSettingsInsertDto } from '../types/actionCardDto'
+import { ActionCardInsertDto } from '../types/actionCardDto'
 
-import { ActionCardSettings } from '../types/actionCard'
+import { ActionCard } from '../types/actionCard'
 
-export function mapActionCardSettings(
+export function mapActionCard(
     gameId: number,
-    actionCardSettingsData: ActionCardSettings
-): ActionCardSettingsInsertDto {
+    actionCardState: ActionCard
+): ActionCardInsertDto {
     return {
-        id: actionCardSettingsData.id,
+        id: actionCardState.id,
         game_id: gameId,
-        state_id: actionCardSettingsData.stateId,
+        included_players:
+            actionCardState.includedPlayersToggle ??
+            actionCardState.includedPlayersAmount ??
+            '-1',
+        share_card: actionCardState.shareCard,
+        unique_players: actionCardState.uniquePlayers,
+        share_unique_card: actionCardState.shareUniqueCard,
+        excluded_players: actionCardState.excludedPlayers,
+        card_repeat: actionCardState.cardRepeat,
         card_limit:
-            (actionCardSettingsData.cardLimit ?? 0) > 0
-                ? actionCardSettingsData.cardLimit
+            !actionCardState.oneCardPerPlayer &&
+            actionCardState.cardLimit &&
+            actionCardState.cardLimit > 0
+                ? actionCardState.cardLimit
                 : undefined,
         card_seconds:
-            (actionCardSettingsData.cardSeconds ?? 0) > 0
-                ? actionCardSettingsData.cardSeconds
+            actionCardState.cardSeconds && actionCardState.cardSeconds > 0
+                ? actionCardState.cardSeconds
                 : undefined,
-        is_auto_next: actionCardSettingsData.isAutoNext,
-        is_player_creative: actionCardSettingsData.isPlayerCreative,
-        has_buzzer: actionCardSettingsData.hasBuzzer,
-        allow_sentence: actionCardSettingsData.allowSentence,
-        can_repeat: actionCardSettingsData.canRepeat,
-        exclude_players_amount:
-            actionCardSettingsData.stateId === 6
-                ? actionCardSettingsData.excludePlayersAmount
-                : undefined,
-        one_card_per_player: actionCardSettingsData.oneCardPerPlayer,
+        is_auto_next: actionCardState.isAutoNext,
+        player_repeat: actionCardState.playerRepeat,
+        one_card_per_player: actionCardState.oneCardPerPlayer,
+        allow_custom_cards: actionCardState.allowCustomCards,
+        allow_sentence: actionCardState.allowSentence,
+        has_overtime: actionCardState.hasOvertime,
+        has_buzzer: actionCardState.hasBuzzer,
     }
 }

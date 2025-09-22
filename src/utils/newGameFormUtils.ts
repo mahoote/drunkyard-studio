@@ -72,7 +72,7 @@ export async function addAccessoriesToGame(
 ) {
     const selectedAccessoriesEn = gameTranslations.en.accessories ?? []
 
-    // First remove all games asociated with the new game.
+    // First remove all games associated with the new game.
     await removeAllGameAccessories(newGameId)
 
     for (const accessory of selectedAccessoriesEn) {
