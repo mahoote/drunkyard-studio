@@ -33,7 +33,6 @@ function NewGamePage() {
         gameTranslations,
         selectedGameTypes,
         actionCardState,
-        activeFormRef,
         advancedSettingsData,
         formStepIndex,
         setFormStepIndex,
@@ -142,17 +141,6 @@ function NewGamePage() {
                 setFormStepIndex={setFormStepIndex}
                 onFinnish={() => void submitForm()}
                 onReset={handleResetForm}
-                isFormValid={() => {
-                    if (activeFormRef?.current) {
-                        if (activeFormRef.current.checkValidity()) {
-                            return true
-                        } else {
-                            activeFormRef.current.reportValidity()
-                            return false
-                        }
-                    }
-                    return true
-                }}
             />
         </Box>
     )
