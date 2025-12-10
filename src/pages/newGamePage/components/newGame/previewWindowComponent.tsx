@@ -160,7 +160,6 @@ export default function PreviewWindowComponent() {
                                         )
                                     }
                                     multiline
-                                    required
                                     fullWidth
                                 />
                                 <Box sx={{ display: { xs: 'flex', lg: 'none' } }}>

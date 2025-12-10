@@ -71,7 +71,6 @@ function NewGameFormComponent() {
                                         setGameTranslations
                                     )
                                 }
-                                required
                                 fullWidth
                             />
                         </Grid>
@@ -86,7 +85,6 @@ function NewGameFormComponent() {
                                     onChange={event =>
                                         handleSelectChange(event, newGame, setNewGame)
                                     }
-                                    required
                                     variant={'filled'}
                                 >
                                     {gameCategories?.map((category: GenericType) => (
@@ -184,7 +182,6 @@ function NewGameFormComponent() {
                                     handleNumberChange(event, newGame, setNewGame)
                                 }
                                 fullWidth
-                                required
                             />
                         </Grid>
                     </Grid>

@@ -243,7 +243,6 @@ const TranslationsFormComponent = () => {
                                     label={codeToLanguage(language)}
                                     variant="filled"
                                     name={`${language}Name`}
-                                    required
                                     fullWidth
                                     value={gameTranslations[language]?.name}
                                     onChange={event =>
@@ -351,7 +350,6 @@ const TranslationsFormComponent = () => {
                                     name={`${language}HasWinnerPrompt`}
                                     fullWidth
                                     multiline
-                                    required
                                     value={gameTranslations[language]?.hasWinnerPrompt}
                                     onChange={event =>
                                         setGameTranslations({
@@ -400,7 +398,6 @@ const TranslationsFormComponent = () => {
                                                     name={`${language}ExcludedPlayerPrompt`}
                                                     multiline
                                                     fullWidth
-                                                    required
                                                     value={
                                                         actionCardTranslationsState[language]
                                                             ?.excludedPlayerPrompt
@@ -444,7 +441,6 @@ const TranslationsFormComponent = () => {
                                                 name={`${language}OvertimePrompt`}
                                                 multiline
                                                 fullWidth
-                                                required
                                                 value={
                                                     actionCardTranslationsState[language]
                                                         ?.overtimePrompt
@@ -487,7 +483,6 @@ const TranslationsFormComponent = () => {
                                                 name={`${language}BuzzedPrompt`}
                                                 multiline
                                                 fullWidth
-                                                required
                                                 value={
                                                     actionCardTranslationsState[language]
                                                         ?.buzzedPrompt
@@ -530,7 +525,6 @@ const TranslationsFormComponent = () => {
                                                 name={`${language}PlayerCreativePrompt`}
                                                 multiline
                                                 fullWidth
-                                                required
                                                 value={
                                                     actionCardTranslationsState[language]
                                                         ?.customCardPrompt
@@ -573,7 +567,6 @@ const TranslationsFormComponent = () => {
                                                 variant="filled"
                                                 name={`${language}Prompt`}
                                                 fullWidth
-                                                required
                                                 value={
                                                     actionCardTranslationsState[language]
                                                         ?.actionPrompt

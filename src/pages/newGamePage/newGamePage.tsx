@@ -7,10 +7,7 @@ import {
 import NewGameFormComponent from './components/newGame/newGameFormComponent'
 import LinearStepperComponent from '../../components/linearStepperComponent'
 import AdvancedSettingsFormComponent from './components/advancedSettings/advancedSettingsFormComponent'
-import {
-    createActionCardData,
-    isActionCardTextsValid,
-} from '../../utils/actionCardSettingsUtils'
+import { createActionCardData } from '../../utils/actionCardSettingsUtils'
 
 import { useNewGameStore } from '../../hooks/useNewGameStore'
 import { useGameOptionsStore } from '../../hooks/useGameOptionsStore'
@@ -125,20 +122,15 @@ function NewGamePage() {
             <LinearStepperComponent
                 steps={[
                     {
-                        label: 'New Game',
+                        label: 'Info',
                         content: <NewGameFormComponent />,
                     },
                     {
-                        label: 'Advanced Settings',
+                        label: 'Settings',
                         content: <AdvancedSettingsFormComponent />,
-                        customValidation: () =>
-                            isActionCardTextsValid(
-                                actionCardState,
-                                actionCardTranslationsState.en.texts
-                            ),
                     },
                     {
-                        label: 'Translations',
+                        label: 'Text',
                         content: <TranslationsFormComponent />,
                     },
                     {
